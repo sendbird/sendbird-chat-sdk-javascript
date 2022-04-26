@@ -702,13 +702,6 @@ declare enum ReportCategory {
   INAPPROPRIATE = 'inappropriate',
 }
 
-declare enum RequestState {
-  PENDING = 'pending',
-  FAILED = 'failed',
-  CANCELED = 'canceled',
-  SUCCEEDED = 'succeeded',
-}
-
 declare class RestrictedUser extends User {
   readonly restrictionInfo: RestrictionInfo;
 }
@@ -733,7 +726,7 @@ declare class SendableMessage extends BaseMessage {
   sender: Sender;
   reqId: string;
   replyToChannel: boolean;
-  requestState: RequestState;
+  sendingStatus: SendingStatus;
   requestedMentionUserIds: string[];
   errorCode: number;
   get isResendable(): boolean;
@@ -875,6 +868,13 @@ export declare class SendbirdError extends Error {
 declare class Sender extends User {
   role: Role;
   isBlockedByMe: boolean;
+}
+
+declare enum SendingStatus {
+  PENDING = 'pending',
+  FAILED = 'failed',
+  CANCELED = 'canceled',
+  SUCCEEDED = 'succeeded',
 }
 
 declare class SessionHandler {

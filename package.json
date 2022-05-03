@@ -1,5 +1,5 @@
 {
-  "version": "4.0.0-beta-5",
+  "version": "4.0.0-beta.6",
   "description": "Sendbird SDK for JavaScript",
   "name": "@sendbird/chat",
   "author": "Sendbird <support@sendbird.com>",
@@ -20,11 +20,13 @@
   "main": "bundles/sendbird.js",
   "types": "types/index.d.ts",
   "exports": {
+    "./package.json": "./package.json",
     ".": "./bundles/sendbird.js",
     "./message": "./bundles/message.js",
     "./groupChannel": "./bundles/groupChannel.js",
     "./openChannel": "./bundles/openChannel.js"
   },
+  "react-native": "./bundles/sendbird.js",
   "typesVersions": {
     "*": {
       "message": [

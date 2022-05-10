@@ -10,4 +10,4 @@ export {
   OpenChannelUpdateParamsProperties,
   ParticipantListQuery,
   SendbirdOpenChat,
-} from './__definition';
+} from './lib/__definition';

@@ -1,5 +1,5 @@
 {
-  "version": "4.0.0-beta.6",
+  "version": "4.0.0-beta.7",
   "description": "Sendbird SDK for JavaScript",
   "name": "@sendbird/chat",
   "author": "Sendbird <support@sendbird.com>",
@@ -17,26 +17,26 @@
     "url": "https://github.com/sendbird/sendbird-chat-sdk-javascript"
   },
   "type": "module",
-  "main": "bundles/sendbird.js",
-  "types": "types/index.d.ts",
+  "main": "sendbird.js",
+  "types": "index.d.ts",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./bundles/sendbird.js",
-    "./message": "./bundles/message.js",
-    "./groupChannel": "./bundles/groupChannel.js",
-    "./openChannel": "./bundles/openChannel.js"
+    ".": "./sendbird.js",
+    "./message": "./message.js",
+    "./groupChannel": "./groupChannel.js",
+    "./openChannel": "./openChannel.js"
   },
-  "react-native": "./bundles/sendbird.js",
+  "react-native": "./sendbird.js",
   "typesVersions": {
     "*": {
       "message": [
-        "./types/message.d.ts"
+        "./message.d.ts"
       ],
       "groupChannel": [
-        "./types/groupChannel.d.ts"
+        "./groupChannel.d.ts"
       ],
       "openChannel": [
-        "./types/openChannel.d.ts"
+        "./openChannel.d.ts"
       ]
     }
   }

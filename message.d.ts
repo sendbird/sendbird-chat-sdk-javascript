@@ -31,8 +31,6 @@ export {
   ReactionEvent,
   ReactionEventOperation,
   ReplyType,
-  ScheduledStatus,
-  ScheduledUserMessage,
   ScheduledUserMessageParams,
   ScheduledUserMessageParamsProperties,
   Sender,
@@ -47,4 +45,4 @@ export {
   UserMessageCreateParamsProperties,
   UserMessageUpdateParams,
   UserMessageUpdateParamsProperties,
-} from './__definition';
+} from './lib/__definition';

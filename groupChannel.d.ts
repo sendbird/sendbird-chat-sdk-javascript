@@ -49,4 +49,4 @@ export {
   SuperChannelFilter,
   UnreadChannelFilter,
   UnreadItemKey,
-} from './__definition';
+} from './lib/__definition';

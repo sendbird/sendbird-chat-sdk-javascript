@@ -189,6 +189,7 @@ declare class BaseMessage {
   appleCriticalAlertOptions?: AppleCriticalAlertOptions;
   createdAt: number;
   updatedAt?: number;
+  scheduledInfo?: ScheduledInfo;
   isIdentical(message: BaseMessage): boolean;
   isEqual(message: BaseMessage): boolean;
   get isUserMessage(): boolean;
@@ -220,6 +221,8 @@ declare class BaseMessageUpdateParamsProperties {
   mentionType?: MentionType;
   mentionedUserIds?: string[];
   mentionedMessageTemplate?: string;
+  metaArrays?: MessageMetaArray[];
+  pushNotificationDeliveryOption?: PushNotificationDeliveryOption;
   appleCriticalAlertOptions?: AppleCriticalAlertOptions;
 }
 
@@ -336,6 +339,7 @@ declare class FileMessageCreateParams extends FileMessageCreateParamsProperties 
   constructor(props?: FileMessageCreateParamsProperties);
   get fileUrl(): string;
   set fileUrl(value: string);
+  serialize(): SerializedFileMessageCreateParams;
   validate(): boolean;
 }
 
@@ -472,6 +476,7 @@ declare class MessageModule extends Module {
   buildMessageFromSerializedData(serialized: object): UserMessage | FileMessage | AdminMessage;
   buildSenderFromSerializedData(serialized: object): Sender;
   getMessage(params: MessageRetrievalParams): Promise<BaseMessage>;
+  getScheduledMessage(params: ScheduledMessageRetrievalParams): Promise<BaseMessage>;
 }
 
 declare class MessageRequestHandler {
@@ -722,6 +727,28 @@ declare enum Role {
   NONE = 'none',
 }
 
+declare interface ScheduledInfo {
+  scheduledMessageId: number;
+  scheduledAt: number;
+}
+
+declare class ScheduledMessageRetrievalParams extends ScheduledMessageRetrievalParamsProperties {
+  constructor(props: ScheduledMessageRetrievalParamsProperties);
+  validate(): boolean;
+}
+
+declare class ScheduledMessageRetrievalParamsProperties {
+  channelUrl: string;
+  scheduledMessageId: number;
+}
+
+declare enum ScheduledStatus {
+  PENDING = 'pending',
+  SENT = 'sent',
+  FAILED = 'failed',
+  CANCELED = 'canceled',
+}
+
 declare class SendableMessage extends BaseMessage {
   sender: Sender;
   reqId: string;
@@ -819,6 +846,7 @@ declare class SendbirdChat {
   getUnreadItemCount(params: UnreadItemCountParams): Promise<UnreadItemCount>;
   getTotalUnreadChannelCount(): Promise<number>;
   getTotalUnreadMessageCount(params: TotalUnreadMessageCountParams): Promise<number>;
+  getTotalScheduledMessageCount(params: TotalScheduledMessageCountParams): Promise<number>;
   getSubscribedTotalUnreadMessageCount(): number;
   getSubscribedCustomTypeTotalUnreadMessageCount(): number;
   getSubscribedCustomTypeUnreadMessageCount(customType: string): number;
@@ -872,9 +900,10 @@ declare class Sender extends User {
 
 declare enum SendingStatus {
   PENDING = 'pending',
+  SCHEDULED = 'scheduled',
+  SUCCEEDED = 'succeeded',
   FAILED = 'failed',
   CANCELED = 'canceled',
-  SUCCEEDED = 'succeeded',
 }
 
 declare class SessionHandler {
@@ -955,6 +984,17 @@ declare interface ThumbnailSize {
   maxHeight: number;
 }
 
+declare class TotalScheduledMessageCountParams extends TotalScheduledMessageCountParamsProperties {
+  constructor(props?: TotalScheduledMessageCountParamsProperties);
+  validate(): boolean;
+}
+
+declare class TotalScheduledMessageCountParamsProperties {
+  channelUrl?: string;
+  scheduledStatus?: ScheduledStatus[];
+  messageTypeFilter?: MessageTypeFilter;
+}
+
 declare class TotalUnreadMessageCountParams extends TotalUnreadMessageCountParamsProperties {
   constructor(props?: TotalUnreadMessageCountParamsProperties);
   validate(): boolean;
@@ -1027,6 +1067,7 @@ declare class UserMessage extends SendableMessage {
   message: string;
   messageParams: UserMessageCreateParams;
   readonly translations: object;
+  readonly translationTargetLanguages: string[];
   readonly messageSurvivalSeconds: number;
   readonly plugins: Plugin_2[];
   getThreadedMessagesByTimestamp(
@@ -1040,6 +1081,7 @@ declare class UserMessage extends SendableMessage {
 
 declare class UserMessageCreateParams extends UserMessageCreateParamsProperties {
   constructor(props?: UserMessageCreateParamsProperties);
+  serialize(): SerializedUserMessageCreateParams;
   validate(): boolean;
 }
 
@@ -1055,6 +1097,7 @@ declare class UserMessageUpdateParams extends UserMessageUpdateParamsProperties 
 
 declare class UserMessageUpdateParamsProperties extends BaseMessageUpdateParamsProperties {
   message?: string;
+  translationTargetLanguages?: string[];
 }
 
 declare enum UserOnlineState {
@@ -1083,38 +1126,7 @@ declare interface Schedule {
   timezone?: string;
 }
 
-declare enum ScheduledStatus {
-  SCHEDULED = 'scheduled',
-  SENT = 'sent',
-  CANCELED = 'canceled',
-  FAILED = 'failed',
-}
-
-declare class ScheduledUserMessage {
-  scheduleId: number;
-  scheduledDateTimeString: string;
-  scheduledTimezone: string;
-  status: ScheduledStatus;
-  readonly channelUrl: string;
-  readonly channelType: ChannelType;
-  readonly messageType: MessageType;
-  readonly sender: Sender;
-  message: string;
-  customType: string;
-  data: string;
-  mentionType: MentionType;
-  mentionedUsers: User[];
-  metaArrays: MessageMetaArray[];
-  translationTargetLanguages: string[];
-  appleCriticalAlertOptions: AppleCriticalAlertOptions;
-  pushNotificationDeliveryOption: PushNotificationDeliveryOption;
-  createdAt: number;
-  updatedAt: number;
-  errorCode: number;
-  errorMessage: string;
-}
-
-declare class ScheduledUserMessageParams extends ScheduledUserMessageParamsProperties {
+export declare class ScheduledUserMessageParams extends ScheduledUserMessageParamsProperties {
   constructor(props?: ScheduledUserMessageParamsProperties);
   get scheduledDateTimeString(): string;
   set scheduledDateTimeString(value: string);
@@ -1122,7 +1134,7 @@ declare class ScheduledUserMessageParams extends ScheduledUserMessageParamsPrope
   validate(): boolean;
 }
 
-declare class ScheduledUserMessageParamsProperties extends UserMessageCreateParamsProperties {
+export declare class ScheduledUserMessageParamsProperties extends UserMessageCreateParamsProperties {
   year: number;
   month: number;
   day: number;
@@ -1229,7 +1241,18 @@ export declare class GroupChannel extends BaseChannel {
   markAsDelivered(): Promise<void>;
   startTyping(): Promise<void>;
   endTyping(): Promise<void>;
-  registerScheduledUserMessage(params: ScheduledUserMessageParams): Promise<ScheduledUserMessage>;
+  createScheduledUserMessage(params: ScheduledUserMessageCreateParams): Promise<UserMessage>;
+  updateScheduledUserMessage(
+    scheduledMessageId: number,
+    params: ScheduledUserMessageUpdateParams,
+  ): Promise<UserMessage>;
+  createScheduledFileMessage(params: ScheduledFileMessageCreateParams): Promise<FileMessage>;
+  updateScheduledFileMessage(
+    scheduledMessageId: number,
+    params: ScheduledFileMessageUpdateParams,
+  ): Promise<FileMessage>;
+  cancelScheduledFileMessage(scheduledMessageId: number): Promise<void>;
+  sendScheduledMessageNow(scheduledMessageId: number): Promise<void>;
   getMyPushTriggerOption(): Promise<PushTriggerOption>;
   setMyPushTriggerOption(option: PushTriggerOption): Promise<PushTriggerOption>;
   setMyCountPreference(preference: CountPreference): Promise<CountPreference>;
@@ -1456,6 +1479,7 @@ export declare class GroupChannelModule extends Module {
   createGroupChannelCollection(params?: GroupChannelCollectionParams): GroupChannelCollection;
   createMyGroupChannelListQuery(params?: GroupChannelListQueryParams): GroupChannelListQuery;
   createPublicGroupChannelListQuery(params?: PublicGroupChannelListQueryParams): PublicGroupChannelListQuery;
+  createScheduledMessageListQuery(params?: ScheduledMessageListQueryParams): ScheduledMessageListQuery;
   addGroupChannelHandler(key: string, handler: GroupChannelHandler): void;
   removeGroupChannelHandler(key: string): void;
   removeAllGroupChannelHandlers(): void;
@@ -1524,6 +1548,7 @@ export declare interface GroupChannelUserIdsFilter {
 }
 
 export declare enum HiddenChannelFilter {
+  ALL = 'all',
   UNHIDDEN = 'unhidden_only',
   HIDDEN = 'hidden_only',
   HIDDEN_ALLOW_AUTO_UNHIDE = 'hidden_allow_auto_unhide',
@@ -1742,6 +1767,78 @@ export declare class ReadStatus {
   readonly channelType: string;
   readonly reader: User;
   readonly readAt: number;
+}
+
+declare class ScheduledFileMessageCreateParams extends ScheduledFileMessageCreateParamsProperties {
+  constructor(props: ScheduledFileMessageCreateParamsProperties);
+  get fileUrl(): string;
+  set fileUrl(value: string);
+  validate(): boolean;
+}
+
+declare class ScheduledFileMessageCreateParamsProperties extends BaseMessageCreateParamsProperties {
+  scheduledAt: number;
+  file: FileParams;
+  fileName?: string;
+  mimeType?: string;
+  fileSize?: number;
+  thumbnailSizes?: ThumbnailSize[];
+}
+
+declare class ScheduledFileMessageUpdateParams extends ScheduledFileMessageUpdateParamsProperties {
+  constructor(props?: ScheduledFileMessageUpdateParamsProperties);
+  get fileUrl(): string;
+  set fileUrl(value: string);
+  validate(): boolean;
+}
+
+declare class ScheduledFileMessageUpdateParamsProperties extends BaseMessageUpdateParamsProperties {
+  scheduledAt?: number;
+  file: FileParams;
+  fileName?: string;
+  mimeType?: string;
+  fileSize?: number;
+  thumbnailSizes?: ThumbnailSize[];
+}
+
+declare enum ScheduledMessageListOrder {
+  CREATED_AT = 'created_at',
+  SCHEDULED_AT = 'scheduled_at',
+}
+
+declare class ScheduledMessageListQuery extends BaseListQuery {
+  readonly channelUrl: string;
+  readonly order: ScheduledMessageListOrder;
+  readonly reverse: boolean;
+  readonly scheduledStatus: ScheduledStatus[];
+  readonly messageTypeFilter: MessageTypeFilter;
+  next(): Promise<BaseMessage[]>;
+}
+
+declare interface ScheduledMessageListQueryParams extends BaseListQueryParams {
+  channelUrl?: string;
+  order?: ScheduledMessageListOrder;
+  reverse?: boolean;
+  scheduledStatus?: ScheduledStatus[];
+  messageTypeFilter?: MessageTypeFilter;
+}
+
+declare class ScheduledUserMessageCreateParams extends ScheduledUserMessageCreateParamsProperties {
+  constructor(props?: ScheduledUserMessageCreateParamsProperties);
+  validate(): boolean;
+}
+
+declare class ScheduledUserMessageCreateParamsProperties extends UserMessageCreateParamsProperties {
+  scheduledAt: number;
+}
+
+declare class ScheduledUserMessageUpdateParams extends ScheduledUserMessageUpdateParamsProperties {
+  constructor(props?: ScheduledUserMessageUpdateParamsProperties);
+  validate(): boolean;
+}
+
+declare class ScheduledUserMessageUpdateParamsProperties extends UserMessageUpdateParamsProperties {
+  scheduledAt?: number;
 }
 
 export declare type SendbirdGroupChat = SendbirdChat & {

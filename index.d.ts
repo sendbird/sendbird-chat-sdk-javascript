@@ -54,7 +54,7 @@ export {
   UserOnlineState,
   UserUpdateParams,
   UserUpdateParamsProperties,
-} from './__definition';
+} from './lib/__definition';
 
-import { SendbirdChat as SendbirdChat } from './__definition';
+import { SendbirdChat as SendbirdChat } from './lib/__definition';
 export default SendbirdChat;

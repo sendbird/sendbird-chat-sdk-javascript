@@ -212,7 +212,6 @@ declare class BaseMessageCreateParamsProperties {
   isReplyToChannel?: boolean;
   pushNotificationDeliveryOption?: PushNotificationDeliveryOption;
   appleCriticalAlertOptions?: AppleCriticalAlertOptions;
-  reqId?: string;
 }
 
 declare class BaseMessageUpdateParamsProperties {
@@ -339,7 +338,6 @@ declare class FileMessageCreateParams extends FileMessageCreateParamsProperties 
   constructor(props?: FileMessageCreateParamsProperties);
   get fileUrl(): string;
   set fileUrl(value: string);
-  serialize(): SerializedFileMessageCreateParams;
   validate(): boolean;
 }
 
@@ -1081,7 +1079,6 @@ declare class UserMessage extends SendableMessage {
 
 declare class UserMessageCreateParams extends UserMessageCreateParamsProperties {
   constructor(props?: UserMessageCreateParamsProperties);
-  serialize(): SerializedUserMessageCreateParams;
   validate(): boolean;
 }
 

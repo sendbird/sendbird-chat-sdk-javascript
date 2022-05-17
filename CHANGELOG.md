@@ -1,0 +1,28 @@
+### v4.0.0-beta.10 (May 17, 2022)
+- `BaseMessage`'s `requestedMentionUserIds` has been replaced with `mentionedUserIds`.
+- Getter and setter for `mentionedUsers` have been added to `userMessageCreateParams`, `userMessageUpdateParams`, `fileMessageUpdateParams`, and `fileMessageUpdateParams`.
+- Getters for `BaseMessage`, `isUserMessage`, `isFileMessage`, and `isAdminMessage` have been replaced with `isUserMessage()`, `isFileMessage()`, and `isAdminMessage()`.
+- Getters for `BaseChannel`, `isGroupChannel`, and `isOpenChannel`, have been replaced with `isGroupChannel()`, and `isOpenChannel()`.
+- `reqId` in `BaseMessageCreateParamsProperties` has been removed.
+- Added `translationTargetLanguages` in `UserMessage`.
+- Added `translationTargetLanguages` in `UserMessageUpdateParamsProperties`.
+- Scheduled message support:
+    - Deleted `ScheduledUserMessageParams`.
+    - Deleted `ScheduledUserMessage`.
+    - Deleted `registerScheduledUserMessage()` in `GroupChannel`.
+    - Added `scheduledInfo` in `BaseMessage`.
+    - Added `ScheduledStatus`.
+    - Added `SCHEDULED` in `SendingStatus`.
+    - Added `ScheduledMessageRetrievalParams`.
+    - Added `ScheduledFileMessageCreateParams`.
+    - Added `ScheduledFileMessageUpdateParams`.
+    - Added `ScheduledUserMessageCreateParams`.
+    - Added `ScheduledUserMessageUpdateParams`.
+    - Added `TotalScheduledMessageCountParams`.
+    - Added `ScheduledMessageListOrder`.
+    - Added `ScheduledMessageListQuery`.
+    - Added `ScheduledMessageListQueryParams`.
+    - Added `getScheduledMessage()` in `MessageModule`, .
+    - Added `createScheduledMessageListQuery() in `GroupChannelModule`.
+    - Added `getTotalScheduledMessageCount() in `SendbirdChat`.
+    - Added `createScheduledUserMessage()`, `updateScheduledUserMessage()`, `createScheduledFileMessage()`, `updateScheduledFileMessage()`, `cancelScheduledMessage()`, `sendScheduledMessageNow() in `GroupChannel`.

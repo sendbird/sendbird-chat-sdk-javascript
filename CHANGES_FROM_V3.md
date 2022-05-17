@@ -40,6 +40,25 @@ import { GroupChannel } from '@sendbird/groupChannel';
 ## New features
 
 - Added `onConnected()`, `onDisconnected()` to `ConnectionHandler`.
+- Added `translationTargetLanguages` in `UserMessage`.
+- Added `translationTargetLanguages` in `UserMessageUpdateParamsProperties`.
+- Scheduled message support:
+  - Added `scheduledInfo` in `BaseMessage`.
+  - Added `ScheduledStatus`.
+  - Added `SCHEDULED` in `SendingStatus`.
+  - Added `ScheduledMessageRetrievalParams`.
+  - Added `ScheduledFileMessageCreateParams`.
+  - Added `ScheduledFileMessageUpdateParams`.
+  - Added `ScheduledUserMessageCreateParams`.
+  - Added `ScheduledUserMessageUpdateParams`.
+  - Added `TotalScheduledMessageCountParams`.
+  - Added `ScheduledMessageListOrder`.
+  - Added `ScheduledMessageListQuery`.
+  - Added `ScheduledMessageListQueryParams`. 
+  - Added `getScheduledMessage()` in `MessageModule`, .
+  - Added `createScheduledMessageListQuery() in `GroupChannelModule`.
+  - Added `getTotalScheduledMessageCount() in `SendbirdChat`.
+  - Added `createScheduledUserMessage()`, `updateScheduledUserMessage()`, `createScheduledFileMessage()`, `updateScheduledFileMessage()`, `cancelScheduledMessage()`, `sendScheduledMessageNow() in `GroupChannel`.
 
 ## Changes
 
@@ -301,12 +320,7 @@ SendBird.getInstance()
 sb.getApplicationId()
 sb.getConnectionState()
 sb.getLastConnectedAt()
-channel.isGroupChannel()
-channel.isOpenChannel()
 channel.getCachedMetaData()
-message.isUserMessage()
-message.isFileMessage()
-message.isAdminMessage()
 message.isResendable()
 
 // v4
@@ -314,12 +328,7 @@ SendbirdChat.instance
 sb.appId
 sb.connectionState
 sb.lastConnectedAt
-channel.isGroupChannel
-channel.isOpenChannel
 channel.cachedMetaData
-message.isUserMessage
-message.isFileMessage
-message.isAdminMessage
 message.isResendable
 ```
 
@@ -343,10 +352,14 @@ message.isResendable
 |`channelHandler.onDeliveryReceiptUpdated()`|`groupChannelHandler.onUndeliveredMemberStatusUpdated()`|
 |`groupChannel.cachedReadReceiptStatus`|`groupChannel.cachedUnreadMemberState`|
 |`groupChannel.cachedDeliveryReceiptStatus`|`groupChannel.cachedUndeliveredMemberState`|
-|`message.sendingStatus`|`message.requestState`|
+|`message.requestedMentionUserIds`|`message.mentionedUserIds`|
+
 
 > \* But stilling meaning the token for Android.
 
 ## Removes
 
 - Removed `channel.getMessagesByID()`.
+- Removed `ScheduledUserMessageParams`.
+- Removed `ScheduledUserMessage`.
+- Removed `groupChannel.registerScheduledUserMessage()`.

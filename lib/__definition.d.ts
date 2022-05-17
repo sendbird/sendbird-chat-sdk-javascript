@@ -97,8 +97,8 @@ declare class BaseChannel {
   isEphemeral: boolean;
   creator: User;
   createdAt: number;
-  get isGroupChannel(): boolean;
-  get isOpenChannel(): boolean;
+  isGroupChannel(): this is GroupChannel;
+  isOpenChannel(): this is OpenChannel;
   get cachedMetaData(): object;
   isIdentical(channel: BaseChannel): boolean;
   isEqual(channel: BaseChannel): boolean;
@@ -181,6 +181,7 @@ declare class BaseMessage {
   customType?: string;
   mentionType?: MentionType;
   mentionedUsers?: User[];
+  mentionedUserIds?: string[];
   mentionedMessageTemplate?: string;
   threadInfo?: ThreadInfo;
   reactions?: Reaction[];
@@ -192,9 +193,9 @@ declare class BaseMessage {
   scheduledInfo?: ScheduledInfo;
   isIdentical(message: BaseMessage): boolean;
   isEqual(message: BaseMessage): boolean;
-  get isUserMessage(): boolean;
-  get isFileMessage(): boolean;
-  get isAdminMessage(): boolean;
+  isUserMessage(): this is UserMessage;
+  isFileMessage(): this is FileMessage;
+  isAdminMessage(): this is AdminMessage;
   serialize(): object;
   getMetaArraysByKeys(keys: string[]): MessageMetaArray[];
   applyThreadInfoUpdateEvent(threadInfoUpdateEvent: ThreadInfoUpdateEvent): boolean;
@@ -274,6 +275,13 @@ declare enum ConnectionState {
   CLOSED = 'CLOSED',
 }
 
+declare enum CountPreference {
+  ALL = 'all',
+  UNREAD_MESSAGE_COUNT_ONLY = 'unread_message_count_only',
+  UNREAD_MENTION_COUNT_ONLY = 'unread_mention_count_only',
+  OFF = 'off',
+}
+
 declare interface DoNotDisturbPreference {
   doNotDisturbOn: boolean;
   startHour?: number;
@@ -338,6 +346,8 @@ declare class FileMessageCreateParams extends FileMessageCreateParamsProperties 
   constructor(props?: FileMessageCreateParamsProperties);
   get fileUrl(): string;
   set fileUrl(value: string);
+  get mentionedUsers(): User[];
+  set mentionedUsers(users: User[]);
   validate(): boolean;
 }
 
@@ -351,6 +361,8 @@ declare class FileMessageCreateParamsProperties extends BaseMessageCreateParamsP
 
 declare class FileMessageUpdateParams extends FileMessageUpdateParamsProperties {
   constructor(props?: FileMessageUpdateParamsProperties);
+  get mentionedUsers(): User[];
+  set mentionedUsers(users: User[]);
   validate(): boolean;
 }
 
@@ -377,6 +389,160 @@ declare class FriendListQuery extends BaseListQuery {
 
 type FriendListQueryParams = BaseListQueryParams;
 
+declare class GroupChannel extends BaseChannel {
+  readonly isDistinct: boolean;
+  readonly isSuper: boolean;
+  readonly isBroadcast: boolean;
+  readonly isExclusive: boolean;
+  readonly isPublic: boolean;
+  readonly isDiscoverable: boolean;
+  readonly isAccessCodeRequired: boolean;
+  readonly isPushEnabled: boolean;
+  unreadMessageCount: number;
+  unreadMentionCount: number;
+  members: Member[];
+  memberCount: number;
+  joinedMemberCount: number;
+  hiddenState: HiddenState;
+  lastMessage: BaseMessage;
+  messageOffsetTimestamp: number;
+  messageSurvivalSeconds: number;
+  myMemberState: MemberState;
+  myRole: Role;
+  myMutedState: MutedState;
+  myLastRead: number;
+  myCountPreference: CountPreference;
+  myPushTriggerOption: PushTriggerOption;
+  inviter: User;
+  invitedAt: number;
+  joinedAt: number;
+  get isHidden(): boolean;
+  get isTyping(): boolean;
+  get cachedUnreadMemberState(): object;
+  get cachedUndeliveredMemberState(): object;
+  isReadMessage(message: BaseMessage): boolean;
+  serialize(): object;
+  createMessageCollection(params?: MessageCollectionParams): MessageCollection;
+  createMemberListQuery(params?: MemberListQueryParams): MemberListQuery;
+  addMember(member: Member, ts?: number): void;
+  removeMember(member: Member): boolean;
+  getUnreadMemberCount(message: BaseMessage): number;
+  getUndeliveredMemberCount(message: BaseMessage): number;
+  getReadMembers(message: SendableMessage, includeAllMembers?: boolean): Member[];
+  getUnreadMembers(message: SendableMessage, includeAllMembers?: boolean): Member[];
+  getReadStatus(includeAllMembers?: boolean): {
+    [key: string]: ReadStatus;
+  };
+  getTypingUsers(): Member[];
+  invalidateTypingStatus(): boolean;
+  refresh(): Promise<GroupChannel>;
+  freeze(): Promise<void>;
+  unfreeze(): Promise<void>;
+  updateChannel(params: GroupChannelUpdateParams): Promise<GroupChannel>;
+  invite(users: User[]): Promise<GroupChannel>;
+  inviteWithUserIds(userIds: string[]): Promise<GroupChannel>;
+  join(accessCode?: string): Promise<GroupChannel>;
+  leave(): Promise<void>;
+  acceptInvitation(accessCode?: string): Promise<GroupChannel>;
+  declineInvitation(): Promise<GroupChannel>;
+  sendUserMessage(params: UserMessageCreateParams): MessageRequestHandler;
+  sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
+  deleteMessage(message: SendableMessage): Promise<void>;
+  hide(params: GroupChannelHideParams): Promise<GroupChannel>;
+  unhide(): Promise<GroupChannel>;
+  delete(): Promise<void>;
+  markAsRead(): Promise<void>;
+  markAsDelivered(): Promise<void>;
+  startTyping(): Promise<void>;
+  endTyping(): Promise<void>;
+  createScheduledUserMessage(params: ScheduledUserMessageCreateParams): Promise<UserMessage>;
+  updateScheduledUserMessage(
+    scheduledMessageId: number,
+    params: ScheduledUserMessageUpdateParams,
+  ): Promise<UserMessage>;
+  createScheduledFileMessage(params: ScheduledFileMessageCreateParams): Promise<FileMessage>;
+  updateScheduledFileMessage(
+    scheduledMessageId: number,
+    params: ScheduledFileMessageUpdateParams,
+  ): Promise<FileMessage>;
+  cancelScheduledMessage(scheduledMessageId: number): Promise<void>;
+  sendScheduledMessageNow(scheduledMessageId: number): Promise<void>;
+  getMyPushTriggerOption(): Promise<PushTriggerOption>;
+  setMyPushTriggerOption(option: PushTriggerOption): Promise<PushTriggerOption>;
+  setMyCountPreference(preference: CountPreference): Promise<CountPreference>;
+  resetMyHistory(): Promise<GroupChannel>;
+}
+
+declare class GroupChannelEventContext {
+  readonly source: GroupChannelEventSource;
+}
+
+declare enum GroupChannelEventSource {
+  UNKNOWN = 'UNKNOWN',
+  EVENT_CHANNEL_CREATED = 'EVENT_CHANNEL_CREATED',
+  EVENT_CHANNEL_UPDATED = 'EVENT_CHANNEL_UPDATED',
+  EVENT_CHANNEL_DELETED = 'EVENT_CHANNEL_DELETED',
+  EVENT_CHANNEL_READ = 'EVENT_CHANNEL_READ',
+  EVENT_CHANNEL_DELIVERED = 'EVENT_CHANNEL_DELIVERED',
+  EVENT_CHANNEL_INVITED = 'EVENT_CHANNEL_INVITED',
+  EVENT_CHANNEL_JOINED = 'EVENT_CHANNEL_JOINED',
+  EVENT_CHANNEL_LEFT = 'EVENT_CHANNEL_LEFT',
+  EVENT_CHANNEL_ACCEPTED_INVITE = 'EVENT_CHANNEL_ACCEPTED_INVITE',
+  EVENT_CHANNEL_DECLINED_INVITE = 'EVENT_CHANNEL_DECLINED_INVITE',
+  EVENT_CHANNEL_OPERATOR_UPDATED = 'EVENT_CHANNEL_OPERATOR_UPDATED',
+  EVENT_CHANNEL_MUTED = 'EVENT_CHANNEL_MUTED',
+  EVENT_CHANNEL_UNMUTED = 'EVENT_CHANNEL_UNMUTED',
+  EVENT_CHANNEL_FROZEN = 'EVENT_CHANNEL_FROZEN',
+  EVENT_CHANNEL_UNFROZEN = 'EVENT_CHANNEL_UNFROZEN',
+  EVENT_CHANNEL_HIDDEN = 'EVENT_CHANNEL_HIDDEN',
+  EVENT_CHANNEL_UNHIDDEN = 'EVENT_CHANNEL_UNHIDDEN',
+  EVENT_CHANNEL_RESET_HISTORY = 'EVENT_CHANNEL_RESET_HISTORY',
+  EVENT_CHANNEL_TYPING_STATUS_UPDATE = 'EVENT_CHANNEL_TYPING_STATUS_UPDATE',
+  EVENT_CHANNEL_MEMBER_COUNT_UPDATED = 'EVENT_CHANNEL_MEMBER_COUNT_UPDATED',
+  EVENT_MESSAGE_SENT = 'EVENT_MESSAGE_SENT',
+  EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
+  EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
+  REQUEST_CHANNEL = 'REQUEST_CHANNEL',
+  REQUEST_CHANNEL_CHANGELOGS = 'REQUEST_CHANNEL_CHANGELOGS',
+  SYNC_CHANNEL_BACKGROUND = 'SYNC_CHANNEL_BACKGROUND',
+  SYNC_CHANNEL_CHANGELOGS = 'SYNC_CHANNEL_CHANGELOGS',
+}
+
+declare class GroupChannelHideParams extends GroupChannelHideParamsProperties {
+  constructor(props?: GroupChannelHideParamsProperties);
+  validate(): boolean;
+}
+
+declare class GroupChannelHideParamsProperties {
+  hidePreviousMessages?: boolean;
+  allowAutoUnhide?: boolean;
+}
+
+declare class GroupChannelUpdateParams extends GroupChannelUpdateParamsProperties {
+  constructor(props?: GroupChannelUpdateParamsProperties);
+  validate(): boolean;
+}
+
+declare class GroupChannelUpdateParamsProperties {
+  coverUrl?: string;
+  coverImage?: FileCompat;
+  isDistinct?: boolean;
+  isPublic?: boolean;
+  isDiscoverable?: boolean;
+  accessCode?: string;
+  name?: string;
+  data?: string;
+  customType?: string;
+  operatorUserIds?: string[];
+  messageSurvivalSeconds?: number;
+}
+
+declare enum HiddenState {
+  UNHIDDEN = 'unhidden',
+  HIDDEN_ALLOW_AUTO_UNHIDE = 'hidden_allow_auto_unhide',
+  HIDDEN_PREVENT_AUTO_UNHIDE = 'hidden_prevent_auto_unhide',
+}
+
 declare interface InvitationPreference {
   autoAccept: boolean;
 }
@@ -388,6 +554,50 @@ declare enum LogLevel {
   INFO = 3,
   WARN = 4,
   ERROR = 5,
+}
+
+declare class Member extends RestrictedUser {
+  state: MemberState;
+  role: Role;
+  isMuted: boolean;
+  isBlockedByMe: boolean;
+  isBlockingMe: boolean;
+}
+
+declare enum MemberListOrder {
+  MEMBER_NICKNAME_ALPHABETICAL = 'member_nickname_alphabetical',
+  OPERATOR_THEN_MEMBER_ALPHABETICAL = 'operator_then_member_alphabetical',
+}
+
+declare class MemberListQuery extends ChannelDataListQuery {
+  readonly mutedMemberFilter: MutedMemberFilter;
+  readonly memberStateFilter: MemberStateFilter;
+  readonly nicknameStartsWithFilter: string;
+  readonly operatorFilter: OperatorFilter;
+  readonly order: MemberListOrder;
+  next(): Promise<Member[]>;
+}
+
+declare interface MemberListQueryParams extends ChannelDataListQueryParams {
+  mutedMemberFilter?: MutedMemberFilter;
+  memberStateFilter?: MemberStateFilter;
+  nicknameStartsWithFilter?: string;
+  operatorFilter?: OperatorFilter;
+  order?: MemberListOrder;
+}
+
+declare enum MemberState {
+  NONE = 'none',
+  JOINED = 'joined',
+  INVITED = 'invited',
+}
+
+declare enum MemberStateFilter {
+  ALL = 'all',
+  JOINED = 'joined_only',
+  INVITED = 'invited_only',
+  INVITED_BY_FRIEND = 'invited_by_friend',
+  INVITED_BY_NON_FRIEND = 'invited_by_non_friend',
 }
 
 declare class MemoryStore implements BaseStore {
@@ -439,6 +649,88 @@ declare class MessageChangeLogsParamsProperties {
   includeMetaArray?: boolean;
   includeParentMessageInfo?: boolean;
   includePollDetails?: boolean;
+}
+
+declare class MessageCollection {
+  readonly filter: MessageFilter;
+  get channel(): GroupChannel;
+  get succeededMessages(): BaseMessage[];
+  get failedMessages(): BaseMessage[];
+  get pendingMessages(): BaseMessage[];
+  get hasPrevious(): boolean;
+  get hasNext(): boolean;
+  setMessageCollectionHandler(handler: MessageCollectionEventHandler): void;
+  initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler;
+  loadPrevious(): Promise<BaseMessage[]>;
+  loadNext(): Promise<BaseMessage[]>;
+  removeFailedMessage(reqId: string): Promise<void>;
+  dispose(): void;
+}
+
+declare interface MessageCollectionEventHandler {
+  onChannelUpdated: (context: GroupChannelEventContext, channel: GroupChannel) => void;
+  onChannelDeleted: (context: GroupChannelEventContext, channelUrl: string) => void;
+  onMessagesAdded: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
+  onMessagesUpdated: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
+  onMessagesDeleted: (context: MessageEventContext, channel: GroupChannel, messageIds: number[]) => void;
+  onHugeGapDetected: () => void;
+}
+
+declare class MessageCollectionInitHandler {
+  onCacheResult(handler: MessageCollectionInitResultHandler): MessageCollectionInitHandler;
+  onApiResult(handler: MessageCollectionInitResultHandler): MessageCollectionInitHandler;
+}
+
+declare enum MessageCollectionInitPolicy {
+  CACHE_AND_REPLACE_BY_API = 'cache_and_replace_by_api',
+  API_ONLY = 'api_only',
+}
+
+declare type MessageCollectionInitResultHandler = (err: Error, messages: BaseMessage[]) => void;
+
+declare interface MessageCollectionParams {
+  filter?: MessageFilter;
+  startingPoint?: number;
+  limit?: number;
+}
+
+declare class MessageEventContext {
+  readonly source: MessageEventSource_2;
+}
+
+declare enum MessageEventSource_2 {
+  UNKNOWN = 'UNKNOWN',
+  EVENT_MESSAGE_SENT_SUCCESS = 'EVENT_MESSAGE_SENT_SUCCESS',
+  EVENT_MESSAGE_SENT_FAILED = 'EVENT_MESSAGE_SENT_FAILED',
+  EVENT_MESSAGE_SENT_PENDING = 'EVENT_MESSAGE_SENT_PENDING',
+  EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
+  EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
+  EVENT_MESSAGE_DELETED = 'EVENT_MESSAGE_DELETED',
+  EVENT_MESSAGE_READ = 'EVENT_MESSAGE_READ',
+  EVENT_MESSAGE_DELIVERED = 'EVENT_MESSAGE_DELIVERED',
+  EVENT_MESSAGE_REACTION_UPDATED = 'EVENT_MESSAGE_REACTION_UPDATED',
+  EVENT_MESSAGE_THREADINFO_UPDATED = 'EVENT_MESSAGE_THREADINFO_UPDATED',
+  EVENT_MESSAGE_OFFSET_UPDATED = 'EVENT_MESSAGE_OFFSET_UPDATED',
+  REQUEST_MESSAGE = 'REQUEST_MESSAGE',
+  REQUEST_RESEND_MESSAGE = 'REQUEST_RESEND_MESSAGE',
+  REQUEST_THREADED_MESSAGE = 'REQUEST_THREADED_MESSAGE',
+  REQUEST_MESSAGE_CHANGELOGS = 'REQUEST_MESSAGE_CHANGELOGS',
+  SYNC_MESSAGE_FILL = 'SYNC_MESSAGE_FILL',
+  SYNC_MESSAGE_BACKGROUND = 'SYNC_MESSAGE_BACKGROUND',
+  SYNC_MESSAGE_CHANGELOGS = 'SYNC_MESSAGE_CHANGELOGS',
+  LOCAL_MESSAGE_PENDING_CREATED = 'LOCAL_MESSAGE_PENDING_CREATED',
+  LOCAL_MESSAGE_FAILED = 'LOCAL_MESSAGE_FAILED',
+  LOCAL_MESSAGE_CANCELED = 'LOCAL_MESSAGE_CANCELED',
+  LOCAL_MESSAGE_RESEND_STARTED = 'LOCAL_MESSAGE_RESEND_STARTED',
+}
+
+declare class MessageFilter {
+  messageTypeFilter: MessageTypeFilter;
+  customTypesFilter: string[];
+  senderUserIdsFilter: string[];
+  replyType: ReplyType;
+  clone(): MessageFilter;
+  match(message: BaseMessage): boolean;
 }
 
 declare type MessageHandler = (message: SendableMessage) => void;
@@ -574,6 +866,17 @@ declare interface MutedInfo {
   description: string;
 }
 
+declare enum MutedMemberFilter {
+  ALL = 'all',
+  MUTED = 'muted',
+  UNMUTED = 'unmuted',
+}
+
+declare enum MutedState {
+  MUTED = 'muted',
+  UNMUTED = 'unmuted',
+}
+
 declare class MutedUserListQuery extends ChannelDataListQuery {
   next(): Promise<RestrictedUser[]>;
 }
@@ -596,11 +899,56 @@ declare class OGMetaData {
   readonly defaultImage: OGImage;
 }
 
+export declare class OpenChannel extends BaseChannel {
+  participantCount: number;
+  operators: User[];
+  serialize(): object;
+  isOperator(userOrUserId: string | User): boolean;
+  createParticipantListQuery(params: ParticipantListQueryParams): ParticipantListQuery;
+  refresh(): Promise<OpenChannel>;
+  enter(): Promise<void>;
+  exit(): Promise<void>;
+  updateChannel(params: OpenChannelUpdateParams): Promise<OpenChannel>;
+  updateChannelWithOperatorUserIds(
+    name: string,
+    coverUrlOrImageFile: FileCompat | string,
+    data: string,
+    operatorUserIds: string[],
+    customType: string,
+  ): Promise<OpenChannel>;
+  delete(): Promise<void>;
+}
+
+export declare class OpenChannelUpdateParams extends OpenChannelUpdateParamsProperties {
+  constructor(props?: OpenChannelUpdateParamsProperties);
+  validate(): boolean;
+}
+
+export declare class OpenChannelUpdateParamsProperties {
+  name?: string;
+  coverUrlOrImage?: FileCompat | string;
+  data?: string;
+  customType?: string;
+  operatorUserIds?: string[];
+}
+
+declare enum OperatorFilter {
+  ALL = 'all',
+  OPERATOR = 'operator',
+  NONOPERATOR = 'nonoperator',
+}
+
 declare class OperatorListQuery extends ChannelDataListQuery {
   next(): Promise<User[]>;
 }
 
 type OperatorListQueryParams = ChannelDataListQueryParams;
+
+export declare class ParticipantListQuery extends ChannelDataListQuery {
+  next(): Promise<User[]>;
+}
+
+type ParticipantListQueryParams = ChannelDataListQueryParams;
 
 declare class Plugin_2 {
   readonly type: string;
@@ -692,6 +1040,13 @@ declare enum ReactionEventOperation {
   DELETE = 'delete',
 }
 
+declare class ReadStatus {
+  readonly channelUrl: string;
+  readonly channelType: string;
+  readonly reader: User;
+  readonly readAt: number;
+}
+
 declare enum ReplyType {
   ALL = 'all',
   NONE = 'none',
@@ -725,6 +1080,38 @@ declare enum Role {
   NONE = 'none',
 }
 
+declare class ScheduledFileMessageCreateParams extends ScheduledFileMessageCreateParamsProperties {
+  constructor(props: ScheduledFileMessageCreateParamsProperties);
+  get fileUrl(): string;
+  set fileUrl(value: string);
+  validate(): boolean;
+}
+
+declare class ScheduledFileMessageCreateParamsProperties extends BaseMessageCreateParamsProperties {
+  scheduledAt: number;
+  file: FileParams;
+  fileName?: string;
+  mimeType?: string;
+  fileSize?: number;
+  thumbnailSizes?: ThumbnailSize[];
+}
+
+declare class ScheduledFileMessageUpdateParams extends ScheduledFileMessageUpdateParamsProperties {
+  constructor(props?: ScheduledFileMessageUpdateParamsProperties);
+  get fileUrl(): string;
+  set fileUrl(value: string);
+  validate(): boolean;
+}
+
+declare class ScheduledFileMessageUpdateParamsProperties extends BaseMessageUpdateParamsProperties {
+  scheduledAt?: number;
+  file: FileParams;
+  fileName?: string;
+  mimeType?: string;
+  fileSize?: number;
+  thumbnailSizes?: ThumbnailSize[];
+}
+
 declare interface ScheduledInfo {
   scheduledMessageId: number;
   scheduledAt: number;
@@ -747,12 +1134,29 @@ declare enum ScheduledStatus {
   CANCELED = 'canceled',
 }
 
+declare class ScheduledUserMessageCreateParams extends ScheduledUserMessageCreateParamsProperties {
+  constructor(props?: ScheduledUserMessageCreateParamsProperties);
+  validate(): boolean;
+}
+
+declare class ScheduledUserMessageCreateParamsProperties extends UserMessageCreateParamsProperties {
+  scheduledAt: number;
+}
+
+declare class ScheduledUserMessageUpdateParams extends ScheduledUserMessageUpdateParamsProperties {
+  constructor(props?: ScheduledUserMessageUpdateParamsProperties);
+  validate(): boolean;
+}
+
+declare class ScheduledUserMessageUpdateParamsProperties extends UserMessageUpdateParamsProperties {
+  scheduledAt?: number;
+}
+
 declare class SendableMessage extends BaseMessage {
   sender: Sender;
   reqId: string;
   replyToChannel: boolean;
   sendingStatus: SendingStatus;
-  requestedMentionUserIds: string[];
   errorCode: number;
   get isResendable(): boolean;
   isIdentical(message: SendableMessage): boolean;
@@ -1079,6 +1483,8 @@ declare class UserMessage extends SendableMessage {
 
 declare class UserMessageCreateParams extends UserMessageCreateParamsProperties {
   constructor(props?: UserMessageCreateParamsProperties);
+  get mentionedUsers(): User[];
+  set mentionedUsers(users: User[]);
   validate(): boolean;
 }
 
@@ -1089,6 +1495,8 @@ declare class UserMessageCreateParamsProperties extends BaseMessageCreateParamsP
 
 declare class UserMessageUpdateParams extends UserMessageUpdateParamsProperties {
   constructor(props?: UserMessageUpdateParamsProperties);
+  get mentionedUsers(): User[];
+  set mentionedUsers(users: User[]);
   validate(): boolean;
 }
 
@@ -1114,32 +1522,6 @@ declare class UserUpdateParamsProperties {
   nickname?: string;
 }
 
-declare interface Schedule {
-  year: number;
-  month: number;
-  day: number;
-  hour?: number;
-  min?: number;
-  timezone?: string;
-}
-
-export declare class ScheduledUserMessageParams extends ScheduledUserMessageParamsProperties {
-  constructor(props?: ScheduledUserMessageParamsProperties);
-  get scheduledDateTimeString(): string;
-  set scheduledDateTimeString(value: string);
-  setSchedule(schedule: Schedule): void;
-  validate(): boolean;
-}
-
-export declare class ScheduledUserMessageParamsProperties extends UserMessageCreateParamsProperties {
-  year: number;
-  month: number;
-  day: number;
-  hour?: number;
-  min?: number;
-  timezone?: string;
-}
-
 declare abstract class BaseChannelHandlerParams {
   onUserMuted?: (channel: BaseChannel, user: RestrictedUser) => void;
   onUserUnmuted?: (channel: BaseChannel, user: User) => void;
@@ -1163,97 +1545,6 @@ declare abstract class BaseChannelHandlerParams {
   onMentionReceived?: (channel: BaseChannel, message: BaseMessage) => void;
   onReactionUpdated?: (channel: BaseChannel, reactionEvent: ReactionEvent) => void;
   onThreadInfoUpdated?: (channel: BaseChannel, threadInfoUpdateEvent: ThreadInfoUpdateEvent) => void;
-}
-
-export declare enum CountPreference {
-  ALL = 'all',
-  UNREAD_MESSAGE_COUNT_ONLY = 'unread_message_count_only',
-  UNREAD_MENTION_COUNT_ONLY = 'unread_mention_count_only',
-  OFF = 'off',
-}
-
-export declare class GroupChannel extends BaseChannel {
-  readonly isDistinct: boolean;
-  readonly isSuper: boolean;
-  readonly isBroadcast: boolean;
-  readonly isExclusive: boolean;
-  readonly isPublic: boolean;
-  readonly isDiscoverable: boolean;
-  readonly isAccessCodeRequired: boolean;
-  readonly isPushEnabled: boolean;
-  unreadMessageCount: number;
-  unreadMentionCount: number;
-  members: Member[];
-  memberCount: number;
-  joinedMemberCount: number;
-  hiddenState: HiddenState;
-  lastMessage: BaseMessage;
-  messageOffsetTimestamp: number;
-  messageSurvivalSeconds: number;
-  myMemberState: MemberState;
-  myRole: Role;
-  myMutedState: MutedState;
-  myLastRead: number;
-  myCountPreference: CountPreference;
-  myPushTriggerOption: PushTriggerOption;
-  inviter: User;
-  invitedAt: number;
-  joinedAt: number;
-  get isHidden(): boolean;
-  get isTyping(): boolean;
-  get cachedUnreadMemberState(): object;
-  get cachedUndeliveredMemberState(): object;
-  isReadMessage(message: BaseMessage): boolean;
-  serialize(): object;
-  createMessageCollection(params?: MessageCollectionParams): MessageCollection;
-  createMemberListQuery(params?: MemberListQueryParams): MemberListQuery;
-  addMember(member: Member, ts?: number): void;
-  removeMember(member: Member): boolean;
-  getUnreadMemberCount(message: BaseMessage): number;
-  getUndeliveredMemberCount(message: BaseMessage): number;
-  getReadMembers(message: SendableMessage, includeAllMembers?: boolean): Member[];
-  getUnreadMembers(message: SendableMessage, includeAllMembers?: boolean): Member[];
-  getReadStatus(includeAllMembers?: boolean): {
-    [key: string]: ReadStatus;
-  };
-  getTypingUsers(): Member[];
-  invalidateTypingStatus(): boolean;
-  refresh(): Promise<GroupChannel>;
-  freeze(): Promise<void>;
-  unfreeze(): Promise<void>;
-  updateChannel(params: GroupChannelUpdateParams): Promise<GroupChannel>;
-  invite(users: User[]): Promise<GroupChannel>;
-  inviteWithUserIds(userIds: string[]): Promise<GroupChannel>;
-  join(accessCode?: string): Promise<GroupChannel>;
-  leave(): Promise<void>;
-  acceptInvitation(accessCode?: string): Promise<GroupChannel>;
-  declineInvitation(): Promise<GroupChannel>;
-  sendUserMessage(params: UserMessageCreateParams): MessageRequestHandler;
-  sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
-  deleteMessage(message: SendableMessage): Promise<void>;
-  hide(params: GroupChannelHideParams): Promise<GroupChannel>;
-  unhide(): Promise<GroupChannel>;
-  delete(): Promise<void>;
-  markAsRead(): Promise<void>;
-  markAsDelivered(): Promise<void>;
-  startTyping(): Promise<void>;
-  endTyping(): Promise<void>;
-  createScheduledUserMessage(params: ScheduledUserMessageCreateParams): Promise<UserMessage>;
-  updateScheduledUserMessage(
-    scheduledMessageId: number,
-    params: ScheduledUserMessageUpdateParams,
-  ): Promise<UserMessage>;
-  createScheduledFileMessage(params: ScheduledFileMessageCreateParams): Promise<FileMessage>;
-  updateScheduledFileMessage(
-    scheduledMessageId: number,
-    params: ScheduledFileMessageUpdateParams,
-  ): Promise<FileMessage>;
-  cancelScheduledFileMessage(scheduledMessageId: number): Promise<void>;
-  sendScheduledMessageNow(scheduledMessageId: number): Promise<void>;
-  getMyPushTriggerOption(): Promise<PushTriggerOption>;
-  setMyPushTriggerOption(option: PushTriggerOption): Promise<PushTriggerOption>;
-  setMyCountPreference(preference: CountPreference): Promise<CountPreference>;
-  resetMyHistory(): Promise<GroupChannel>;
 }
 
 export declare interface GroupChannelChangelogs {
@@ -1333,41 +1624,6 @@ export declare class GroupChannelCreateParamsProperties {
   messageSurvivalSeconds?: number;
 }
 
-export declare class GroupChannelEventContext {
-  readonly source: GroupChannelEventSource;
-}
-
-export declare enum GroupChannelEventSource {
-  UNKNOWN = 'UNKNOWN',
-  EVENT_CHANNEL_CREATED = 'EVENT_CHANNEL_CREATED',
-  EVENT_CHANNEL_UPDATED = 'EVENT_CHANNEL_UPDATED',
-  EVENT_CHANNEL_DELETED = 'EVENT_CHANNEL_DELETED',
-  EVENT_CHANNEL_READ = 'EVENT_CHANNEL_READ',
-  EVENT_CHANNEL_DELIVERED = 'EVENT_CHANNEL_DELIVERED',
-  EVENT_CHANNEL_INVITED = 'EVENT_CHANNEL_INVITED',
-  EVENT_CHANNEL_JOINED = 'EVENT_CHANNEL_JOINED',
-  EVENT_CHANNEL_LEFT = 'EVENT_CHANNEL_LEFT',
-  EVENT_CHANNEL_ACCEPTED_INVITE = 'EVENT_CHANNEL_ACCEPTED_INVITE',
-  EVENT_CHANNEL_DECLINED_INVITE = 'EVENT_CHANNEL_DECLINED_INVITE',
-  EVENT_CHANNEL_OPERATOR_UPDATED = 'EVENT_CHANNEL_OPERATOR_UPDATED',
-  EVENT_CHANNEL_MUTED = 'EVENT_CHANNEL_MUTED',
-  EVENT_CHANNEL_UNMUTED = 'EVENT_CHANNEL_UNMUTED',
-  EVENT_CHANNEL_FROZEN = 'EVENT_CHANNEL_FROZEN',
-  EVENT_CHANNEL_UNFROZEN = 'EVENT_CHANNEL_UNFROZEN',
-  EVENT_CHANNEL_HIDDEN = 'EVENT_CHANNEL_HIDDEN',
-  EVENT_CHANNEL_UNHIDDEN = 'EVENT_CHANNEL_UNHIDDEN',
-  EVENT_CHANNEL_RESET_HISTORY = 'EVENT_CHANNEL_RESET_HISTORY',
-  EVENT_CHANNEL_TYPING_STATUS_UPDATE = 'EVENT_CHANNEL_TYPING_STATUS_UPDATE',
-  EVENT_CHANNEL_MEMBER_COUNT_UPDATED = 'EVENT_CHANNEL_MEMBER_COUNT_UPDATED',
-  EVENT_MESSAGE_SENT = 'EVENT_MESSAGE_SENT',
-  EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
-  EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
-  REQUEST_CHANNEL = 'REQUEST_CHANNEL',
-  REQUEST_CHANNEL_CHANGELOGS = 'REQUEST_CHANNEL_CHANGELOGS',
-  SYNC_CHANNEL_BACKGROUND = 'SYNC_CHANNEL_BACKGROUND',
-  SYNC_CHANNEL_CHANGELOGS = 'SYNC_CHANNEL_CHANGELOGS',
-}
-
 export declare class GroupChannelFilter {
   includeEmpty: boolean;
   nicknameContainsFilter: string;
@@ -1402,16 +1658,6 @@ declare abstract class GroupChannelHandlerParams extends BaseChannelHandlerParam
   onUnreadMemberStatusUpdated?: (channel: GroupChannel) => void;
   onUndeliveredMemberStatusUpdated?: (channel: GroupChannel) => void;
   onTypingStatusUpdated?: (channel: GroupChannel) => void;
-}
-
-export declare class GroupChannelHideParams extends GroupChannelHideParamsProperties {
-  constructor(props?: GroupChannelHideParamsProperties);
-  validate(): boolean;
-}
-
-export declare class GroupChannelHideParamsProperties {
-  hidePreviousMessages?: boolean;
-  allowAutoUnhide?: boolean;
 }
 
 export declare enum GroupChannelListOrder {
@@ -1519,25 +1765,6 @@ export declare interface GroupChannelSearchFilter {
   fields?: GroupChannelSearchField[];
 }
 
-export declare class GroupChannelUpdateParams extends GroupChannelUpdateParamsProperties {
-  constructor(props?: GroupChannelUpdateParamsProperties);
-  validate(): boolean;
-}
-
-export declare class GroupChannelUpdateParamsProperties {
-  coverUrl?: string;
-  coverImage?: FileCompat;
-  isDistinct?: boolean;
-  isPublic?: boolean;
-  isDiscoverable?: boolean;
-  accessCode?: string;
-  name?: string;
-  data?: string;
-  customType?: string;
-  operatorUserIds?: string[];
-  messageSurvivalSeconds?: number;
-}
-
 export declare interface GroupChannelUserIdsFilter {
   userIds: string[];
   includeMode: boolean;
@@ -1552,158 +1779,9 @@ export declare enum HiddenChannelFilter {
   HIDDEN_PREVENT_AUTO_UNHIDE = 'hidden_prevent_auto_unhide',
 }
 
-export declare enum HiddenState {
-  UNHIDDEN = 'unhidden',
-  HIDDEN_ALLOW_AUTO_UNHIDE = 'hidden_allow_auto_unhide',
-  HIDDEN_PREVENT_AUTO_UNHIDE = 'hidden_prevent_auto_unhide',
-}
-
-export declare class Member extends RestrictedUser {
-  state: MemberState;
-  role: Role;
-  isMuted: boolean;
-  isBlockedByMe: boolean;
-  isBlockingMe: boolean;
-}
-
-export declare enum MemberListOrder {
-  MEMBER_NICKNAME_ALPHABETICAL = 'member_nickname_alphabetical',
-  OPERATOR_THEN_MEMBER_ALPHABETICAL = 'operator_then_member_alphabetical',
-}
-
-export declare class MemberListQuery extends ChannelDataListQuery {
-  readonly mutedMemberFilter: MutedMemberFilter;
-  readonly memberStateFilter: MemberStateFilter;
-  readonly nicknameStartsWithFilter: string;
-  readonly operatorFilter: OperatorFilter;
-  readonly order: MemberListOrder;
-  next(): Promise<Member[]>;
-}
-
-declare interface MemberListQueryParams extends ChannelDataListQueryParams {
-  mutedMemberFilter?: MutedMemberFilter;
-  memberStateFilter?: MemberStateFilter;
-  nicknameStartsWithFilter?: string;
-  operatorFilter?: OperatorFilter;
-  order?: MemberListOrder;
-}
-
 declare enum MembershipFilter {
   ALL = 'all',
   JOINED = 'joined',
-}
-
-export declare enum MemberState {
-  NONE = 'none',
-  JOINED = 'joined',
-  INVITED = 'invited',
-}
-
-export declare enum MemberStateFilter {
-  ALL = 'all',
-  JOINED = 'joined_only',
-  INVITED = 'invited_only',
-  INVITED_BY_FRIEND = 'invited_by_friend',
-  INVITED_BY_NON_FRIEND = 'invited_by_non_friend',
-}
-
-export declare class MessageCollection {
-  readonly filter: MessageFilter;
-  get channel(): GroupChannel;
-  get succeededMessages(): BaseMessage[];
-  get failedMessages(): BaseMessage[];
-  get pendingMessages(): BaseMessage[];
-  get hasPrevious(): boolean;
-  get hasNext(): boolean;
-  setMessageCollectionHandler(handler: MessageCollectionEventHandler): void;
-  initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler;
-  loadPrevious(): Promise<BaseMessage[]>;
-  loadNext(): Promise<BaseMessage[]>;
-  removeFailedMessage(reqId: string): Promise<void>;
-  dispose(): void;
-}
-
-export declare interface MessageCollectionEventHandler {
-  onChannelUpdated: (context: GroupChannelEventContext, channel: GroupChannel) => void;
-  onChannelDeleted: (context: GroupChannelEventContext, channelUrl: string) => void;
-  onMessagesAdded: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
-  onMessagesUpdated: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
-  onMessagesDeleted: (context: MessageEventContext, channel: GroupChannel, messageIds: number[]) => void;
-  onHugeGapDetected: () => void;
-}
-
-export declare class MessageCollectionInitHandler {
-  onCacheResult(handler: MessageCollectionInitResultHandler): MessageCollectionInitHandler;
-  onApiResult(handler: MessageCollectionInitResultHandler): MessageCollectionInitHandler;
-}
-
-export declare enum MessageCollectionInitPolicy {
-  CACHE_AND_REPLACE_BY_API = 'cache_and_replace_by_api',
-  API_ONLY = 'api_only',
-}
-
-declare type MessageCollectionInitResultHandler = (err: Error, messages: BaseMessage[]) => void;
-
-declare interface MessageCollectionParams {
-  filter?: MessageFilter;
-  startingPoint?: number;
-  limit?: number;
-}
-
-export declare class MessageEventContext {
-  readonly source: MessageEventSource_2;
-}
-
-declare enum MessageEventSource_2 {
-  UNKNOWN = 'UNKNOWN',
-  EVENT_MESSAGE_SENT_SUCCESS = 'EVENT_MESSAGE_SENT_SUCCESS',
-  EVENT_MESSAGE_SENT_FAILED = 'EVENT_MESSAGE_SENT_FAILED',
-  EVENT_MESSAGE_SENT_PENDING = 'EVENT_MESSAGE_SENT_PENDING',
-  EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
-  EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
-  EVENT_MESSAGE_DELETED = 'EVENT_MESSAGE_DELETED',
-  EVENT_MESSAGE_READ = 'EVENT_MESSAGE_READ',
-  EVENT_MESSAGE_DELIVERED = 'EVENT_MESSAGE_DELIVERED',
-  EVENT_MESSAGE_REACTION_UPDATED = 'EVENT_MESSAGE_REACTION_UPDATED',
-  EVENT_MESSAGE_THREADINFO_UPDATED = 'EVENT_MESSAGE_THREADINFO_UPDATED',
-  EVENT_MESSAGE_OFFSET_UPDATED = 'EVENT_MESSAGE_OFFSET_UPDATED',
-  REQUEST_MESSAGE = 'REQUEST_MESSAGE',
-  REQUEST_RESEND_MESSAGE = 'REQUEST_RESEND_MESSAGE',
-  REQUEST_THREADED_MESSAGE = 'REQUEST_THREADED_MESSAGE',
-  REQUEST_MESSAGE_CHANGELOGS = 'REQUEST_MESSAGE_CHANGELOGS',
-  SYNC_MESSAGE_FILL = 'SYNC_MESSAGE_FILL',
-  SYNC_MESSAGE_BACKGROUND = 'SYNC_MESSAGE_BACKGROUND',
-  SYNC_MESSAGE_CHANGELOGS = 'SYNC_MESSAGE_CHANGELOGS',
-  LOCAL_MESSAGE_PENDING_CREATED = 'LOCAL_MESSAGE_PENDING_CREATED',
-  LOCAL_MESSAGE_FAILED = 'LOCAL_MESSAGE_FAILED',
-  LOCAL_MESSAGE_CANCELED = 'LOCAL_MESSAGE_CANCELED',
-  LOCAL_MESSAGE_RESEND_STARTED = 'LOCAL_MESSAGE_RESEND_STARTED',
-}
-
-export declare class MessageFilter {
-  messageTypeFilter: MessageTypeFilter;
-  customTypesFilter: string[];
-  senderUserIdsFilter: string[];
-  replyType: ReplyType;
-  clone(): MessageFilter;
-  match(message: BaseMessage): boolean;
-}
-
-declare enum MutedMemberFilter {
-  ALL = 'all',
-  MUTED = 'muted',
-  UNMUTED = 'unmuted',
-}
-
-export declare enum MutedState {
-  MUTED = 'muted',
-  UNMUTED = 'unmuted',
-}
-
-export declare enum OperatorFilter {
-  ALL = 'all',
-  OPERATOR = 'operator',
-  NONOPERATOR = 'nonoperator',
 }
 
 export declare enum PublicChannelFilter {
@@ -1759,45 +1837,6 @@ export declare enum QueryType {
   OR = 'OR',
 }
 
-export declare class ReadStatus {
-  readonly channelUrl: string;
-  readonly channelType: string;
-  readonly reader: User;
-  readonly readAt: number;
-}
-
-declare class ScheduledFileMessageCreateParams extends ScheduledFileMessageCreateParamsProperties {
-  constructor(props: ScheduledFileMessageCreateParamsProperties);
-  get fileUrl(): string;
-  set fileUrl(value: string);
-  validate(): boolean;
-}
-
-declare class ScheduledFileMessageCreateParamsProperties extends BaseMessageCreateParamsProperties {
-  scheduledAt: number;
-  file: FileParams;
-  fileName?: string;
-  mimeType?: string;
-  fileSize?: number;
-  thumbnailSizes?: ThumbnailSize[];
-}
-
-declare class ScheduledFileMessageUpdateParams extends ScheduledFileMessageUpdateParamsProperties {
-  constructor(props?: ScheduledFileMessageUpdateParamsProperties);
-  get fileUrl(): string;
-  set fileUrl(value: string);
-  validate(): boolean;
-}
-
-declare class ScheduledFileMessageUpdateParamsProperties extends BaseMessageUpdateParamsProperties {
-  scheduledAt?: number;
-  file: FileParams;
-  fileName?: string;
-  mimeType?: string;
-  fileSize?: number;
-  thumbnailSizes?: ThumbnailSize[];
-}
-
 declare enum ScheduledMessageListOrder {
   CREATED_AT = 'created_at',
   SCHEDULED_AT = 'scheduled_at',
@@ -1820,24 +1859,6 @@ declare interface ScheduledMessageListQueryParams extends BaseListQueryParams {
   messageTypeFilter?: MessageTypeFilter;
 }
 
-declare class ScheduledUserMessageCreateParams extends ScheduledUserMessageCreateParamsProperties {
-  constructor(props?: ScheduledUserMessageCreateParamsProperties);
-  validate(): boolean;
-}
-
-declare class ScheduledUserMessageCreateParamsProperties extends UserMessageCreateParamsProperties {
-  scheduledAt: number;
-}
-
-declare class ScheduledUserMessageUpdateParams extends ScheduledUserMessageUpdateParamsProperties {
-  constructor(props?: ScheduledUserMessageUpdateParamsProperties);
-  validate(): boolean;
-}
-
-declare class ScheduledUserMessageUpdateParamsProperties extends UserMessageUpdateParamsProperties {
-  scheduledAt?: number;
-}
-
 export declare type SendbirdGroupChat = SendbirdChat & {
   groupChannel: GroupChannelModule;
 };
@@ -1845,26 +1866,6 @@ export declare type SendbirdGroupChat = SendbirdChat & {
 export declare enum UnreadChannelFilter {
   ALL = 'all',
   UNREAD_MESSAGE = 'unread_message',
-}
-
-export declare class OpenChannel extends BaseChannel {
-  participantCount: number;
-  operators: User[];
-  serialize(): object;
-  isOperator(userOrUserId: string | User): boolean;
-  createParticipantListQuery(params: ParticipantListQueryParams): ParticipantListQuery;
-  refresh(): Promise<OpenChannel>;
-  enter(): Promise<void>;
-  exit(): Promise<void>;
-  updateChannel(params: OpenChannelUpdateParams): Promise<OpenChannel>;
-  updateChannelWithOperatorUserIds(
-    name: string,
-    coverUrlOrImageFile: FileCompat | string,
-    data: string,
-    operatorUserIds: string[],
-    customType: string,
-  ): Promise<OpenChannel>;
-  delete(): Promise<void>;
 }
 
 export declare class OpenChannelCreateParams extends OpenChannelCreateParamsProperties {
@@ -1926,25 +1927,6 @@ export declare class OpenChannelModule extends Module {
     customType: string,
   ): Promise<OpenChannel>;
 }
-
-export declare class OpenChannelUpdateParams extends OpenChannelUpdateParamsProperties {
-  constructor(props?: OpenChannelUpdateParamsProperties);
-  validate(): boolean;
-}
-
-export declare class OpenChannelUpdateParamsProperties {
-  name?: string;
-  coverUrlOrImage?: FileCompat | string;
-  data?: string;
-  customType?: string;
-  operatorUserIds?: string[];
-}
-
-export declare class ParticipantListQuery extends ChannelDataListQuery {
-  next(): Promise<User[]>;
-}
-
-type ParticipantListQueryParams = ChannelDataListQueryParams;
 
 export declare type SendbirdOpenChat = SendbirdChat & {
   openChannel: OpenChannelModule;

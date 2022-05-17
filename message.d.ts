@@ -31,8 +31,6 @@ export {
   ReactionEvent,
   ReactionEventOperation,
   ReplyType,
-  ScheduledUserMessageParams,
-  ScheduledUserMessageParamsProperties,
   Sender,
   SendingStatus,
   ThreadedMessageListParams,

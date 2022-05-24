@@ -442,7 +442,7 @@ declare class GroupChannel extends BaseChannel {
   invite(users: User[]): Promise<GroupChannel>;
   inviteWithUserIds(userIds: string[]): Promise<GroupChannel>;
   join(accessCode?: string): Promise<GroupChannel>;
-  leave(): Promise<void>;
+  leave(shouldRemoveOperatorStatus?: boolean): Promise<void>;
   acceptInvitation(accessCode?: string): Promise<GroupChannel>;
   declineInvitation(): Promise<GroupChannel>;
   sendUserMessage(params: UserMessageCreateParams): MessageRequestHandler;

@@ -1,3 +1,8 @@
+### v4.0.0-beta.11 (May 24, 2022)
+- `groupChannel.leave()` now takes an optional input `shouldRemoveOperatorStatus: boolean = false`.
+- `SendbirdChat.connect()` now returns `User` instance from the cache if local cache is enabled.
+- Improved stability.
+
 ### v4.0.0-beta.10 (May 17, 2022)
 - `BaseMessage`'s `requestedMentionUserIds` has been replaced with `mentionedUserIds`.
 - Getter and setter for `mentionedUsers` have been added to `userMessageCreateParams`, `userMessageUpdateParams`, `fileMessageUpdateParams`, and `fileMessageUpdateParams`.

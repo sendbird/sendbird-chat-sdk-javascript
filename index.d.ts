@@ -1,3 +1,7 @@
+import './message';
+import './groupChannel';
+import './openChannel';
+
 export {
   ApplicationUserListQuery,
   ApplicationUserListQueryParams,

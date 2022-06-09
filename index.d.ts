@@ -50,14 +50,11 @@ export {
   SessionHandler,
   SnoozePeriod,
   TotalUnreadMessageCountParams,
-  TotalUnreadMessageCountParamsProperties,
   UnreadItemCountParams,
-  UnreadItemCountParamsProperties,
   User,
   UserEventHandler,
   UserOnlineState,
   UserUpdateParams,
-  UserUpdateParamsProperties,
 } from './lib/__definition';
 
 import { SendbirdChat as SendbirdChat } from './lib/__definition';

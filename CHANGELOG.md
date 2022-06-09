@@ -1,3 +1,20 @@
+### v4.0.0-beta.12 (June 09, 2022)
+- Type of `SendbirdChatParams.useAsyncStorageStore` has changed to AsyncStorage of `@react-native-async-storage/async-storage`.
+- Added `clearCachedMessages()` in `SendbirdChat`.
+- Rename `SendbirdChat.clearCache()` to `SendbirdChat.clearCachedData()`.
+- Bug fixed the logic for filtering public group channel in `GroupChannelCollection`.
+- Rename `SendbirdChat.Options.useMemberAsMessageSender` to `SendbirdChat.Options.useMemberInfoInMessage`.
+- `useMemberInfoInMessage` now applies to both `message.sender` and `message.mentionedUsers`.
+- Bug fixed cached channel not updated when disconnect and then connect.
+- Bug fixed broken file data of auto-resent file message.
+- Added `BaseMessage.parentMessage`.
+- Added `BaseMessage.applyParentMessage()`.
+- Parent message update event now updates `parentMessage` value of all its child messages.
+- Bug fixed `message.metaArrays` value not being updated after calling `createMessageMetaArrayKeys()`, `deleteMessageMetaArrayKeys()`, `addMessageMetaArrayValues()`, and `removeMessageMetaArrayValues()` of `BaseChannel`.
+- `MessageCollectionInitPolicy.API_ONLY` has been removed.
+- All classes whose namespace ends with params (ex. `UserMessageCreateParams`, `GroupChannelCreateParams`, etc.) is now changed to interfaces.
+- Improved stability.
+
 ### v4.0.0-beta.11 (May 24, 2022)
 - `groupChannel.leave()` now takes an optional input `shouldRemoveOperatorStatus: boolean = false`.
 - `SendbirdChat.connect()` now returns `User` instance from the cache if local cache is enabled.

@@ -167,14 +167,11 @@ sb.updateCurrentUserInfo(NICKNAME, PROFILE_URL);
 sb.updateCurrentUserInfoWithProfileImage(NICKNAME, PROFILE_IMAGE);
 
 // v4
-import { UserUpdateParams } from '@sendbird/chat';
-
-const params = new UserUpdateParams({
-	nickname: NICKNAME,
-	profileUrl: PROFILE_URL,
-	// or you can put a file as `profileImage` to upload the profile
+sb.updateCurrentUserInfo({
+  nickname: NICKNAME,
+  profileUrl: PROFILE_URL,
+  // or you can put a file as `profileImage` to upload the profile
 });
-sb.updateCurrentUserInfo(params);
 // no sb.updateCurrentUserInfoWithProfileImage()
 ```
 
@@ -185,10 +182,9 @@ sb.updateCurrentUserInfo(params);
 sb.getUnreadItemCount(KEYS);
 
 // v4
-const params = new UnreadItemCountParams({
-	keys: KEYS,
+sb.getUnreadItemCount({
+  keys: KEYS,
 });
-sb.getUnreadItemCount(params);
 ```
 
 - Changed `sb.getTotalUnreadMessageCount()` to take `TotalUnreadMessageCountParams` as a parameter.
@@ -199,11 +195,10 @@ sb.getTotalUnreadMessageCount(CHANNEL_CUSTOM_TYPES);
 // no super channel filter support
 
 // v4
-const params = new TotalUnreadMessageCountParams({
-	channelCustomTypesFilter: CHANNEL_CUSTOM_TYPES,
-	superChannelFilter: SUPER_CHANNEL_FILTER,
+sb.getTotalUnreadMessageCount({
+  channelCustomTypesFilter: CHANNEL_CUSTOM_TYPES,
+  superChannelFilter: SUPER_CHANNEL_FILTER,
 });
-sb.getTotalUnreadMessageCount(params);
 ```
 
 - Changed `sendUserMessage()` and `sendFileMessage()` interface to chain the callbacks for pending/failed/succeeded messages.
@@ -225,6 +220,32 @@ channel.sendUserMessage(params)
 	.onSucceeded((succeededMessage: UserMessage) => {});
 ```
 
+- Changed all classes whose namespace ends with params to interfaces.
+
+```ts
+// v3
+const params = new sb.UserMessageParams();
+params.message = 'message';
+
+const pendingMessage = channel.sendUserMessage(params, (err, message) => {
+  if (err) {
+    // message is a failed message
+  } else {
+    // message is a succeeded message
+  }
+});
+
+// v4
+import { UserMessageParams } from '@sendbird/chat/message';
+
+channel.sendUserMessage({
+  message: 'message',
+})
+  .onPending((pendingMessage: UserMessage) => {})
+  .onFailed((err: Error, failedMessage: UserMessage) => {})
+  .onSucceeded((succeededMessage: UserMessage) => {});
+```
+
 - Separated update params from create params.
 
 ```ts
@@ -243,25 +264,6 @@ UserMessageCreateParams
 UserMessageUpdateParams
 FileMessageCreateParams
 FileMessageUpdateParams
-```
-
-- Changed to accept initial properties in `~Params` constructors.
-
-```ts
-// v3
-const params = new sb.UserMessageParams();
-params.message = 'message';
-
-// v4
-import { UserMessageParams } from '@sendbird/chat/message';
-
-const params = new UserMessageCreateParams({
-	message: 'message',
-});
-
-// or you can still use it as v3
-const params = new UserMessageCreateParams();
-params.message = 'message';
 ```
 
 - Changed to accept properties in `~Query` constructors. The query properties are immutable later on.
@@ -353,8 +355,7 @@ message.isResendable
 |`groupChannel.cachedReadReceiptStatus`|`groupChannel.cachedUnreadMemberState`|
 |`groupChannel.cachedDeliveryReceiptStatus`|`groupChannel.cachedUndeliveredMemberState`|
 |`message.requestedMentionUserIds`|`message.mentionedUserIds`|
-
-
+|`Options.useMemberAsMessageSender`|`SendbirdChatOptions.useMemberInfoInMessage`|
 > \* But stilling meaning the token for Android.
 
 ## Removes
@@ -363,3 +364,4 @@ message.isResendable
 - Removed `ScheduledUserMessageParams`.
 - Removed `ScheduledUserMessage`.
 - Removed `groupChannel.registerScheduledUserMessage()`.
+- Removed `MessageCollectionInitPolicy.CACHE_ONLY`.

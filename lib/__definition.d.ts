@@ -1,3 +1,5 @@
+import type AsyncStorage from '@react-native-async-storage/async-storage';
+
 declare class AdminMessage extends BaseMessage {
   message: string;
   translations: object;
@@ -28,56 +30,6 @@ declare interface ApplicationUserListQueryParams extends BaseListQueryParams {
   metaDataKeyFilter?: string;
   metaDataValuesFilter?: string[];
   nicknameStartsWithFilter?: string;
-}
-
-declare interface AsyncStorageStatic {
-  /**
-   * Fetches key and passes the result to callback, along with an Error if there is any.
-   */
-  getItem(key: string, callback?: (error?: Error, result?: string) => void): Promise<string | null>;
-  /**
-   * Sets value for key and calls callback on completion, along with an Error if there is any
-   */
-  setItem(key: string, value: string, callback?: (error?: Error) => void): Promise<void>;
-  removeItem(key: string, callback?: (error?: Error) => void): Promise<void>;
-  /**
-   * Merges existing value with input value, assuming they are stringified json. Returns a Promise object.
-   * Not supported by all native implementation
-   */
-  mergeItem(key: string, value: string, callback?: (error?: Error) => void): Promise<void>;
-  /**
-   * Erases all AsyncStorage for all clients, libraries, etc. You probably don't want to call this.
-   * Use removeItem or multiRemove to clear only your own keys instead.
-   */
-  clear(callback?: (error?: Error) => void): Promise<void>;
-  /**
-   * Gets all keys known to the app, for all callers, libraries, etc
-   */
-  getAllKeys(callback?: (error?: Error, keys?: string[]) => void): Promise<string[]>;
-  /**
-   * multiGet invokes callback with an array of key-value pair arrays that matches the input format of multiSet
-   */
-  multiGet(
-    keys: string[],
-    callback?: (errors?: Error[], result?: [string, string | null][]) => void,
-  ): Promise<[string, string | null][]>;
-  /**
-   * multiSet and multiMerge take arrays of key-value array pairs that match the output of multiGet,
-   *
-   * multiSet([['k1', 'val1'], ['k2', 'val2']], cb);
-   */
-  multiSet(keyValuePairs: string[][], callback?: (errors?: Error[]) => void): Promise<void>;
-  /**
-   * Delete all the keys in the keys array.
-   */
-  multiRemove(keys: string[], callback?: (errors?: Error[]) => void): Promise<void>;
-  /**
-   * Merges existing values with input values, assuming they are stringified json.
-   * Returns a Promise object.
-   *
-   * Not supported by all native implementations.
-   */
-  multiMerge(keyValuePairs: string[][], callback?: (errors?: Error[]) => void): Promise<void>;
 }
 
 declare class BannedUserListQuery extends ChannelDataListQuery {
@@ -174,6 +126,7 @@ declare class BaseMessage {
   channelType: ChannelType;
   messageId: number;
   parentMessageId?: number;
+  parentMessage?: BaseMessage;
   silent?: boolean;
   isOperatorMessage?: boolean;
   messageType?: MessageType;
@@ -200,13 +153,15 @@ declare class BaseMessage {
   getMetaArraysByKeys(keys: string[]): MessageMetaArray[];
   applyThreadInfoUpdateEvent(threadInfoUpdateEvent: ThreadInfoUpdateEvent): boolean;
   applyReactionEvent(reactionEvent: ReactionEvent): void;
+  applyParentMessage(parentMessage: BaseMessage): boolean;
 }
 
-declare class BaseMessageCreateParamsProperties {
+declare interface BaseMessageCreateParams {
   data?: string;
   customType?: string;
   mentionType?: MentionType;
   mentionedUserIds?: string[];
+  mentionedUsers?: User[];
   mentionedMessageTemplate?: string;
   metaArrays?: MessageMetaArray[];
   parentMessageId?: number;
@@ -215,11 +170,12 @@ declare class BaseMessageCreateParamsProperties {
   appleCriticalAlertOptions?: AppleCriticalAlertOptions;
 }
 
-declare class BaseMessageUpdateParamsProperties {
+declare interface BaseMessageUpdateParams {
   data?: string;
   customType?: string;
   mentionType?: MentionType;
   mentionedUserIds?: string[];
+  mentionedUsers?: User[];
   mentionedMessageTemplate?: string;
   metaArrays?: MessageMetaArray[];
   pushNotificationDeliveryOption?: PushNotificationDeliveryOption;
@@ -342,33 +298,18 @@ declare class FileMessage extends SendableMessage {
   }>;
 }
 
-declare class FileMessageCreateParams extends FileMessageCreateParamsProperties {
-  constructor(props?: FileMessageCreateParamsProperties);
-  get fileUrl(): string;
-  set fileUrl(value: string);
-  get mentionedUsers(): User[];
-  set mentionedUsers(users: User[]);
-  validate(): boolean;
-}
-
-declare class FileMessageCreateParamsProperties extends BaseMessageCreateParamsProperties {
-  file: FileParams;
+declare interface FileMessageCreateParams extends BaseMessageCreateParams {
+  file?: FileCompat;
+  fileKey?: string;
+  fileUrl?: string;
   fileName?: string;
   fileSize?: number;
   mimeType?: string;
   thumbnailSizes?: ThumbnailSize[];
+  requireAuth?: boolean;
 }
 
-declare class FileMessageUpdateParams extends FileMessageUpdateParamsProperties {
-  constructor(props?: FileMessageUpdateParamsProperties);
-  get mentionedUsers(): User[];
-  set mentionedUsers(users: User[]);
-  validate(): boolean;
-}
-
-declare class FileMessageUpdateParamsProperties extends BaseMessageUpdateParamsProperties {}
-
-declare type FileParams = FileCompat | string;
+type FileMessageUpdateParams = BaseMessageUpdateParams;
 
 declare interface FriendChangelogs {
   addedUsers: User[];
@@ -508,22 +449,12 @@ declare enum GroupChannelEventSource {
   SYNC_CHANNEL_CHANGELOGS = 'SYNC_CHANNEL_CHANGELOGS',
 }
 
-declare class GroupChannelHideParams extends GroupChannelHideParamsProperties {
-  constructor(props?: GroupChannelHideParamsProperties);
-  validate(): boolean;
-}
-
-declare class GroupChannelHideParamsProperties {
+declare interface GroupChannelHideParams {
   hidePreviousMessages?: boolean;
   allowAutoUnhide?: boolean;
 }
 
-declare class GroupChannelUpdateParams extends GroupChannelUpdateParamsProperties {
-  constructor(props?: GroupChannelUpdateParamsProperties);
-  validate(): boolean;
-}
-
-declare class GroupChannelUpdateParamsProperties {
+declare interface GroupChannelUpdateParams {
   coverUrl?: string;
   coverImage?: FileCompat;
   isDistinct?: boolean;
@@ -637,12 +568,7 @@ declare interface MessageChangelogs {
   token: string;
 }
 
-declare class MessageChangeLogsParams extends MessageChangeLogsParamsProperties {
-  constructor(props?: MessageChangeLogsParamsProperties);
-  validate(): boolean;
-}
-
-declare class MessageChangeLogsParamsProperties {
+declare interface MessageChangeLogsParams {
   replyType?: ReplyType;
   includeReactions?: boolean;
   includeThreadInfo?: boolean;
@@ -655,8 +581,8 @@ declare class MessageCollection {
   readonly filter: MessageFilter;
   get channel(): GroupChannel;
   get succeededMessages(): BaseMessage[];
-  get failedMessages(): BaseMessage[];
-  get pendingMessages(): BaseMessage[];
+  get failedMessages(): SendableMessage[];
+  get pendingMessages(): SendableMessage[];
   get hasPrevious(): boolean;
   get hasNext(): boolean;
   setMessageCollectionHandler(handler: MessageCollectionEventHandler): void;
@@ -683,7 +609,6 @@ declare class MessageCollectionInitHandler {
 
 declare enum MessageCollectionInitPolicy {
   CACHE_AND_REPLACE_BY_API = 'cache_and_replace_by_api',
-  API_ONLY = 'api_only',
 }
 
 declare type MessageCollectionInitResultHandler = (err: Error, messages: BaseMessage[]) => void;
@@ -735,12 +660,7 @@ declare class MessageFilter {
 
 declare type MessageHandler = (message: SendableMessage) => void;
 
-declare class MessageListParams extends MessageListParamsProperties {
-  constructor(props?: MessageListParamsProperties);
-  validate(): boolean;
-}
-
-declare class MessageListParamsProperties {
+declare interface MessageListParams {
   prevResultSize: number;
   nextResultSize: number;
   isInclusive?: boolean;
@@ -775,12 +695,7 @@ declare class MessageRequestHandler {
   onSucceeded(handler: MessageHandler): MessageRequestHandler;
 }
 
-declare class MessageRetrievalParams extends MessageRetrievalParamsProperties {
-  constructor(props?: MessageRetrievalParamsProperties);
-  validate(): boolean;
-}
-
-declare class MessageRetrievalParamsProperties {
+declare interface MessageRetrievalParams {
   channelUrl: string;
   channelType: ChannelType;
   messageId: number;
@@ -911,7 +826,7 @@ export declare class OpenChannel extends BaseChannel {
   updateChannel(params: OpenChannelUpdateParams): Promise<OpenChannel>;
   updateChannelWithOperatorUserIds(
     name: string,
-    coverUrlOrImageFile: FileCompat | string,
+    coverUrlOrImage: FileCompat | string,
     data: string,
     operatorUserIds: string[],
     customType: string,
@@ -919,12 +834,7 @@ export declare class OpenChannel extends BaseChannel {
   delete(): Promise<void>;
 }
 
-export declare class OpenChannelUpdateParams extends OpenChannelUpdateParamsProperties {
-  constructor(props?: OpenChannelUpdateParamsProperties);
-  validate(): boolean;
-}
-
-export declare class OpenChannelUpdateParamsProperties {
+export declare interface OpenChannelUpdateParams {
   name?: string;
   coverUrlOrImage?: FileCompat | string;
   data?: string;
@@ -1080,36 +990,26 @@ declare enum Role {
   NONE = 'none',
 }
 
-declare class ScheduledFileMessageCreateParams extends ScheduledFileMessageCreateParamsProperties {
-  constructor(props: ScheduledFileMessageCreateParamsProperties);
-  get fileUrl(): string;
-  set fileUrl(value: string);
-  validate(): boolean;
-}
-
-declare class ScheduledFileMessageCreateParamsProperties extends BaseMessageCreateParamsProperties {
+declare interface ScheduledFileMessageCreateParams extends BaseMessageCreateParams {
   scheduledAt: number;
-  file: FileParams;
+  file?: FileCompat;
+  fileUrl?: string;
   fileName?: string;
   mimeType?: string;
   fileSize?: number;
   thumbnailSizes?: ThumbnailSize[];
+  requireAuth?: boolean;
 }
 
-declare class ScheduledFileMessageUpdateParams extends ScheduledFileMessageUpdateParamsProperties {
-  constructor(props?: ScheduledFileMessageUpdateParamsProperties);
-  get fileUrl(): string;
-  set fileUrl(value: string);
-  validate(): boolean;
-}
-
-declare class ScheduledFileMessageUpdateParamsProperties extends BaseMessageUpdateParamsProperties {
+declare interface ScheduledFileMessageUpdateParams extends BaseMessageUpdateParams {
   scheduledAt?: number;
-  file: FileParams;
+  file?: FileCompat;
+  fileUrl?: string;
   fileName?: string;
   mimeType?: string;
   fileSize?: number;
   thumbnailSizes?: ThumbnailSize[];
+  requireAuth?: boolean;
 }
 
 declare interface ScheduledInfo {
@@ -1117,12 +1017,7 @@ declare interface ScheduledInfo {
   scheduledAt: number;
 }
 
-declare class ScheduledMessageRetrievalParams extends ScheduledMessageRetrievalParamsProperties {
-  constructor(props: ScheduledMessageRetrievalParamsProperties);
-  validate(): boolean;
-}
-
-declare class ScheduledMessageRetrievalParamsProperties {
+declare interface ScheduledMessageRetrievalParams {
   channelUrl: string;
   scheduledMessageId: number;
 }
@@ -1134,21 +1029,11 @@ declare enum ScheduledStatus {
   CANCELED = 'canceled',
 }
 
-declare class ScheduledUserMessageCreateParams extends ScheduledUserMessageCreateParamsProperties {
-  constructor(props?: ScheduledUserMessageCreateParamsProperties);
-  validate(): boolean;
+declare interface ScheduledUserMessageCreateParams extends UserMessageCreateParams {
+  scheduledAt?: number;
 }
 
-declare class ScheduledUserMessageCreateParamsProperties extends UserMessageCreateParamsProperties {
-  scheduledAt: number;
-}
-
-declare class ScheduledUserMessageUpdateParams extends ScheduledUserMessageUpdateParamsProperties {
-  constructor(props?: ScheduledUserMessageUpdateParamsProperties);
-  validate(): boolean;
-}
-
-declare class ScheduledUserMessageUpdateParamsProperties extends UserMessageUpdateParamsProperties {
+declare interface ScheduledUserMessageUpdateParams extends UserMessageUpdateParams {
   scheduledAt?: number;
 }
 
@@ -1185,7 +1070,8 @@ declare class SendbirdChat {
   getMemoryStoreForDebugging(): MemoryStore;
   addExtension(key: string, version: string): void;
   initializeCache(userId: string): Promise<void>;
-  clearCache(): Promise<void>;
+  clearCachedData(): Promise<void>;
+  clearCachedMessages(channelUrls: string[]): Promise<void[]>;
   connect(userId: string, authToken?: string): Promise<User>;
   reconnect(): boolean;
   disconnect(): Promise<void>;
@@ -1203,7 +1089,7 @@ declare class SendbirdChat {
   createFriendListQuery(params?: FriendListQueryParams): FriendListQuery;
   createMessageSearchQuery(params: MessageSearchQueryParams): MessageSearchQuery;
   buildUserFromSerializedData(serialized: object): User;
-  updateCurrentUserInfo(params: UserUpdateParams): Promise<User>;
+  updateCurrentUserInfo(params?: UserUpdateParams): Promise<User>;
   updateCurrentUserInfoWithPreferredLanguages(preferredLanguages: string[]): Promise<User>;
   registerFCMPushTokenForCurrentUser(token: string): Promise<PushTokenRegistrationState>;
   unregisterFCMPushTokenForCurrentUser(token: string): Promise<PushTokenRegistrationState>;
@@ -1248,7 +1134,7 @@ declare class SendbirdChat {
   getUnreadItemCount(params: UnreadItemCountParams): Promise<UnreadItemCount>;
   getTotalUnreadChannelCount(): Promise<number>;
   getTotalUnreadMessageCount(params: TotalUnreadMessageCountParams): Promise<number>;
-  getTotalScheduledMessageCount(params: TotalScheduledMessageCountParams): Promise<number>;
+  getTotalScheduledMessageCount(params?: TotalScheduledMessageCountParams): Promise<number>;
   getSubscribedTotalUnreadMessageCount(): number;
   getSubscribedCustomTypeTotalUnreadMessageCount(): number;
   getSubscribedCustomTypeUnreadMessageCount(customType: string): number;
@@ -1256,18 +1142,18 @@ declare class SendbirdChat {
 
 declare class SendbirdChatOptions {
   constructor({
-    useMemberAsMessageSender,
+    useMemberInfoInMessage,
     typingIndicatorInvalidateTime,
     typingIndicatorThrottle,
     websocketResponseTimeout,
   }?: {
-    useMemberAsMessageSender?: boolean;
+    useMemberInfoInMessage?: boolean;
     typingIndicatorInvalidateTime?: number;
     typingIndicatorThrottle?: number;
     websocketResponseTimeout?: number;
   });
-  get useMemberAsMessageSender(): boolean;
-  set useMemberAsMessageSender(value: boolean);
+  get useMemberInfoInMessage(): boolean;
+  set useMemberInfoInMessage(value: boolean);
   get typingIndicatorInvalidateTime(): number;
   set typingIndicatorInvalidateTime(value: number);
   get typingIndicatorThrottle(): number;
@@ -1288,7 +1174,7 @@ declare interface SendbirdChatParams<Modules extends Module[]> {
   debugMode?: boolean;
   localCacheEnabled?: boolean;
   localCacheEncryption?: Encryption;
-  useAsyncStorageStore?: AsyncStorageStatic;
+  useAsyncStorageStore?: typeof AsyncStorage;
 }
 
 export declare class SendbirdError extends Error {
@@ -1340,12 +1226,7 @@ declare enum SuperChannelFilter {
   EXCLUSIVE_ONLY = 'exclusive_only',
 }
 
-declare class ThreadedMessageListParams extends ThreadedMessageListParamsProperties {
-  constructor(props?: ThreadedMessageListParamsProperties);
-  validate(): boolean;
-}
-
-declare class ThreadedMessageListParamsProperties {
+declare interface ThreadedMessageListParams {
   prevResultSize: number;
   nextResultSize: number;
   isInclusive?: boolean;
@@ -1386,23 +1267,13 @@ declare interface ThumbnailSize {
   maxHeight: number;
 }
 
-declare class TotalScheduledMessageCountParams extends TotalScheduledMessageCountParamsProperties {
-  constructor(props?: TotalScheduledMessageCountParamsProperties);
-  validate(): boolean;
-}
-
-declare class TotalScheduledMessageCountParamsProperties {
+declare interface TotalScheduledMessageCountParams {
   channelUrl?: string;
   scheduledStatus?: ScheduledStatus[];
   messageTypeFilter?: MessageTypeFilter;
 }
 
-declare class TotalUnreadMessageCountParams extends TotalUnreadMessageCountParamsProperties {
-  constructor(props?: TotalUnreadMessageCountParamsProperties);
-  validate(): boolean;
-}
-
-declare class TotalUnreadMessageCountParamsProperties {
+declare interface TotalUnreadMessageCountParams {
   channelCustomTypesFilter?: string[];
   superChannelFilter?: SuperChannelFilter;
 }
@@ -1419,13 +1290,8 @@ declare interface UnreadItemCount {
   nonSuperGroupChannelInvitationCount?: number;
 }
 
-declare class UnreadItemCountParams extends UnreadItemCountParamsProperties {
-  constructor(props?: UnreadItemCountParamsProperties);
-  validate(): boolean;
-}
-
-declare class UnreadItemCountParamsProperties {
-  keys: UnreadItemKey[];
+declare interface UnreadItemCountParams {
+  keys?: UnreadItemKey[];
 }
 
 declare enum UnreadItemKey {
@@ -1481,26 +1347,12 @@ declare class UserMessage extends SendableMessage {
   }>;
 }
 
-declare class UserMessageCreateParams extends UserMessageCreateParamsProperties {
-  constructor(props?: UserMessageCreateParamsProperties);
-  get mentionedUsers(): User[];
-  set mentionedUsers(users: User[]);
-  validate(): boolean;
-}
-
-declare class UserMessageCreateParamsProperties extends BaseMessageCreateParamsProperties {
+declare interface UserMessageCreateParams extends BaseMessageCreateParams {
   message: string;
   translationTargetLanguages?: string[];
 }
 
-declare class UserMessageUpdateParams extends UserMessageUpdateParamsProperties {
-  constructor(props?: UserMessageUpdateParamsProperties);
-  get mentionedUsers(): User[];
-  set mentionedUsers(users: User[]);
-  validate(): boolean;
-}
-
-declare class UserMessageUpdateParamsProperties extends BaseMessageUpdateParamsProperties {
+declare interface UserMessageUpdateParams extends BaseMessageUpdateParams {
   message?: string;
   translationTargetLanguages?: string[];
 }
@@ -1511,12 +1363,7 @@ declare enum UserOnlineState {
   NON_AVAILABLE = 'nonavailable',
 }
 
-declare class UserUpdateParams extends UserUpdateParamsProperties {
-  constructor(props?: UserUpdateParamsProperties);
-  validate(): boolean;
-}
-
-declare class UserUpdateParamsProperties {
+declare interface UserUpdateParams {
   profileImage?: FileCompat;
   profileUrl?: string;
   nickname?: string;
@@ -1554,12 +1401,7 @@ export declare interface GroupChannelChangelogs {
   token: string;
 }
 
-export declare class GroupChannelChangeLogsParams extends GroupChannelChangeLogsParamsProperties {
-  constructor(props?: GroupChannelChangeLogsParamsProperties);
-  validate(): boolean;
-}
-
-export declare class GroupChannelChangeLogsParamsProperties {
+export declare interface GroupChannelChangeLogsParams {
   customTypes?: string[];
   includeEmpty?: boolean;
   includeFrozen?: boolean;
@@ -1587,23 +1429,11 @@ declare interface GroupChannelCollectionParams {
   limit?: number;
 }
 
-export declare class GroupChannelCountParams extends GroupChannelCountParamsProperties {
-  constructor(props?: GroupChannelCountParamsProperties);
-  validate(): boolean;
-}
-
-export declare class GroupChannelCountParamsProperties {
+export declare interface GroupChannelCountParams {
   memberStateFilter?: MemberStateFilter;
 }
 
-export declare class GroupChannelCreateParams extends GroupChannelCreateParamsProperties {
-  constructor(props?: GroupChannelCreateParamsProperties);
-  validate(): boolean;
-  addUserIds(userIds: string[]): void;
-  addUserId(userId: string): void;
-}
-
-export declare class GroupChannelCreateParamsProperties {
+export declare interface GroupChannelCreateParams {
   invitedUserIds?: string[];
   channelUrl?: string;
   coverUrl?: string;
@@ -1868,12 +1698,7 @@ export declare enum UnreadChannelFilter {
   UNREAD_MESSAGE = 'unread_message',
 }
 
-export declare class OpenChannelCreateParams extends OpenChannelCreateParamsProperties {
-  constructor(props?: OpenChannelCreateParamsProperties);
-  validate(): boolean;
-}
-
-export declare class OpenChannelCreateParamsProperties {
+export declare interface OpenChannelCreateParams {
   channelUrl?: string;
   name?: string;
   coverUrlOrImage?: FileCompat | string;

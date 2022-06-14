@@ -1,7 +1,7 @@
 ### v4.0.0 (June 14, 2022)
-- Added `MyMemberStateFilter`.
-    - `GroupChannelListQueryParams.memberStateFilter` -> `GroupChannelListQueryParams.myMemberStateFilter`.
-    - `GroupChannelCountParams.memberStateFilter` -> `GroupChannelCountParams.myMemberStateFilter`.
+- Added `MyMemberStateFilter`
+    - `GroupChannelListQueryParams.memberStateFilter` -> `GroupChannelListQueryParams.myMemberStateFilter`
+    - `GroupChannelCountParams.memberStateFilter` -> `GroupChannelCountParams.myMemberStateFilter`
     - `GroupChannelFilter.memberStateFilter` -> `GroupChannelFilter.myMemberStateFilter`
 - Moved `getXXXCount()` `GroupChannelModule`
     - `SendbirdChat.getUnreadItemCount()` -> `SendbirdChat.groupChannel.getUnreadItemCount()`
@@ -11,79 +11,79 @@
     - `SendbirdChat.getSubscribedTotalUnreadMessageCount()` -> `SendbirdChat.groupChannel.getSubscribedTotalUnreadMessageCount()`
     - `SendbirdChat.getSubscribedCustomTypeTotalUnreadMessageCount()` -> `SendbirdChat.groupChannel.getSubscribedCustomTypeTotalUnreadMessageCount()`
     - `SendbirdChat.getSubscribedCustomTypeUnreadMessageCount()` -> `SendbirdChat.groupChannel.getSubscribedCustomTypeUnreadMessageCount()`
-- Bug fixed Scheduled messsage interface.
-- Set default empty object `createChannel()`.
+- Bug fixed Scheduled messsage interface
+- Set default empty object `createChannel()`
 
 ### v4.0.0-beta.12 (June 09, 2022)
-- Type of `SendbirdChatParams.useAsyncStorageStore` has changed to AsyncStorage of `@react-native-async-storage/async-storage`.
-- Added `clearCachedMessages()` in `SendbirdChat`.
-- Rename `SendbirdChat.clearCache()` to `SendbirdChat.clearCachedData()`.
-- Bug fixed the logic for filtering public group channel in `GroupChannelCollection`.
-- Rename `SendbirdChat.Options.useMemberAsMessageSender` to `SendbirdChat.Options.useMemberInfoInMessage`.
-- `useMemberInfoInMessage` now applies to both `message.sender` and `message.mentionedUsers`.
-- Bug fixed cached channel not updated when disconnect and then connect.
-- Bug fixed broken file data of auto-resent file message.
-- Added `BaseMessage.parentMessage`.
-- Added `BaseMessage.applyParentMessage()`.
-- Parent message update event now updates `parentMessage` value of all its child messages.
-- Bug fixed `message.metaArrays` value not being updated after calling `createMessageMetaArrayKeys()`, `deleteMessageMetaArrayKeys()`, `addMessageMetaArrayValues()`, and `removeMessageMetaArrayValues()` of `BaseChannel`.
-- `MessageCollectionInitPolicy.API_ONLY` has been removed.
-- All classes whose namespace ends with params (ex. `UserMessageCreateParams`, `GroupChannelCreateParams`, etc.) is now changed to interfaces.
-- Improved stability.
+- Type of `SendbirdChatParams.useAsyncStorageStore` has changed to AsyncStorage of `@react-native-async-storage/async-storage`
+- Added `clearCachedMessages()` in `SendbirdChat`
+- Rename `SendbirdChat.clearCache()` to `SendbirdChat.clearCachedData()`
+- Bug fixed the logic for filtering public group channel in `GroupChannelCollection`
+- Rename `SendbirdChat.Options.useMemberAsMessageSender` to `SendbirdChat.Options.useMemberInfoInMessage`
+- `useMemberInfoInMessage` now applies to both `message.sender` and `message.mentionedUsers`
+- Bug fixed cached channel not updated when disconnect and then connect
+- Bug fixed broken file data of auto-resent file message
+- Added `BaseMessage.parentMessage`
+- Added `BaseMessage.applyParentMessage()`
+- Parent message update event now updates `parentMessage` value of all its child messages
+- Bug fixed `message.metaArrays` value not being updated after calling `createMessageMetaArrayKeys()`, `deleteMessageMetaArrayKeys()`, `addMessageMetaArrayValues()`, and `removeMessageMetaArrayValues()` of `BaseChannel`
+- `MessageCollectionInitPolicy.API_ONLY` has been removed
+- All classes whose namespace ends with params (ex. `UserMessageCreateParams`, `GroupChannelCreateParams`, etc.) is now changed to interfaces
+- Improved stability
 
 ### v4.0.0-beta.11 (May 24, 2022)
-- `SendbirdChat.connect()` now returns `User` instance from the cache if local cache is enabled.
-- Improved stability.
+- `SendbirdChat.connect()` now returns `User` instance from the cache if local cache is enabled
+- Improved stability
 
 ### v4.0.0-beta.10 (May 17, 2022)
-- `BaseMessage`'s `requestedMentionUserIds` has been replaced with `mentionedUserIds`.
-- Getter and setter for `mentionedUsers` have been added to `userMessageCreateParams`, `userMessageUpdateParams`, `fileMessageUpdateParams`, and `fileMessageUpdateParams`.
-- Getters for `BaseMessage`, `isUserMessage`, `isFileMessage`, and `isAdminMessage` have been replaced with `isUserMessage()`, `isFileMessage()`, and `isAdminMessage()`.
-- Getters for `BaseChannel`, `isGroupChannel`, and `isOpenChannel`, have been replaced with `isGroupChannel()`, and `isOpenChannel()`.
-- `reqId` in `BaseMessageCreateParamsProperties` has been removed.
-- Added `translationTargetLanguages` in `UserMessage`.
-- Added `translationTargetLanguages` in `UserMessageUpdateParamsProperties`.
+- `BaseMessage`'s `requestedMentionUserIds` has been replaced with `mentionedUserIds`
+- Getter and setter for `mentionedUsers` have been added to `userMessageCreateParams`, `userMessageUpdateParams`, `fileMessageUpdateParams`, and `fileMessageUpdateParams`
+- Getters for `BaseMessage`, `isUserMessage`, `isFileMessage`, and `isAdminMessage` have been replaced with `isUserMessage()`, `isFileMessage()`, and `isAdminMessage()`
+- Getters for `BaseChannel`, `isGroupChannel`, and `isOpenChannel`, have been replaced with `isGroupChannel()`, and `isOpenChannel()`
+- `reqId` in `BaseMessageCreateParamsProperties` has been removed
+- Added `translationTargetLanguages` in `UserMessage`
+- Added `translationTargetLanguages` in `UserMessageUpdateParamsProperties`
 - Scheduled message support:
-    - Deleted `ScheduledUserMessageParams`.
-    - Deleted `ScheduledUserMessage`.
-    - Deleted `registerScheduledUserMessage()` in `GroupChannel`.
-    - Added `scheduledInfo` in `BaseMessage`.
-    - Added `ScheduledStatus`.
-    - Added `SCHEDULED` in `SendingStatus`.
-    - Added `ScheduledMessageRetrievalParams`.
-    - Added `ScheduledFileMessageCreateParams`.
-    - Added `ScheduledFileMessageUpdateParams`.
-    - Added `ScheduledUserMessageCreateParams`.
-    - Added `ScheduledUserMessageUpdateParams`.
-    - Added `TotalScheduledMessageCountParams`.
-    - Added `ScheduledMessageListOrder`.
-    - Added `ScheduledMessageListQuery`.
-    - Added `ScheduledMessageListQueryParams`.
-    - Added `getScheduledMessage()` in `MessageModule`, .
-    - Added `createScheduledMessageListQuery() in `GroupChannelModule`.
-    - Added `getTotalScheduledMessageCount() in `SendbirdChat`.
-    - Added `createScheduledUserMessage()`, `updateScheduledUserMessage()`, `createScheduledFileMessage()`, `updateScheduledFileMessage()`, `cancelScheduledMessage()`, `sendScheduledMessageNow() in `GroupChannel`.
+    - Deleted `ScheduledUserMessageParams`
+    - Deleted `ScheduledUserMessage`
+    - Deleted `registerScheduledUserMessage()` in `GroupChannel`
+    - Added `scheduledInfo` in `BaseMessage`
+    - Added `ScheduledStatus`
+    - Added `SCHEDULED` in `SendingStatus`
+    - Added `ScheduledMessageRetrievalParams`
+    - Added `ScheduledFileMessageCreateParams`
+    - Added `ScheduledFileMessageUpdateParams`
+    - Added `ScheduledUserMessageCreateParams`
+    - Added `ScheduledUserMessageUpdateParams`
+    - Added `TotalScheduledMessageCountParams`
+    - Added `ScheduledMessageListOrder`
+    - Added `ScheduledMessageListQuery`
+    - Added `ScheduledMessageListQueryParams`
+    - Added `getScheduledMessage()` in `MessageModule`
+    - Added `createScheduledMessageListQuery()` in `GroupChannelModule`
+    - Added `getTotalScheduledMessageCount()` in `SendbirdChat`
+    - Added `createScheduledUserMessage()`, `updateScheduledUserMessage()`, `createScheduledFileMessage()`, `updateScheduledFileMessage()`, `cancelScheduledMessage()`, `sendScheduledMessageNow()` in `GroupChannel`
 
 ### v4.0.0-beta.9 (May 13, 2022)
-- Bug Fix in sending a message.
+- Bug Fix in sending a message
 
 ### v4.0.0-beta.8 (May 11, 2022)
-- Improve stabilize.
+- Improve stabilize
 
 ### v4.0.0-beta.7 (May 10, 2022)
-- Improve stabilize.
+- Improve stabilize
 
 ### v4.0.0-beta.6 (May 03, 2022)
-- Improve stabilize.
+- Improve stabilize
 
 ### v4.0.0-beta.4 (Apr 15, 2022)
-- Improve stabilize.
+- Improve stabilize
 
 ### v4.0.0-beta.3 (Apr 14, 2022)
-- Bug Fixes.
+- Bug Fixes
 
 ### v4.0.0-beta (Apr 12, 2022)
-- No callback. Use `Promise`.
+- No callback. Use `Promise`
 
 ```ts
 // v3
@@ -107,7 +107,7 @@ import { GroupChannel } from '@sendbird/groupChannel';
 ...
 ```
 
-- `static` object relocation.
+- `static` object relocation
 
 |`v3`|`v4`|
 |-|-|
@@ -115,35 +115,35 @@ import { GroupChannel } from '@sendbird/groupChannel';
 |`sb.OpenChannel`|`sb.openChannel`**|
 |`sb.BaseMessage`|`sb.message`|
 
-> \* Should declare `GroupChannelModule` in `SendbirdChat.init()`.  
-> ** Should declare `OpenChannelModule` in `SendbirdChat.init()`.
+> \* Should declare `GroupChannelModule` in `SendbirdChat.init()`  
+> ** Should declare `OpenChannelModule` in `SendbirdChat.init()`
 
 ## New features
 
-- Added `onConnected()`, `onDisconnected()` to `ConnectionHandler`.
-- Added `translationTargetLanguages` in `UserMessage`.
-- Added `translationTargetLanguages` in `UserMessageUpdateParamsProperties`.
+- Added `onConnected()`, `onDisconnected()` to `ConnectionHandler`
+- Added `translationTargetLanguages` in `UserMessage`
+- Added `translationTargetLanguages` in `UserMessageUpdateParamsProperties`
 - Scheduled message support:
-  - Added `scheduledInfo` in `BaseMessage`.
-  - Added `ScheduledStatus`.
-  - Added `SCHEDULED` in `SendingStatus`.
-  - Added `ScheduledMessageRetrievalParams`.
-  - Added `ScheduledFileMessageCreateParams`.
-  - Added `ScheduledFileMessageUpdateParams`.
-  - Added `ScheduledUserMessageCreateParams`.
-  - Added `ScheduledUserMessageUpdateParams`.
-  - Added `TotalScheduledMessageCountParams`.
-  - Added `ScheduledMessageListOrder`.
-  - Added `ScheduledMessageListQuery`.
-  - Added `ScheduledMessageListQueryParams`. 
-  - Added `getScheduledMessage()` in `MessageModule`, .
-  - Added `createScheduledMessageListQuery() in `GroupChannelModule`.
-  - Added `getTotalScheduledMessageCount() in `SendbirdChat`.
-  - Added `createScheduledUserMessage()`, `updateScheduledUserMessage()`, `createScheduledFileMessage()`, `updateScheduledFileMessage()`, `cancelScheduledMessage()`, `sendScheduledMessageNow() in `GroupChannel`.
+  - Added `scheduledInfo` in `BaseMessage`
+  - Added `ScheduledStatus`
+  - Added `SCHEDULED` in `SendingStatus`
+  - Added `ScheduledMessageRetrievalParams`
+  - Added `ScheduledFileMessageCreateParams`
+  - Added `ScheduledFileMessageUpdateParams`
+  - Added `ScheduledUserMessageCreateParams`
+  - Added `ScheduledUserMessageUpdateParams`
+  - Added `TotalScheduledMessageCountParams`
+  - Added `ScheduledMessageListOrder`
+  - Added `ScheduledMessageListQuery`
+  - Added `ScheduledMessageListQueryParams` 
+  - Added `getScheduledMessage()` in `MessageModule`
+  - Added `createScheduledMessageListQuery()` in `GroupChannelModule`
+  - Added `getTotalScheduledMessageCount()` in `SendbirdChat`
+  - Added `createScheduledUserMessage()`, `updateScheduledUserMessage()`, `createScheduledFileMessage()`, `updateScheduledFileMessage()`, `cancelScheduledMessage()`, `sendScheduledMessageNow()` in `GroupChannel`
 
 ## Changes
 
-- Changed initialization interface.
+- Changed initialization interface
 
 ```ts
 // v3
@@ -204,7 +204,7 @@ sb.groupChannel.addGroupChannelHandler(EVENT_ID, channelHandler);
 sb.groupChannel.removeGroupChannelHandler(EVENT_ID);
 ```
 
-- No builder pattern for `Collection`s.
+- No builder pattern for `Collection`s
 
 ```ts
 // v3
@@ -240,7 +240,7 @@ const mc = channel.createMessageCollection({
 });
 ```
 
-- Changed `sb.updateCurrentUserInfo()` to take `UserUpdateParams` as a parameter.
+- Changed `sb.updateCurrentUserInfo()` to take `UserUpdateParams` as a parameter
 
 ```ts
 // v3
@@ -256,7 +256,7 @@ sb.updateCurrentUserInfo({
 // no sb.updateCurrentUserInfoWithProfileImage()
 ```
 
-- Changed `sb.getUnreadItemCount()` to take `UnreadItemCountParams` as a parameter.
+- Changed `sb.getUnreadItemCount()` to take `UnreadItemCountParams` as a parameter
 
 ```ts
 // v3
@@ -268,7 +268,7 @@ sb.getUnreadItemCount({
 });
 ```
 
-- Changed `sb.getTotalUnreadMessageCount()` to take `TotalUnreadMessageCountParams` as a parameter.
+- Changed `sb.getTotalUnreadMessageCount()` to take `TotalUnreadMessageCountParams` as a parameter
 
 ```ts
 // v3
@@ -282,7 +282,7 @@ sb.getTotalUnreadMessageCount({
 });
 ```
 
-- Changed `sendUserMessage()` and `sendFileMessage()` interface to chain the callbacks for pending/failed/succeeded messages.
+- Changed `sendUserMessage()` and `sendFileMessage()` interface to chain the callbacks for pending/failed/succeeded messages
 
 ```ts
 // v3
@@ -301,7 +301,7 @@ channel.sendUserMessage(params)
 	.onSucceeded((succeededMessage: UserMessage) => {});
 ```
 
-- Changed all classes whose namespace ends with params to interfaces.
+- Changed all classes whose namespace ends with params to interfaces
 
 ```ts
 // v3
@@ -327,7 +327,7 @@ channel.sendUserMessage({
   .onSucceeded((succeededMessage: UserMessage) => {});
 ```
 
-- Separated update params from create params.
+- Separated update params from create params
 
 ```ts
 // v3
@@ -347,7 +347,7 @@ FileMessageCreateParams
 FileMessageUpdateParams
 ```
 
-- Changed to accept properties in `~Query` constructors. The query properties are immutable later on.
+- Changed to accept properties in `~Query` constructors. The query properties are immutable later on
 
 ```ts
 // v3
@@ -365,7 +365,7 @@ const query = sb.groupChannel.createMyGroupChannelListQuery({
 query.customTypesFilter = ['a', 'b']; // ERROR! IMMUTABLE PROPERTY!
 ```
 
-- Changed `buildFromSerializedData()` paths.
+- Changed `buildFromSerializedData()` paths
 
 ```ts
 // v3
@@ -395,7 +395,7 @@ sb.openChannel.buildOpenChannelFromSerializedData()
 sb.buildUserFromSerializedData()
 ```
 
-- Turned some getter functions to read-only properties.
+- Turned some getter functions to read-only properties
 
 ```ts
 // v3
@@ -437,7 +437,7 @@ message.isResendable
 |`groupChannel.cachedDeliveryReceiptStatus`|`groupChannel.cachedUndeliveredMemberState`|
 |`message.requestedMentionUserIds`|`message.mentionedUserIds`|
 |`Options.useMemberAsMessageSender`|`SendbirdChatOptions.useMemberInfoInMessage`|
-> \* But stilling meaning the token for Android.
+> \* But stilling meaning the token for Android
 
 ## Removes
 

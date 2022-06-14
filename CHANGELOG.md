@@ -1,50 +1,97 @@
-### v4.0.0-beta.12 (June 09, 2022)
-- Type of `SendbirdChatParams.useAsyncStorageStore` has changed to AsyncStorage of `@react-native-async-storage/async-storage`.
-- Added `clearCachedMessages()` in `SendbirdChat`.
-- Rename `SendbirdChat.clearCache()` to `SendbirdChat.clearCachedData()`.
-- Bug fixed the logic for filtering public group channel in `GroupChannelCollection`.
-- Rename `SendbirdChat.Options.useMemberAsMessageSender` to `SendbirdChat.Options.useMemberInfoInMessage`.
-- `useMemberInfoInMessage` now applies to both `message.sender` and `message.mentionedUsers`.
-- Bug fixed cached channel not updated when disconnect and then connect.
-- Bug fixed broken file data of auto-resent file message.
-- Added `BaseMessage.parentMessage`.
-- Added `BaseMessage.applyParentMessage()`.
-- Parent message update event now updates `parentMessage` value of all its child messages.
-- Bug fixed `message.metaArrays` value not being updated after calling `createMessageMetaArrayKeys()`, `deleteMessageMetaArrayKeys()`, `addMessageMetaArrayValues()`, and `removeMessageMetaArrayValues()` of `BaseChannel`.
-- `MessageCollectionInitPolicy.API_ONLY` has been removed.
-- All classes whose namespace ends with params (ex. `UserMessageCreateParams`, `GroupChannelCreateParams`, etc.) is now changed to interfaces.
-- Improved stability.
 
-### v4.0.0-beta.11 (May 24, 2022)
-- `groupChannel.leave()` now takes an optional input `shouldRemoveOperatorStatus: boolean = false`.
-- `SendbirdChat.connect()` now returns `User` instance from the cache if local cache is enabled.
-- Improved stability.
+# Changelog
 
-### v4.0.0-beta.10 (May 17, 2022)
-- `BaseMessage`'s `requestedMentionUserIds` has been replaced with `mentionedUserIds`.
-- Getter and setter for `mentionedUsers` have been added to `userMessageCreateParams`, `userMessageUpdateParams`, `fileMessageUpdateParams`, and `fileMessageUpdateParams`.
-- Getters for `BaseMessage`, `isUserMessage`, `isFileMessage`, and `isAdminMessage` have been replaced with `isUserMessage()`, `isFileMessage()`, and `isAdminMessage()`.
-- Getters for `BaseChannel`, `isGroupChannel`, and `isOpenChannel`, have been replaced with `isGroupChannel()`, and `isOpenChannel()`.
-- `reqId` in `BaseMessageCreateParamsProperties` has been removed.
-- Added `translationTargetLanguages` in `UserMessage`.
-- Added `translationTargetLanguages` in `UserMessageUpdateParamsProperties`.
-- Scheduled message support:
-    - Deleted `ScheduledUserMessageParams`.
-    - Deleted `ScheduledUserMessage`.
-    - Deleted `registerScheduledUserMessage()` in `GroupChannel`.
-    - Added `scheduledInfo` in `BaseMessage`.
-    - Added `ScheduledStatus`.
-    - Added `SCHEDULED` in `SendingStatus`.
-    - Added `ScheduledMessageRetrievalParams`.
-    - Added `ScheduledFileMessageCreateParams`.
-    - Added `ScheduledFileMessageUpdateParams`.
-    - Added `ScheduledUserMessageCreateParams`.
-    - Added `ScheduledUserMessageUpdateParams`.
-    - Added `TotalScheduledMessageCountParams`.
-    - Added `ScheduledMessageListOrder`.
-    - Added `ScheduledMessageListQuery`.
-    - Added `ScheduledMessageListQueryParams`.
-    - Added `getScheduledMessage()` in `MessageModule`, .
-    - Added `createScheduledMessageListQuery() in `GroupChannelModule`.
-    - Added `getTotalScheduledMessageCount() in `SendbirdChat`.
-    - Added `createScheduledUserMessage()`, `updateScheduledUserMessage()`, `createScheduledFileMessage()`, `updateScheduledFileMessage()`, `cancelScheduledMessage()`, `sendScheduledMessageNow() in `GroupChannel`.
+## v4.0.0 (Jun 14, 2022)
+> To see detailed changes for below items, please refer to the [migration guide](https://sendbird.com/docs/chat/v4/javascript/getting-started/migration-guide)
+
+- All apis are now made `async` and callbacks are removed.
+- The way to instantiate `SendBird` instance has changed from `new SendBird` to `SendbirdChat.init()`.
+- `sendUserMessage()`, `sendFileMessage()` no longer takes callback as argument but added `onPending()`, `onFailed()`, `onSucceeded` event handler instead.
+- All `XxxParams` classes (except `XxxHandlerParams` classes) are now interfaces.
+  ```ts
+    // old
+    const params = new XxxParams();
+
+    // new
+    const params = { ... };
+  ```
+- All `XxxListQuery` classes are now immutable.
+  ```ts
+    // old
+    const query = sb.GroupChannel.createMyGroupChannelListQuery();
+    query.customTypesFilter = ['a', 'b']
+
+    // new
+    const query = sb.groupChannel.createMyGroupChannelListQuery({ customTypesFilter: [‘a’, ‘b’] });
+  ```
+
+- Added `SendbirdChatParams.localCacheEncryption`.
+- Added `onConnected`, and `onDisconnected` to `ConnectionHandler`.
+- Added `addOpenChannelHandler`,`removeOpenChannelHandler`, `removeAllOpenChannelHandlers` in `OpenChannelModule`.
+- Added `addGroupChannelHandler`,`removeGroupChannelHandler`, `removeAllGroupChannelHandlers` in `GroupChannelModule`.
+- Added `UserUpdateParams`.
+- Added `UnreadItemCountParams`.
+
+- Removed `sb.addChannelHandler()`, `sb.removeChannelHandler()`, and `sb.removeAllChannelHandlers()`.
+- Removed builder pattern for `GroupChannelCollection` and `MessageCollection`.
+- Removed `sb.updateCurrentUserInfoWithProfileImage()`. Use `sb.updateCurrentUserInfo()` instead.
+- Removed `MessageCollectionInitPolicy.CACHE_ONLY`.
+
+- Replaced `SendBirdParams` with `SendbirdChatParams`.
+- Replaced `sb.GroupChannel` with `GroupChannelModule`.
+- Replaced `sb.OpenChannel` with `OpenChannelModule`.
+- Replaced `sb.BaseMessage` with `MessageModule`.
+- Replaced `SendBird.setLogLevel()` with `sb.logLevel` and `SendbirdChatParams.logLevel`.
+- Replaced `sb.useAsyncStorageAsDatabase()` to `SendbirdChatParams.useAsyncStorageStore`.
+- Replaced `channelHandler.onReadReceiptUpdated` to `groupChannelHandler.onUnreadMemberStatusUpdated`.
+- Replaced `channelHandler.onDeliveryReceiptUpdated` to `groupChannelHandler.onUndeliveredMemberStatusUpdated`.
+- Replaced `GroupChannelParams` with `GroupChannelCreateParams` and `GroupChannelUpdateParams`.
+- Replaced `OpenChannelParams` with `OpenChannelCreateParams` and `OpenChannelUpdateParams`.
+- Replaced `UserMessageParams` with `UserMessageCreateParams` and `UserMessageUpdateParams`.
+- Replaced `FileMessageParams` with `FileMessageCreateParams` and `FileMessageUpdateParams`.
+- Replaced `SendBird.getInstance()` with `SendbirdChat.instance`.
+- Replaced `sb.getApplicationId()` with `sb.appId`.
+- Replaced `sb.getConnectionState()` with `sb.connectionState`.
+- Replaced `sb.getLastConnectedAt()` with `sb.lastConnectedAt`.
+- Replaced `sb.Options.useMemberAsMessageSender` with `sb.options.useMemberInfoInMessage`.
+- Replaced `channel.getCachedMetaData()` with `channel.cachedMetaData`.
+- Replaced `message.isResendable()` with `message.isResendable`.
+- Replaced `sb.UserMessage.buildFromSerializedData()`, `sb.FileMessage.buildFromSerializedData()`, and `sb.AdminMessage.buildFromSerializedData()` with `sb.message.buildMessageFromSerializedData()`.
+- Replaced `requestedMentionUserIds` with `mentionedUserIds` in `BaseMessage`.
+- Replaced `isUserMessage`,`isFileMessage`,`isAdminMessage` with `isUserMessage()`,`isFileMessage()` and `isAdminMessage()` in `BaseMessage`.
+- Replaced `isGroupChannel`,`isOpenChannel` with `isGroupChannel()` and `isOpenChannel()`.
+
+
+- Moved `sb.appVersion` to `SendbirdChatParams.appVersion`.
+- Moved `sb.getMyGroupChannelChangeLogsByToken()` to `sb.groupChannel.getMyGroupChannelChangeLogsByToken()`.
+- Moved `sb.getMyGroupChannelChangeLogsByTimestamp()` to `sb.groupChannel.getMyGroupChannelChangeLogsByTimestamp()`.
+- Moved `sb.getUnreadItemCount()` to `sb.groupChannel.getUnreadItemCount()`.
+- Moved `sb.getTotalUnreadChannelCount()` to `sb.groupChannel.getTotalUnreadChannelCount()`.
+- Moved `sb.getTotalUnreadMessageCount()` to `sb.groupChannel.getTotalUnreadMessageCount()`.
+- Moved `sb.getTotalScheduledMessageCount()` to `sb.groupChannel.getTotalScheduledMessageCount()`.
+- Moved `sb.getSubscribedTotalUnreadMessageCount()` to `sb.groupChannel.getSubscribedTotalUnreadMessageCount()`.
+- Moved `sb.getSubscribedCustomTypeTotalUnreadMessageCount()` to `sb.groupChannel.getSubscribedCustomTypeTotalUnreadMessageCount()`.
+- Moved `sb.getSubscribedCustomTypeUnreadMessageCount()` to `sb.groupChannel.getSubscribedCustomTypeUnreadMessageCount()`.
+- Moved `sb.Sender.buildFromSerializedData()` to `sb.message.buildSenderFromSerializedData()`.
+- Moved `sb.GroupChannel.buildFromSerializedData()` to `sb.groupChannel.buildGroupChannelFromSerializedData()`.
+- Moved `sb.GroupChannelListQuery.buildFromSerializedData()` to `sb.groupChannel.buildGroupChannelListQueryFromSerializedData()`.
+- Moved `sb.Member.buildFromSerializedData()` to `sb.groupChannel.buildMemberFromSerializedData()`.
+- Moved `sb.OpenChannel.buildFromSerializedData()` to `sb.openChannel.buildOpenChannelFromSerializedData()`.
+- Moved `sb.User.buildFromSerializedData()` to `sb.buildUserFromSerializedData()`.
+
+- Divided `ChannelHandler` into `GroupChannelHandler` and `OpenChannelHandler`.
+
+- Renamed `SendbirdException` to `SendbirdError`.
+- Renamed `sb.initializeDatabase()` to `sb.initializeCache()`.
+- Renamed `sb.clearDatabase()` to `sb.clearCachedData()`.
+- Renamed `Options` to `SendbirdChatOptions`.
+- Renamed `groupChannel.cachedReadReceiptStatus` to `groupChannel.cachedUnreadMemberState`.
+- Renamed `groupChannel.cachedDeliveryReceiptStatus` to `groupChannel.cachedUndeliveredMemberState`.
+- Renamed `GCMPushToken` to `FCMPushToken`.
+
+
+### v4.0.0-beta.*
+For the changelog between the beta release, please refer to [this page](https://github.com/sendbird/sendbird-chat-sdk-javascript/blob/main/CHANGELOG_V4_BETA.md)
+
+### v3 Changelog
+Please refer to [this page](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/CHANGELOG.md)

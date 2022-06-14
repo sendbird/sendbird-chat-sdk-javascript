@@ -49,8 +49,6 @@ export {
   SendbirdError,
   SessionHandler,
   SnoozePeriod,
-  TotalUnreadMessageCountParams,
-  UnreadItemCountParams,
   User,
   UserEventHandler,
   UserOnlineState,

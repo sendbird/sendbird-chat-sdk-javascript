@@ -990,15 +990,8 @@ declare enum Role {
   NONE = 'none',
 }
 
-declare interface ScheduledFileMessageCreateParams extends BaseMessageCreateParams {
+declare interface ScheduledFileMessageCreateParams extends FileMessageCreateParams {
   scheduledAt: number;
-  file?: FileCompat;
-  fileUrl?: string;
-  fileName?: string;
-  mimeType?: string;
-  fileSize?: number;
-  thumbnailSizes?: ThumbnailSize[];
-  requireAuth?: boolean;
 }
 
 declare interface ScheduledFileMessageUpdateParams extends BaseMessageUpdateParams {
@@ -1006,8 +999,8 @@ declare interface ScheduledFileMessageUpdateParams extends BaseMessageUpdatePara
   file?: FileCompat;
   fileUrl?: string;
   fileName?: string;
-  mimeType?: string;
   fileSize?: number;
+  mimeType?: string;
   thumbnailSizes?: ThumbnailSize[];
   requireAuth?: boolean;
 }
@@ -1022,15 +1015,8 @@ declare interface ScheduledMessageRetrievalParams {
   scheduledMessageId: number;
 }
 
-declare enum ScheduledStatus {
-  PENDING = 'pending',
-  SENT = 'sent',
-  FAILED = 'failed',
-  CANCELED = 'canceled',
-}
-
 declare interface ScheduledUserMessageCreateParams extends UserMessageCreateParams {
-  scheduledAt?: number;
+  scheduledAt: number;
 }
 
 declare interface ScheduledUserMessageUpdateParams extends UserMessageUpdateParams {
@@ -1131,13 +1117,6 @@ declare class SendbirdChat {
   getAllEmoji(): Promise<EmojiContainer>;
   getEmojiCategory(categoryId: number): Promise<EmojiCategory>;
   getEmoji(emojiKey: string): Promise<Emoji>;
-  getUnreadItemCount(params: UnreadItemCountParams): Promise<UnreadItemCount>;
-  getTotalUnreadChannelCount(): Promise<number>;
-  getTotalUnreadMessageCount(params: TotalUnreadMessageCountParams): Promise<number>;
-  getTotalScheduledMessageCount(params?: TotalScheduledMessageCountParams): Promise<number>;
-  getSubscribedTotalUnreadMessageCount(): number;
-  getSubscribedCustomTypeTotalUnreadMessageCount(): number;
-  getSubscribedCustomTypeUnreadMessageCount(customType: string): number;
 }
 
 declare class SendbirdChatOptions {
@@ -1218,14 +1197,6 @@ declare interface StoreItem {
   generation: number;
 }
 
-declare enum SuperChannelFilter {
-  ALL = 'all',
-  SUPER = 'super',
-  NON_SUPER = 'nonsuper',
-  BROADCAST_ONLY = 'broadcast_only',
-  EXCLUSIVE_ONLY = 'exclusive_only',
-}
-
 declare interface ThreadedMessageListParams {
   prevResultSize: number;
   nextResultSize: number;
@@ -1265,45 +1236,6 @@ declare class Thumbnail {
 declare interface ThumbnailSize {
   maxWidth: number;
   maxHeight: number;
-}
-
-declare interface TotalScheduledMessageCountParams {
-  channelUrl?: string;
-  scheduledStatus?: ScheduledStatus[];
-  messageTypeFilter?: MessageTypeFilter;
-}
-
-declare interface TotalUnreadMessageCountParams {
-  channelCustomTypesFilter?: string[];
-  superChannelFilter?: SuperChannelFilter;
-}
-
-declare interface UnreadItemCount {
-  groupChannelUnreadMentionCount?: number;
-  groupChannelUnreadMessageCount?: number;
-  groupChannelInvitationCount?: number;
-  superGroupChannelUnreadMentionCount?: number;
-  superGroupChannelUnreadMessageCount?: number;
-  superGroupChannelInvitationCount?: number;
-  nonSuperGroupChannelUnreadMentionCount?: number;
-  nonSuperGroupChannelUnreadMessageCount?: number;
-  nonSuperGroupChannelInvitationCount?: number;
-}
-
-declare interface UnreadItemCountParams {
-  keys?: UnreadItemKey[];
-}
-
-declare enum UnreadItemKey {
-  GROUP_CHANNEL_UNREAD_MENTION_COUNT = 'group_channel_unread_mention_count',
-  NONSUPER_UNREAD_MENTION_COUNT = 'non_super_group_channel_unread_mention_count',
-  SUPER_UNREAD_MENTION_COUNT = 'super_group_channel_unread_mention_count',
-  GROUP_CHANNEL_UNREAD_MESSAGE_COUNT = 'group_channel_unread_message_count',
-  NONSUPER_UNREAD_MESSAGE_COUNT = 'non_super_group_channel_unread_message_count',
-  SUPER_UNREAD_MESSAGE_COUNT = 'super_group_channel_unread_message_count',
-  GROUP_CHANNEL_INVITATION_COUNT = 'group_channel_invitation_count',
-  NONSUPER_INVITATION_COUNT = 'non_super_group_channel_invitation_count',
-  SUPER_INVITATION_COUNT = 'super_group_channel_invitation_count',
 }
 
 declare class User {
@@ -1430,7 +1362,7 @@ declare interface GroupChannelCollectionParams {
 }
 
 export declare interface GroupChannelCountParams {
-  memberStateFilter?: MemberStateFilter;
+  myMemberStateFilter?: MyMemberStateFilter;
 }
 
 export declare interface GroupChannelCreateParams {
@@ -1458,7 +1390,7 @@ export declare class GroupChannelFilter {
   includeEmpty: boolean;
   nicknameContainsFilter: string;
   channelNameContainsFilter: string;
-  memberStateFilter: MemberStateFilter;
+  myMemberStateFilter: MyMemberStateFilter;
   customTypesFilter: string[];
   channelUrlsFilter: string[];
   superChannelFilter: SuperChannelFilter;
@@ -1506,7 +1438,7 @@ declare interface GroupChannelListParams {
   customTypeStartsWithFilter?: string;
   nicknameContainsFilter?: string;
   channelNameContainsFilter?: string;
-  memberStateFilter?: MemberStateFilter;
+  myMemberStateFilter?: MyMemberStateFilter;
   unreadChannelFilter?: UnreadChannelFilter;
   superChannelFilter?: SuperChannelFilter;
   publicChannelFilter?: PublicChannelFilter;
@@ -1529,7 +1461,7 @@ export declare class GroupChannelListQuery extends BaseListQuery {
   readonly customTypeStartsWithFilter: string;
   readonly nicknameContainsFilter: string;
   readonly channelNameContainsFilter: string;
-  readonly memberStateFilter: MemberStateFilter;
+  readonly myMemberStateFilter: MyMemberStateFilter;
   readonly unreadChannelFilter: UnreadChannelFilter;
   readonly superChannelFilter: SuperChannelFilter;
   readonly publicChannelFilter: PublicChannelFilter;
@@ -1570,7 +1502,14 @@ export declare class GroupChannelModule extends Module {
     params: GroupChannelChangeLogsParams,
   ): Promise<GroupChannelChangelogs>;
   getGroupChannelCount(params: GroupChannelCountParams): Promise<number>;
-  createChannel(params: GroupChannelCreateParams): Promise<GroupChannel>;
+  getUnreadItemCount(params: UnreadItemCountParams): Promise<UnreadItemCount>;
+  getTotalUnreadChannelCount(): Promise<number>;
+  getTotalUnreadMessageCount(params: TotalUnreadMessageCountParams): Promise<number>;
+  getTotalScheduledMessageCount(params: TotalScheduledMessageCountParams): Promise<number>;
+  getSubscribedTotalUnreadMessageCount(): number;
+  getSubscribedCustomTypeTotalUnreadMessageCount(): number;
+  getSubscribedCustomTypeUnreadMessageCount(customType: string): number;
+  createChannel(params?: GroupChannelCreateParams): Promise<GroupChannel>;
   createDistinctChannelIfNotExist(params: GroupChannelCreateParams): Promise<GroupChannel>;
   createChannelWithUserIds(
     userIds: string[],
@@ -1609,9 +1548,17 @@ export declare enum HiddenChannelFilter {
   HIDDEN_PREVENT_AUTO_UNHIDE = 'hidden_prevent_auto_unhide',
 }
 
-declare enum MembershipFilter {
+export declare enum MembershipFilter {
   ALL = 'all',
   JOINED = 'joined',
+}
+
+export declare enum MyMemberStateFilter {
+  ALL = 'all',
+  JOINED = 'joined_only',
+  INVITED = 'invited_only',
+  INVITED_BY_FRIEND = 'invited_by_friend',
+  INVITED_BY_NON_FRIEND = 'invited_by_non_friend',
 }
 
 export declare enum PublicChannelFilter {
@@ -1689,13 +1636,67 @@ declare interface ScheduledMessageListQueryParams extends BaseListQueryParams {
   messageTypeFilter?: MessageTypeFilter;
 }
 
+declare enum ScheduledStatus {
+  PENDING = 'pending',
+  SENT = 'sent',
+  FAILED = 'failed',
+  CANCELED = 'canceled',
+}
+
 export declare type SendbirdGroupChat = SendbirdChat & {
   groupChannel: GroupChannelModule;
 };
 
+export declare enum SuperChannelFilter {
+  ALL = 'all',
+  SUPER = 'super',
+  NON_SUPER = 'nonsuper',
+  BROADCAST_ONLY = 'broadcast_only',
+  EXCLUSIVE_ONLY = 'exclusive_only',
+}
+
+export declare interface TotalScheduledMessageCountParams {
+  channelUrl?: string;
+  scheduledStatus?: ScheduledStatus[];
+  messageTypeFilter?: MessageTypeFilter;
+}
+
+export declare interface TotalUnreadMessageCountParams {
+  channelCustomTypesFilter?: string[];
+  superChannelFilter?: SuperChannelFilter;
+}
+
 export declare enum UnreadChannelFilter {
   ALL = 'all',
   UNREAD_MESSAGE = 'unread_message',
+}
+
+export declare interface UnreadItemCount {
+  groupChannelUnreadMentionCount?: number;
+  groupChannelUnreadMessageCount?: number;
+  groupChannelInvitationCount?: number;
+  superGroupChannelUnreadMentionCount?: number;
+  superGroupChannelUnreadMessageCount?: number;
+  superGroupChannelInvitationCount?: number;
+  nonSuperGroupChannelUnreadMentionCount?: number;
+  nonSuperGroupChannelUnreadMessageCount?: number;
+  nonSuperGroupChannelInvitationCount?: number;
+}
+
+export declare interface UnreadItemCountParams {
+  keys?: UnreadItemKey[];
+}
+
+declare enum UnreadItemKey {
+  GROUP_CHANNEL_UNREAD_MENTION_COUNT = 'group_channel_unread_mention_count',
+  NONSUPER_UNREAD_MENTION_COUNT = 'non_super_group_channel_unread_mention_count',
+  SUPER_UNREAD_MENTION_COUNT = 'super_group_channel_unread_mention_count',
+  GROUP_CHANNEL_UNREAD_MESSAGE_COUNT = 'group_channel_unread_message_count',
+  NONSUPER_UNREAD_MESSAGE_COUNT = 'non_super_group_channel_unread_message_count',
+  SUPER_UNREAD_MESSAGE_COUNT = 'super_group_channel_unread_message_count',
+  GROUP_CHANNEL_INVITATION_COUNT = 'group_channel_invitation_count',
+  NONSUPER_INVITATION_COUNT = 'non_super_group_channel_invitation_count',
+  SUPER_INVITATION_COUNT = 'super_group_channel_invitation_count',
 }
 
 export declare interface OpenChannelCreateParams {
@@ -1743,7 +1744,7 @@ export declare class OpenChannelModule extends Module {
   buildOpenChannelFromSerializedData(serialized: object): OpenChannel;
   getChannel(channelUrl: string): Promise<OpenChannel>;
   getChannelWithoutCache(channelUrl: string): Promise<OpenChannel>;
-  createChannel(params: OpenChannelCreateParams): Promise<OpenChannel>;
+  createChannel(params?: OpenChannelCreateParams): Promise<OpenChannel>;
   createChannelWithOperatorUserIds(
     name: string,
     coverUrlOrImageFile: FileCompat | string,

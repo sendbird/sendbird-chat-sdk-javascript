@@ -1,6 +1,6 @@
 import type AsyncStorage from '@react-native-async-storage/async-storage';
 
-declare class AdminMessage extends BaseMessage {
+export declare class AdminMessage extends BaseMessage {
   message: string;
   translations: object;
   getThreadedMessagesByTimestamp(
@@ -12,12 +12,20 @@ declare class AdminMessage extends BaseMessage {
   }>;
 }
 
-declare class AppleCriticalAlertOptions {
+declare class AppInfo {
+  readonly emojiHash: string;
+  readonly uploadSizeLimit: number;
+  readonly useReaction: boolean;
+  readonly applicationAttributes: string[];
+  readonly premiumFeatureList: string[];
+}
+
+export declare class AppleCriticalAlertOptions {
   readonly name: string;
   readonly volume: number;
 }
 
-declare class ApplicationUserListQuery extends BaseListQuery {
+export declare class ApplicationUserListQuery extends BaseListQuery {
   readonly userIdsFilter: string[];
   readonly metaDataKeyFilter: string;
   readonly metaDataValuesFilter: string[];
@@ -25,20 +33,20 @@ declare class ApplicationUserListQuery extends BaseListQuery {
   next(): Promise<User[]>;
 }
 
-declare interface ApplicationUserListQueryParams extends BaseListQueryParams {
+export declare interface ApplicationUserListQueryParams extends BaseListQueryParams {
   userIdsFilter?: string[];
   metaDataKeyFilter?: string;
   metaDataValuesFilter?: string[];
   nicknameStartsWithFilter?: string;
 }
 
-declare class BannedUserListQuery extends ChannelDataListQuery {
+export declare class BannedUserListQuery extends ChannelDataListQuery {
   next(): Promise<RestrictedUser[]>;
 }
 
-type BannedUserListQueryParams = ChannelDataListQueryParams;
+export type BannedUserListQueryParams = ChannelDataListQueryParams;
 
-declare class BaseChannel {
+export declare class BaseChannel {
   url: string;
   channelType: ChannelType;
   name: string;
@@ -121,7 +129,7 @@ declare interface BaseListQueryParams {
   limit?: number;
 }
 
-declare class BaseMessage {
+export declare class BaseMessage {
   channelUrl: string;
   channelType: ChannelType;
   messageId: number;
@@ -195,12 +203,12 @@ declare interface BaseStore {
   clear(): Promise<void>;
 }
 
-declare class BlockedUserListQuery extends BaseListQuery {
+export declare class BlockedUserListQuery extends BaseListQuery {
   readonly userIdsFilter: string[];
   next(): Promise<User[]>;
 }
 
-declare interface BlockedUserListQueryParams extends BaseListQueryParams {
+export declare interface BlockedUserListQueryParams extends BaseListQueryParams {
   userIdsFilter?: string[];
 }
 
@@ -211,13 +219,13 @@ declare abstract class ChannelDataListQuery extends BaseListQuery {
 
 type ChannelDataListQueryParams = BaseListQueryParams;
 
-declare enum ChannelType {
+export declare enum ChannelType {
   BASE = 'base',
   GROUP = 'group',
   OPEN = 'open',
 }
 
-declare class ConnectionHandler {
+export declare class ConnectionHandler {
   onConnected: (userId: string) => void;
   onReconnectStarted: () => void;
   onReconnectSucceeded: () => void;
@@ -225,20 +233,20 @@ declare class ConnectionHandler {
   onDisconnected: (userId: string) => void;
 }
 
-declare enum ConnectionState {
+export declare enum ConnectionState {
   CONNECTING = 'CONNECTING',
   OPEN = 'OPEN',
   CLOSED = 'CLOSED',
 }
 
-declare enum CountPreference {
+export declare enum CountPreference {
   ALL = 'all',
   UNREAD_MESSAGE_COUNT_ONLY = 'unread_message_count_only',
   UNREAD_MENTION_COUNT_ONLY = 'unread_mention_count_only',
   OFF = 'off',
 }
 
-declare interface DoNotDisturbPreference {
+export declare interface DoNotDisturbPreference {
   doNotDisturbOn: boolean;
   startHour?: number;
   startMin?: number;
@@ -247,31 +255,31 @@ declare interface DoNotDisturbPreference {
   timezone?: string;
 }
 
-declare class Emoji {
+export declare class Emoji {
   readonly key: string;
   readonly url: string;
 }
 
-declare class EmojiCategory {
+export declare class EmojiCategory {
   readonly id: number;
   readonly name: string;
   readonly url: string;
   readonly emojis: Emoji[];
 }
 
-declare class EmojiContainer {
+export declare class EmojiContainer {
   readonly emojiHash: string;
   readonly emojiCategories: EmojiCategory[];
 }
 
-declare interface Encryption {
+export declare interface Encryption {
   encrypt: (obj: object) => object;
   decrypt: (encrypted: object) => object;
 }
 
-declare type FailedMessageHandler = (err: Error, message: SendableMessage) => void;
+export declare type FailedMessageHandler = (err: Error, message: SendableMessage) => void;
 
-declare type FileCompat = File | Blob | FileInfo;
+export declare type FileCompat = File | Blob | FileInfo;
 
 declare interface FileInfo {
   name: string;
@@ -279,7 +287,7 @@ declare interface FileInfo {
   type: string;
 }
 
-declare class FileMessage extends SendableMessage {
+export declare class FileMessage extends SendableMessage {
   messageParams: FileMessageCreateParams;
   readonly plainUrl: string;
   readonly requireAuth: boolean;
@@ -298,7 +306,7 @@ declare class FileMessage extends SendableMessage {
   }>;
 }
 
-declare interface FileMessageCreateParams extends BaseMessageCreateParams {
+export declare interface FileMessageCreateParams extends BaseMessageCreateParams {
   file?: FileCompat;
   fileKey?: string;
   fileUrl?: string;
@@ -309,9 +317,9 @@ declare interface FileMessageCreateParams extends BaseMessageCreateParams {
   requireAuth?: boolean;
 }
 
-type FileMessageUpdateParams = BaseMessageUpdateParams;
+export type FileMessageUpdateParams = BaseMessageUpdateParams;
 
-declare interface FriendChangelogs {
+export declare interface FriendChangelogs {
   addedUsers: User[];
   updatedUsers: User[];
   deletedUserIds: string[];
@@ -319,18 +327,18 @@ declare interface FriendChangelogs {
   token: string;
 }
 
-declare interface FriendDiscovery {
+export declare interface FriendDiscovery {
   friendDiscoveryKey: string;
   friendName: string;
 }
 
-declare class FriendListQuery extends BaseListQuery {
+export declare class FriendListQuery extends BaseListQuery {
   next(): Promise<User[]>;
 }
 
-type FriendListQueryParams = BaseListQueryParams;
+export type FriendListQueryParams = BaseListQueryParams;
 
-declare class GroupChannel extends BaseChannel {
+export declare class GroupChannel extends BaseChannel {
   readonly isDistinct: boolean;
   readonly isSuper: boolean;
   readonly isBroadcast: boolean;
@@ -414,11 +422,11 @@ declare class GroupChannel extends BaseChannel {
   resetMyHistory(): Promise<GroupChannel>;
 }
 
-declare class GroupChannelEventContext {
+export declare class GroupChannelEventContext {
   readonly source: GroupChannelEventSource;
 }
 
-declare enum GroupChannelEventSource {
+export declare enum GroupChannelEventSource {
   UNKNOWN = 'UNKNOWN',
   EVENT_CHANNEL_CREATED = 'EVENT_CHANNEL_CREATED',
   EVENT_CHANNEL_UPDATED = 'EVENT_CHANNEL_UPDATED',
@@ -449,12 +457,12 @@ declare enum GroupChannelEventSource {
   SYNC_CHANNEL_CHANGELOGS = 'SYNC_CHANNEL_CHANGELOGS',
 }
 
-declare interface GroupChannelHideParams {
+export declare interface GroupChannelHideParams {
   hidePreviousMessages?: boolean;
   allowAutoUnhide?: boolean;
 }
 
-declare interface GroupChannelUpdateParams {
+export declare interface GroupChannelUpdateParams {
   coverUrl?: string;
   coverImage?: FileCompat;
   isDistinct?: boolean;
@@ -468,17 +476,17 @@ declare interface GroupChannelUpdateParams {
   messageSurvivalSeconds?: number;
 }
 
-declare enum HiddenState {
+export declare enum HiddenState {
   UNHIDDEN = 'unhidden',
   HIDDEN_ALLOW_AUTO_UNHIDE = 'hidden_allow_auto_unhide',
   HIDDEN_PREVENT_AUTO_UNHIDE = 'hidden_prevent_auto_unhide',
 }
 
-declare interface InvitationPreference {
+export declare interface InvitationPreference {
   autoAccept: boolean;
 }
 
-declare enum LogLevel {
+export declare enum LogLevel {
   NONE = 0,
   VERBOSE = 1,
   DEBUG = 2,
@@ -487,7 +495,7 @@ declare enum LogLevel {
   ERROR = 5,
 }
 
-declare class Member extends RestrictedUser {
+export declare class Member extends RestrictedUser {
   state: MemberState;
   role: Role;
   isMuted: boolean;
@@ -495,12 +503,12 @@ declare class Member extends RestrictedUser {
   isBlockingMe: boolean;
 }
 
-declare enum MemberListOrder {
+export declare enum MemberListOrder {
   MEMBER_NICKNAME_ALPHABETICAL = 'member_nickname_alphabetical',
   OPERATOR_THEN_MEMBER_ALPHABETICAL = 'operator_then_member_alphabetical',
 }
 
-declare class MemberListQuery extends ChannelDataListQuery {
+export declare class MemberListQuery extends ChannelDataListQuery {
   readonly mutedMemberFilter: MutedMemberFilter;
   readonly memberStateFilter: MemberStateFilter;
   readonly nicknameStartsWithFilter: string;
@@ -517,13 +525,13 @@ declare interface MemberListQueryParams extends ChannelDataListQueryParams {
   order?: MemberListOrder;
 }
 
-declare enum MemberState {
+export declare enum MemberState {
   NONE = 'none',
   JOINED = 'joined',
   INVITED = 'invited',
 }
 
-declare enum MemberStateFilter {
+export declare enum MemberStateFilter {
   ALL = 'all',
   JOINED = 'joined_only',
   INVITED = 'invited_only',
@@ -531,7 +539,7 @@ declare enum MemberStateFilter {
   INVITED_BY_NON_FRIEND = 'invited_by_non_friend',
 }
 
-declare class MemoryStore implements BaseStore {
+export declare class MemoryStore implements BaseStore {
   dbname: string;
   itemSizeLimit: number;
   delay: number;
@@ -556,7 +564,7 @@ declare interface MemoryStoreParams {
   encryption?: Encryption;
 }
 
-declare enum MentionType {
+export declare enum MentionType {
   USERS = 'users',
   CHANNEL = 'channel',
 }
@@ -568,7 +576,7 @@ declare interface MessageChangelogs {
   token: string;
 }
 
-declare interface MessageChangeLogsParams {
+export declare interface MessageChangeLogsParams {
   replyType?: ReplyType;
   includeReactions?: boolean;
   includeThreadInfo?: boolean;
@@ -577,7 +585,7 @@ declare interface MessageChangeLogsParams {
   includePollDetails?: boolean;
 }
 
-declare class MessageCollection {
+export declare class MessageCollection {
   readonly filter: MessageFilter;
   get channel(): GroupChannel;
   get succeededMessages(): BaseMessage[];
@@ -593,7 +601,7 @@ declare class MessageCollection {
   dispose(): void;
 }
 
-declare interface MessageCollectionEventHandler {
+export declare interface MessageCollectionEventHandler {
   onChannelUpdated: (context: GroupChannelEventContext, channel: GroupChannel) => void;
   onChannelDeleted: (context: GroupChannelEventContext, channelUrl: string) => void;
   onMessagesAdded: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
@@ -602,12 +610,12 @@ declare interface MessageCollectionEventHandler {
   onHugeGapDetected: () => void;
 }
 
-declare class MessageCollectionInitHandler {
+export declare class MessageCollectionInitHandler {
   onCacheResult(handler: MessageCollectionInitResultHandler): MessageCollectionInitHandler;
   onApiResult(handler: MessageCollectionInitResultHandler): MessageCollectionInitHandler;
 }
 
-declare enum MessageCollectionInitPolicy {
+export declare enum MessageCollectionInitPolicy {
   CACHE_AND_REPLACE_BY_API = 'cache_and_replace_by_api',
 }
 
@@ -619,11 +627,11 @@ declare interface MessageCollectionParams {
   limit?: number;
 }
 
-declare class MessageEventContext {
-  readonly source: MessageEventSource_2;
+export declare class MessageEventContext {
+  readonly source: MessageEventSource;
 }
 
-declare enum MessageEventSource_2 {
+export declare enum MessageEventSource {
   UNKNOWN = 'UNKNOWN',
   EVENT_MESSAGE_SENT_SUCCESS = 'EVENT_MESSAGE_SENT_SUCCESS',
   EVENT_MESSAGE_SENT_FAILED = 'EVENT_MESSAGE_SENT_FAILED',
@@ -649,7 +657,7 @@ declare enum MessageEventSource_2 {
   LOCAL_MESSAGE_RESEND_STARTED = 'LOCAL_MESSAGE_RESEND_STARTED',
 }
 
-declare class MessageFilter {
+export declare class MessageFilter {
   messageTypeFilter: MessageTypeFilter;
   customTypesFilter: string[];
   senderUserIdsFilter: string[];
@@ -658,9 +666,9 @@ declare class MessageFilter {
   match(message: BaseMessage): boolean;
 }
 
-declare type MessageHandler = (message: SendableMessage) => void;
+export declare type MessageHandler = (message: SendableMessage) => void;
 
-declare interface MessageListParams {
+export declare interface MessageListParams {
   prevResultSize: number;
   nextResultSize: number;
   isInclusive?: boolean;
@@ -676,12 +684,12 @@ declare interface MessageListParams {
   showSubchannelMessagesOnly?: boolean;
 }
 
-declare class MessageMetaArray {
+export declare class MessageMetaArray {
   readonly key: string;
   readonly value: string[];
 }
 
-declare class MessageModule extends Module {
+export declare class MessageModule extends Module {
   name: 'message';
   buildMessageFromSerializedData(serialized: object): UserMessage | FileMessage | AdminMessage;
   buildSenderFromSerializedData(serialized: object): Sender;
@@ -689,13 +697,13 @@ declare class MessageModule extends Module {
   getScheduledMessage(params: ScheduledMessageRetrievalParams): Promise<BaseMessage>;
 }
 
-declare class MessageRequestHandler {
+export declare class MessageRequestHandler {
   onPending(handler: MessageHandler): MessageRequestHandler;
   onFailed(handler: FailedMessageHandler): MessageRequestHandler;
   onSucceeded(handler: MessageHandler): MessageRequestHandler;
 }
 
-declare interface MessageRetrievalParams {
+export declare interface MessageRetrievalParams {
   channelUrl: string;
   channelType: ChannelType;
   messageId: number;
@@ -706,12 +714,12 @@ declare interface MessageRetrievalParams {
   includePollDetails?: boolean;
 }
 
-declare enum MessageSearchOrder {
+export declare enum MessageSearchOrder {
   SCORE = 'score',
   TIMESTAMP = 'ts',
 }
 
-declare class MessageSearchQuery extends BaseListQuery {
+export declare class MessageSearchQuery extends BaseListQuery {
   readonly keyword: string;
   readonly reverse: boolean;
   readonly exactMatch: boolean;
@@ -738,25 +746,25 @@ declare interface MessageSearchQueryParams extends BaseListQueryParams {
   targetFields?: string[];
 }
 
-declare enum MessageType {
+export declare enum MessageType {
   BASE = 'base',
   USER = 'user',
   FILE = 'file',
   ADMIN = 'admin',
 }
 
-declare enum MessageTypeFilter {
+export declare enum MessageTypeFilter {
   ALL = '',
   USER = 'MESG',
   FILE = 'FILE',
   ADMIN = 'ADMM',
 }
 
-declare type MetaCounter = {
+export declare type MetaCounter = {
   [key: string]: number;
 };
 
-declare type MetaData = {
+export declare type MetaData = {
   [key: string]: string;
 };
 
@@ -773,7 +781,7 @@ declare type ModuleNamespaces<T extends Module[], M extends T[number] = T[number
     : never;
 };
 
-declare interface MutedInfo {
+export declare interface MutedInfo {
   isMuted: boolean;
   startAt: number;
   endAt: number;
@@ -787,18 +795,18 @@ declare enum MutedMemberFilter {
   UNMUTED = 'unmuted',
 }
 
-declare enum MutedState {
+export declare enum MutedState {
   MUTED = 'muted',
   UNMUTED = 'unmuted',
 }
 
-declare class MutedUserListQuery extends ChannelDataListQuery {
+export declare class MutedUserListQuery extends ChannelDataListQuery {
   next(): Promise<RestrictedUser[]>;
 }
 
-type MutedUserListQueryParams = ChannelDataListQueryParams;
+export type MutedUserListQueryParams = ChannelDataListQueryParams;
 
-declare class OGImage {
+export declare class OGImage {
   readonly url: string;
   readonly secureUrl: string;
   readonly type: string;
@@ -807,7 +815,7 @@ declare class OGImage {
   readonly alt: string;
 }
 
-declare class OGMetaData {
+export declare class OGMetaData {
   readonly title: string;
   readonly url: string;
   readonly description: string;
@@ -842,17 +850,17 @@ export declare interface OpenChannelUpdateParams {
   operatorUserIds?: string[];
 }
 
-declare enum OperatorFilter {
+export declare enum OperatorFilter {
   ALL = 'all',
   OPERATOR = 'operator',
   NONOPERATOR = 'nonoperator',
 }
 
-declare class OperatorListQuery extends ChannelDataListQuery {
+export declare class OperatorListQuery extends ChannelDataListQuery {
   next(): Promise<User[]>;
 }
 
-type OperatorListQueryParams = ChannelDataListQueryParams;
+export type OperatorListQueryParams = ChannelDataListQueryParams;
 
 export declare class ParticipantListQuery extends ChannelDataListQuery {
   next(): Promise<User[]>;
@@ -860,13 +868,13 @@ export declare class ParticipantListQuery extends ChannelDataListQuery {
 
 type ParticipantListQueryParams = ChannelDataListQueryParams;
 
-declare class Plugin_2 {
+export declare class Plugin {
   readonly type: string;
   readonly vendor: string;
   readonly detail: object;
 }
 
-declare class PreviousMessageListQuery extends ChannelDataListQuery {
+export declare class PreviousMessageListQuery extends ChannelDataListQuery {
   readonly reverse: boolean;
   readonly messageTypeFilter: MessageTypeFilter;
   readonly customTypesFilter: string[];
@@ -893,43 +901,43 @@ declare interface PreviousMessageListQueryParams extends ChannelDataListQueryPar
   showSubchannelMessagesOnly?: boolean;
 }
 
-declare enum PushNotificationDeliveryOption {
+export declare enum PushNotificationDeliveryOption {
   DEFAULT = 'default',
   SUPPRESS = 'suppress',
 }
 
-declare enum PushTemplate {
+export declare enum PushTemplate {
   ALTERNATIVE = 'alternative',
   DEFAULT = 'default',
 }
 
-declare enum PushTokenRegistrationState {
+export declare enum PushTokenRegistrationState {
   SUCCESS = 'success',
   PENDING = 'pending',
   ERROR = 'error',
 }
 
-declare interface PushTokens {
+export declare interface PushTokens {
   deviceTokens: string[];
   type: PushTokenType;
   hasMore: boolean;
   token: string;
 }
 
-declare enum PushTokenType {
+export declare enum PushTokenType {
   FCM = 'gcm',
   APNS = 'apns',
   UNKNOWN = 'unknown',
 }
 
-declare enum PushTriggerOption {
+export declare enum PushTriggerOption {
   DEFAULT = 'default',
   ALL = 'all',
   MENTION_ONLY = 'mention_only',
   OFF = 'off',
 }
 
-declare class Reaction {
+export declare class Reaction {
   readonly key: string;
   readonly userIds: string[];
   updatedAt: number;
@@ -937,7 +945,7 @@ declare class Reaction {
   applyEvent(reactionEvent: ReactionEvent): void;
 }
 
-declare class ReactionEvent {
+export declare class ReactionEvent {
   readonly messageId: number;
   readonly userId: string;
   readonly key: string;
@@ -945,47 +953,47 @@ declare class ReactionEvent {
   readonly updatedAt: number;
 }
 
-declare enum ReactionEventOperation {
+export declare enum ReactionEventOperation {
   ADD = 'add',
   DELETE = 'delete',
 }
 
-declare class ReadStatus {
+export declare class ReadStatus {
   readonly channelUrl: string;
   readonly channelType: string;
   readonly reader: User;
   readonly readAt: number;
 }
 
-declare enum ReplyType {
+export declare enum ReplyType {
   ALL = 'all',
   NONE = 'none',
   ONLY_REPLY_TO_CHANNEL = 'only_reply_to_channel',
 }
 
-declare enum ReportCategory {
+export declare enum ReportCategory {
   SPAM = 'spam',
   HARASSING = 'harassing',
   SUSPICIOUS = 'suspicious',
   INAPPROPRIATE = 'inappropriate',
 }
 
-declare class RestrictedUser extends User {
+export declare class RestrictedUser extends User {
   readonly restrictionInfo: RestrictionInfo;
 }
 
-declare class RestrictionInfo {
+export declare class RestrictionInfo {
   readonly restrictionType: RestrictionType;
   readonly description: string;
   readonly endAt: number;
 }
 
-declare enum RestrictionType {
+export declare enum RestrictionType {
   MUTED = 'muted',
   BANNED = 'banned',
 }
 
-declare enum Role {
+export declare enum Role {
   OPERATOR = 'operator',
   NONE = 'none',
 }
@@ -1033,7 +1041,7 @@ declare class SendableMessage extends BaseMessage {
   isIdentical(message: SendableMessage): boolean;
 }
 
-declare class SendbirdChat {
+export declare class SendbirdChat {
   readonly options: SendbirdChatOptions;
   readonly message: MessageModule;
   static init<Modules extends Module[]>(
@@ -1042,6 +1050,7 @@ declare class SendbirdChat {
   static get instance(): SendbirdChat;
   static get version(): string;
   get appId(): string;
+  get appInfo(): AppInfo;
   get appVersion(): string;
   get debugMode(): boolean;
   get logLevel(): LogLevel;
@@ -1119,7 +1128,7 @@ declare class SendbirdChat {
   getEmoji(emojiKey: string): Promise<Emoji>;
 }
 
-declare class SendbirdChatOptions {
+export declare class SendbirdChatOptions {
   constructor({
     useMemberInfoInMessage,
     typingIndicatorInvalidateTime,
@@ -1141,7 +1150,7 @@ declare class SendbirdChatOptions {
   set websocketResponseTimeout(value: number);
 }
 
-declare interface SendbirdChatParams<Modules extends Module[]> {
+export declare interface SendbirdChatParams<Modules extends Module[]> {
   appId: string;
   appVersion?: string;
   customApiHost?: string;
@@ -1160,12 +1169,12 @@ export declare class SendbirdError extends Error {
   readonly code: number;
 }
 
-declare class Sender extends User {
+export declare class Sender extends User {
   role: Role;
   isBlockedByMe: boolean;
 }
 
-declare enum SendingStatus {
+export declare enum SendingStatus {
   PENDING = 'pending',
   SCHEDULED = 'scheduled',
   SUCCEEDED = 'succeeded',
@@ -1173,7 +1182,7 @@ declare enum SendingStatus {
   CANCELED = 'canceled',
 }
 
-declare class SessionHandler {
+export declare class SessionHandler {
   onSessionExpired: () => void;
   onSessionTokenRequired: (resolve: SessionTokenRefreshResolve, reject: SessionTokenRefreshReject) => void;
   onSessionError: (err: Error) => void;
@@ -1185,7 +1194,7 @@ declare type SessionTokenRefreshReject = (err: Error) => void;
 
 declare type SessionTokenRefreshResolve = (authToken: string) => void;
 
-declare interface SnoozePeriod {
+export declare interface SnoozePeriod {
   isSnoozeOn: boolean;
   startTs?: number;
   endTs?: number;
@@ -1197,7 +1206,7 @@ declare interface StoreItem {
   generation: number;
 }
 
-declare interface ThreadedMessageListParams {
+export declare interface ThreadedMessageListParams {
   prevResultSize: number;
   nextResultSize: number;
   isInclusive?: boolean;
@@ -1210,21 +1219,21 @@ declare interface ThreadedMessageListParams {
   includeParentMessageInfo?: boolean;
 }
 
-declare class ThreadInfo {
+export declare class ThreadInfo {
   readonly replyCount: number;
   readonly mostRepliedUsers: User[];
   readonly lastRepliedAt: number;
   readonly updatedAt: number;
 }
 
-declare class ThreadInfoUpdateEvent {
+export declare class ThreadInfoUpdateEvent {
   readonly threadInfo: ThreadInfo;
   readonly targetMessageId: number;
   readonly channelUrl: string;
   readonly channelType: ChannelType;
 }
 
-declare class Thumbnail {
+export declare class Thumbnail {
   readonly url: string;
   readonly width: number;
   readonly height: number;
@@ -1238,7 +1247,7 @@ declare interface ThumbnailSize {
   maxHeight: number;
 }
 
-declare class User {
+export declare class User {
   readonly userId: string;
   readonly requireAuth: boolean;
   nickname: string;
@@ -1258,18 +1267,18 @@ declare class User {
   deleteAllMetaData(): Promise<void>;
 }
 
-declare class UserEventHandler {
+export declare class UserEventHandler {
   onFriendsDiscovered: (users: User[]) => void;
   onTotalUnreadMessageCountUpdated: (totalCount: number, countByCustomType: object) => void;
 }
 
-declare class UserMessage extends SendableMessage {
+export declare class UserMessage extends SendableMessage {
   message: string;
   messageParams: UserMessageCreateParams;
   readonly translations: object;
   readonly translationTargetLanguages: string[];
   readonly messageSurvivalSeconds: number;
-  readonly plugins: Plugin_2[];
+  readonly plugins: Plugin[];
   getThreadedMessagesByTimestamp(
     ts: number,
     params: ThreadedMessageListParams,
@@ -1279,23 +1288,23 @@ declare class UserMessage extends SendableMessage {
   }>;
 }
 
-declare interface UserMessageCreateParams extends BaseMessageCreateParams {
+export declare interface UserMessageCreateParams extends BaseMessageCreateParams {
   message: string;
   translationTargetLanguages?: string[];
 }
 
-declare interface UserMessageUpdateParams extends BaseMessageUpdateParams {
+export declare interface UserMessageUpdateParams extends BaseMessageUpdateParams {
   message?: string;
   translationTargetLanguages?: string[];
 }
 
-declare enum UserOnlineState {
+export declare enum UserOnlineState {
   ONLINE = 'online',
   OFFLINE = 'offline',
   NON_AVAILABLE = 'nonavailable',
 }
 
-declare interface UserUpdateParams {
+export declare interface UserUpdateParams {
   profileImage?: FileCompat;
   profileUrl?: string;
   nickname?: string;

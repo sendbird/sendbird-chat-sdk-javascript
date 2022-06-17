@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v4.0.1 (Jun 17, 2022)
+- Added `appInfo` getter in `SendbirdChat`.
+- Improved stability.
+
 ## v4.0.0 (Jun 14, 2022)
 > To see detailed changes for below items, please refer to the [migration guide](https://sendbird.com/docs/chat/v4/javascript/getting-started/migration-guide)
 

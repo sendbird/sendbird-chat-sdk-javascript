@@ -33,7 +33,7 @@ export {
   MutedUserListQueryParams,
   OperatorListQuery,
   OperatorListQueryParams,
-  Plugin_2 as Plugin,
+  Plugin,
   PushTemplate,
   PushTokenRegistrationState,
   PushTokens,

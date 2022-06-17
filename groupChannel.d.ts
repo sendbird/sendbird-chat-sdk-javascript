@@ -32,7 +32,7 @@ export {
   MessageCollectionInitHandler,
   MessageCollectionInitPolicy,
   MessageEventContext,
-  MessageEventSource_2 as MessageEventSource,
+  MessageEventSource,
   MessageFilter,
   MutedState,
   MyMemberStateFilter,

@@ -1364,7 +1364,7 @@ export declare interface GroupChannelCollectionEventHandler {
   onChannelsDeleted: (context: GroupChannelEventContext, channelUrls: string[]) => void;
 }
 
-declare interface GroupChannelCollectionParams {
+export declare interface GroupChannelCollectionParams {
   filter?: GroupChannelFilter;
   order?: GroupChannelListOrder;
   limit?: number;
@@ -1486,7 +1486,7 @@ export declare class GroupChannelListQuery extends BaseListQuery {
   next(): Promise<GroupChannel[]>;
 }
 
-declare interface GroupChannelListQueryParams extends BaseListQueryParams, GroupChannelListParams {}
+export declare interface GroupChannelListQueryParams extends BaseListQueryParams, GroupChannelListParams {}
 
 export declare class GroupChannelModule extends Module {
   name: 'groupChannel';
@@ -1601,7 +1601,7 @@ export declare class PublicGroupChannelListQuery extends BaseListQuery {
   next(): Promise<GroupChannel[]>;
 }
 
-declare interface PublicGroupChannelListQueryParams extends BaseListQueryParams {
+export declare interface PublicGroupChannelListQueryParams extends BaseListQueryParams {
   includeEmpty?: boolean;
   includeFrozen?: boolean;
   includeMetaData?: boolean;

@@ -1,6 +1,9 @@
 
 # Changelog
 
+## v4.0.2 (Jun 22, 2022)
+- Added missing `GroupChannelListQueryParams`, `GroupChannelCollectionParams`, and `PublicGroupChannelListQueryParams` in `GroupChannelModule`.
+
 ## v4.0.1 (Jun 17, 2022)
 - Added `appInfo` getter in `SendbirdChat`.
 - Improved stability.

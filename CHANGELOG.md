@@ -1,6 +1,9 @@
 
 # Changelog
 
+## v4.0.3 (Jun 28, 2022)
+- Fixed bug: Crash on using `OpenChannelModule` alone.
+
 ## v4.0.2 (Jun 22, 2022)
 - Added missing `GroupChannelListQueryParams`, `GroupChannelCollectionParams`, and `PublicGroupChannelListQueryParams` in `GroupChannelModule`.
 

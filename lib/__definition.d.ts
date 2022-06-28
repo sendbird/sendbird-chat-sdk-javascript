@@ -1066,7 +1066,7 @@ export declare class SendbirdChat {
   addExtension(key: string, version: string): void;
   initializeCache(userId: string): Promise<void>;
   clearCachedData(): Promise<void>;
-  clearCachedMessages(channelUrls: string[]): Promise<void[]>;
+  clearCachedMessages(channelUrls: string[]): Promise<void>;
   connect(userId: string, authToken?: string): Promise<User>;
   reconnect(): boolean;
   disconnect(): Promise<void>;

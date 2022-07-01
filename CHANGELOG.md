@@ -1,6 +1,12 @@
 
 # Changelog
 
+## v4.0.4 (Jul 1, 2022)
+- Changed `GroupChannel.createScheduledUserMessage()` and `GroupChannel.createScheduledFileMessage()` to return a `MessageRequestHandler` instance.
+- An optional property `scheduledMessageParams` has been added to `ScheduledInfo`.
+- Fixed a bug where `succeededMessage.replyToChannel` is false when a message is sent with `messageParams.isReplyToChannel` set to true.
+- Improved stability.
+
 ## v4.0.3 (Jun 28, 2022)
 - Fixed bug: Crash on using `OpenChannelModule` alone.
 

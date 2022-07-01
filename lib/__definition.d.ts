@@ -404,12 +404,12 @@ export declare class GroupChannel extends BaseChannel {
   markAsDelivered(): Promise<void>;
   startTyping(): Promise<void>;
   endTyping(): Promise<void>;
-  createScheduledUserMessage(params: ScheduledUserMessageCreateParams): Promise<UserMessage>;
+  createScheduledUserMessage(params: ScheduledUserMessageCreateParams): MessageRequestHandler;
   updateScheduledUserMessage(
     scheduledMessageId: number,
     params: ScheduledUserMessageUpdateParams,
   ): Promise<UserMessage>;
-  createScheduledFileMessage(params: ScheduledFileMessageCreateParams): Promise<FileMessage>;
+  createScheduledFileMessage(params: ScheduledFileMessageCreateParams): MessageRequestHandler;
   updateScheduledFileMessage(
     scheduledMessageId: number,
     params: ScheduledFileMessageUpdateParams,
@@ -687,6 +687,7 @@ export declare interface MessageListParams {
 export declare class MessageMetaArray {
   readonly key: string;
   readonly value: string[];
+  constructor(payload: MessageMetaArrayPayload);
 }
 
 export declare class MessageModule extends Module {
@@ -1016,6 +1017,7 @@ declare interface ScheduledFileMessageUpdateParams extends BaseMessageUpdatePara
 declare interface ScheduledInfo {
   scheduledMessageId: number;
   scheduledAt: number;
+  scheduledMessageParams?: ScheduledUserMessageCreateParams | ScheduledFileMessageCreateParams;
 }
 
 declare interface ScheduledMessageRetrievalParams {

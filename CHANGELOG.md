@@ -1,6 +1,9 @@
 
 # Changelog
 
+## v4.0.5 (Jul 6, 2022)
+- Fixed a bug on AppStateChangeDetector in ReactNative.
+
 ## v4.0.4 (Jul 1, 2022)
 - Changed `GroupChannel.createScheduledUserMessage()` and `GroupChannel.createScheduledFileMessage()` to return a `MessageRequestHandler` instance.
 - An optional property `scheduledMessageParams` has been added to `ScheduledInfo`.

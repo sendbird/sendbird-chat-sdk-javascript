@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v4.0.6 (Jul 8, 2022)
+- Fixed a bug `messageRequestHandler.onFailed()` to always return a failed message.
+- Improved stability.
+
 ## v4.0.5 (Jul 6, 2022)
 - Fixed a bug on AppStateChangeDetector in ReactNative.
 

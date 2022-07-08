@@ -690,6 +690,11 @@ export declare class MessageMetaArray {
   constructor(payload: MessageMetaArrayPayload);
 }
 
+declare interface MessageMetaArrayPayload {
+  'key': string;
+  'value'?: string[];
+}
+
 export declare class MessageModule extends Module {
   name: 'message';
   buildMessageFromSerializedData(serialized: object): UserMessage | FileMessage | AdminMessage;
@@ -1068,7 +1073,7 @@ export declare class SendbirdChat {
   addExtension(key: string, version: string): void;
   initializeCache(userId: string): Promise<void>;
   clearCachedData(): Promise<void>;
-  clearCachedMessages(channelUrls: string[]): Promise<void[]>;
+  clearCachedMessages(channelUrls: string[]): Promise<void>;
   connect(userId: string, authToken?: string): Promise<User>;
   reconnect(): boolean;
   disconnect(): Promise<void>;

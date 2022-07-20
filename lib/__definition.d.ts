@@ -1190,6 +1190,9 @@ export declare enum SendingStatus {
 }
 
 export declare class SessionHandler {
+  /**
+   * @deprecated since v4.0.7
+   */
   onSessionExpired: () => void;
   onSessionTokenRequired: (resolve: SessionTokenRefreshResolve, reject: SessionTokenRefreshReject) => void;
   onSessionError: (err: Error) => void;
@@ -1518,15 +1521,15 @@ export declare class GroupChannelModule extends Module {
     params: GroupChannelChangeLogsParams,
   ): Promise<GroupChannelChangelogs>;
   getGroupChannelCount(params: GroupChannelCountParams): Promise<number>;
-  getUnreadItemCount(params: UnreadItemCountParams): Promise<UnreadItemCount>;
+  getUnreadItemCount(params?: UnreadItemCountParams): Promise<UnreadItemCount>;
   getTotalUnreadChannelCount(): Promise<number>;
-  getTotalUnreadMessageCount(params: TotalUnreadMessageCountParams): Promise<number>;
-  getTotalScheduledMessageCount(params: TotalScheduledMessageCountParams): Promise<number>;
+  getTotalUnreadMessageCount(params?: TotalUnreadMessageCountParams): Promise<number>;
+  getTotalScheduledMessageCount(params?: TotalScheduledMessageCountParams): Promise<number>;
   getSubscribedTotalUnreadMessageCount(): number;
   getSubscribedCustomTypeTotalUnreadMessageCount(): number;
   getSubscribedCustomTypeUnreadMessageCount(customType: string): number;
   createChannel(params?: GroupChannelCreateParams): Promise<GroupChannel>;
-  createDistinctChannelIfNotExist(params: GroupChannelCreateParams): Promise<GroupChannel>;
+  createDistinctChannelIfNotExist(params?: GroupChannelCreateParams): Promise<GroupChannel>;
   createChannelWithUserIds(
     userIds: string[],
     isDistinct?: boolean,

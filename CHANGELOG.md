@@ -1,6 +1,14 @@
 
 # Changelog
 
+## v4.0.7 (Jul 20, 2022)
+- Fixed a bug where `groupChannelCollection.hasNext` is always true.
+- Fixed a bug where `messageCollection.initialize()` returning the result in reverse order.
+- Fixed a bug where `channelHandler.onMentionReceived()` returning a channel with `mentionedCount` value not updated when expected to be updated.
+- Params parameter of `getUnreadItemCount()`, `getTotalUnreadMessageCount()`, `getTotalScheduledMessageCount()`, `createDistinctChannelIfNotExist()` in `GroupChannelModule` are now made optional.
+- Deprecated `sessionHandler.onSessionExpired()`.
+- Improved stability.
+
 ## v4.0.6 (Jul 8, 2022)
 - Fixed a bug `messageRequestHandler.onFailed()` to always return a failed message.
 - Improved stability.

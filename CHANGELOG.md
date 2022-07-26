@@ -1,6 +1,12 @@
 
 # Changelog
 
+## v4.0.8 (Jul 26, 2022)
+- Fixed a bug where request url is malformed when it includes a stringified array as a parameter value
+- Fixed a bug where `groupChannelCollection.onChannelsUpdated()` is not called when `groupChannel.lastMessage` is updated
+- Fixed a bug where file upload failed messages are not resendable
+- Improved stability
+
 ## v4.0.7 (Jul 20, 2022)
 - Fixed a bug where `groupChannelCollection.hasNext` is always true.
 - Fixed a bug where `messageCollection.initialize()` returning the result in reverse order.

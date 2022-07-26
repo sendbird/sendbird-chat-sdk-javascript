@@ -395,7 +395,9 @@ export declare class GroupChannel extends BaseChannel {
   acceptInvitation(accessCode?: string): Promise<GroupChannel>;
   declineInvitation(): Promise<GroupChannel>;
   sendUserMessage(params: UserMessageCreateParams): MessageRequestHandler;
+  updateUserMessage(messageId: number, params: UserMessageUpdateParams): Promise<UserMessage>;
   sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
+  updateFileMessage(messageId: number, params: FileMessageUpdateParams): Promise<FileMessage>;
   deleteMessage(message: SendableMessage): Promise<void>;
   hide(params: GroupChannelHideParams): Promise<GroupChannel>;
   unhide(): Promise<GroupChannel>;

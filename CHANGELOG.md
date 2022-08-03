@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v4.0.9 (Aug 03, 2022)
+- Fixed a bug where numeric zero values are being removed from request url
+- Improved stability
+
 ## v4.0.8 (Jul 26, 2022)
 - Fixed a bug where request url is malformed when it includes a stringified array as a parameter value
 - Fixed a bug where `groupChannelCollection.onChannelsUpdated()` is not called when `groupChannel.lastMessage` is updated

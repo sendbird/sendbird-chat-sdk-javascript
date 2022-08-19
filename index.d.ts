@@ -31,6 +31,7 @@ export {
   MutedInfo,
   MutedUserListQuery,
   MutedUserListQueryParams,
+  OnlineDetectorListener,
   OperatorListQuery,
   OperatorListQueryParams,
   Plugin,

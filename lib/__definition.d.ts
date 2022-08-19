@@ -830,6 +830,8 @@ export declare class OGMetaData {
   readonly defaultImage: OGImage;
 }
 
+export declare type OnlineDetectorListener = (callback: () => void) => (() => void) | undefined;
+
 export declare class OpenChannel extends BaseChannel {
   participantCount: number;
   operators: User[];
@@ -1073,6 +1075,8 @@ export declare class SendbirdChat {
   get apnsPushToken(): string;
   getMemoryStoreForDebugging(): MemoryStore;
   addExtension(key: string, version: string): void;
+  setOnlineListener(listener: OnlineDetectorListener): void;
+  setOfflineListener(listener: OnlineDetectorListener): void;
   initializeCache(userId: string): Promise<void>;
   clearCachedData(): Promise<void>;
   clearCachedMessages(channelUrls: string[]): Promise<void>;

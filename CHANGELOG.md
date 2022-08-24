@@ -1,6 +1,6 @@
 
 # Changelog
-## v4.0.10 (Aug 119, 2022)
+## v4.0.10 (Aug 19, 2022)
 - Added sb.setOnlineListener() and sb.setOfflineListener() interfaces for non-browser environments
 - Updated to stop all running sync jobs when GroupChannelCollection.dispose(), and MessageCollection.dispose() is called
 - Added missing exports to sendbird.min.js

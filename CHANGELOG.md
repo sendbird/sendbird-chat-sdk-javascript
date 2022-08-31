@@ -1,5 +1,12 @@
 
 # Changelog
+## v4.0.11 (AUG 31, 2022)
+- Added getMessagesByMessageId() to BaseChannel
+- Added MessageSearchQuery's totalCount and made it public
+- Fixed reportUser() returning 404 Error
+- Fixed a bug where after the user updates their profile and sends a message or is mentioned, their profile wasn't being updated in the received message
+- Added parameter validation check in sb.connect()
+- Improved stability
 ## v4.0.10 (Aug 19, 2022)
 - Added sb.setOnlineListener() and sb.setOfflineListener() interfaces for non-browser environments
 - Updated to stop all running sync jobs when GroupChannelCollection.dispose(), and MessageCollection.dispose() is called

@@ -93,6 +93,7 @@ export declare class BaseChannel {
   unbanUserWithUserId(userId: string): Promise<void>;
   freeze(): Promise<void>;
   unfreeze(): Promise<void>;
+  getMessagesByMessageId(messageId: number, params: MessageListParams): Promise<BaseMessage[]>;
   getMessagesByTimestamp(ts: number, params: MessageListParams): Promise<BaseMessage[]>;
   getMessageChangeLogsSinceTimestamp(ts: number, params: MessageChangeLogsParams): Promise<MessageChangelogs>;
   getMessageChangeLogsSinceToken(token: string, params: MessageChangeLogsParams): Promise<MessageChangelogs>;
@@ -738,6 +739,7 @@ export declare class MessageSearchQuery extends BaseListQuery {
   readonly order: MessageSearchOrder;
   readonly advancedQuery: boolean;
   readonly targetFields: string[];
+  totalCount: number;
   next(): Promise<BaseMessage[]>;
 }
 

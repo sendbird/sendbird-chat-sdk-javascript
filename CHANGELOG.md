@@ -1,17 +1,26 @@
 
 # Changelog
-## v4.0.11 (AUG 31, 2022)
+
+## v4.0.12 (Sep 23, 2022)
+- Fixed a bug in `GroupChannel.setMyPushTriggerOption()` to include channel url in request body
+- Fixed a bug where `resendUserMessage()` and `resendFileMessage()` in `BaseChannel` not using the given `failedMessage.reqId`
+- Added missed export for enums: `ScheduledMessageListOrder`, `ScheduledStatus`, `UnreadItemKey`, and `MutedMemberFilter`
+- Deprecated `BaseChannel.isPushEnabled`
+
+## v4.0.11 (Aug 31, 2022)
 - Added getMessagesByMessageId() to BaseChannel
 - Added MessageSearchQuery's totalCount and made it public
 - Fixed reportUser() returning 404 Error
 - Fixed a bug where after the user updates their profile and sends a message or is mentioned, their profile wasn't being updated in the received message
 - Added parameter validation check in sb.connect()
 - Improved stability
+- 
 ## v4.0.10 (Aug 19, 2022)
 - Added sb.setOnlineListener() and sb.setOfflineListener() interfaces for non-browser environments
 - Updated to stop all running sync jobs when GroupChannelCollection.dispose(), and MessageCollection.dispose() is called
 - Added missing exports to sendbird.min.js
 - Improved stability
+- 
 ## v4.0.9 (Aug 03, 2022)
 - Fixed a bug where numeric zero values are being removed from request url
 - Improved stability

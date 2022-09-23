@@ -36,6 +36,7 @@ export {
   MessageEventContext,
   MessageEventSource,
   MessageFilter,
+  MutedMemberFilter,
   MutedState,
   MyMemberStateFilter,
   OperatorFilter,
@@ -45,6 +46,8 @@ export {
   PublicGroupChannelListQueryParams,
   QueryType,
   ReadStatus,
+  ScheduledMessageListOrder,
+  ScheduledStatus,
   SendbirdGroupChat,
   SuperChannelFilter,
   TotalScheduledMessageCountParams,
@@ -52,4 +55,5 @@ export {
   UnreadChannelFilter,
   UnreadItemCount,
   UnreadItemCountParams,
+  UnreadItemKey,
 } from './lib/__definition';

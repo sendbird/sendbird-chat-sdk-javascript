@@ -347,6 +347,9 @@ export declare class GroupChannel extends BaseChannel {
   readonly isPublic: boolean;
   readonly isDiscoverable: boolean;
   readonly isAccessCodeRequired: boolean;
+  /**
+   * @deprecated
+   */
   readonly isPushEnabled: boolean;
   unreadMessageCount: number;
   unreadMentionCount: number;
@@ -799,7 +802,7 @@ export declare interface MutedInfo {
   description: string;
 }
 
-declare enum MutedMemberFilter {
+export declare enum MutedMemberFilter {
   ALL = 'all',
   MUTED = 'muted',
   UNMUTED = 'unmuted',
@@ -1641,7 +1644,7 @@ export declare enum QueryType {
   OR = 'OR',
 }
 
-declare enum ScheduledMessageListOrder {
+export declare enum ScheduledMessageListOrder {
   CREATED_AT = 'created_at',
   SCHEDULED_AT = 'scheduled_at',
 }
@@ -1663,7 +1666,7 @@ declare interface ScheduledMessageListQueryParams extends BaseListQueryParams {
   messageTypeFilter?: MessageTypeFilter;
 }
 
-declare enum ScheduledStatus {
+export declare enum ScheduledStatus {
   PENDING = 'pending',
   SENT = 'sent',
   FAILED = 'failed',
@@ -1714,7 +1717,7 @@ export declare interface UnreadItemCountParams {
   keys?: UnreadItemKey[];
 }
 
-declare enum UnreadItemKey {
+export declare enum UnreadItemKey {
   GROUP_CHANNEL_UNREAD_MENTION_COUNT = 'group_channel_unread_mention_count',
   NONSUPER_UNREAD_MENTION_COUNT = 'non_super_group_channel_unread_mention_count',
   SUPER_UNREAD_MENTION_COUNT = 'super_group_channel_unread_mention_count',

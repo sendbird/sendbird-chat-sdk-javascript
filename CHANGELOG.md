@@ -1,6 +1,11 @@
 
 # Changelog
-
+## v4.0.13 (Sep 28, 2022)
+- Added `nicknameStartsWithFilter` and `nicknameExactMatchFilter` in `GroupChannelListQueryParams`
+- Implemented channel membership history where clients can retrieve whether users have joined or left the channel
+- Added constructor support for `SessionHandler`, `ConnectionHandler`, and `UserEventHandler`
+- `BaseChannel.resendFileMessge()` now takes FileCompat instead of Blob in order to support React Native
+- Improved stability
 ## v4.0.12 (Sep 23, 2022)
 - Fixed a bug in `GroupChannel.setMyPushTriggerOption()` to include channel url in request body
 - Fixed a bug where `resendUserMessage()` and `resendFileMessage()` in `BaseChannel` not using the given `failedMessage.reqId`

@@ -1,5 +1,5 @@
 {
-  "version": "4.0.12",
+  "version": "4.0.13",
   "description": "Sendbird SDK for JavaScript",
   "name": "@sendbird/chat",
   "author": "Sendbird <support@sendbird.com>",

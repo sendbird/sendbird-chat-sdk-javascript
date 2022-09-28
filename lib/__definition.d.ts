@@ -18,6 +18,7 @@ declare class AppInfo {
   readonly useReaction: boolean;
   readonly applicationAttributes: string[];
   readonly premiumFeatureList: string[];
+  readonly enabledChannelMemberShipHistory: boolean;
 }
 
 export declare class AppleCriticalAlertOptions {
@@ -104,7 +105,7 @@ export declare class BaseChannel {
   translateUserMessage(targetMessage: UserMessage, languages: string[]): Promise<UserMessage>;
   sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
   sendFileMessages(paramsList: FileMessageCreateParams[]): MessageRequestHandler;
-  resendFileMessage(failedMessage: FileMessage, blob: Blob): Promise<FileMessage>;
+  resendFileMessage(failedMessage: FileMessage, file?: FileCompat): Promise<FileMessage>;
   updateFileMessage(messageId: number, params: FileMessageUpdateParams): Promise<FileMessage>;
   cancelUploadingFileMessage(requestId: string): Promise<boolean>;
   copyFileMessage(targetChannel: BaseChannel, message: FileMessage): Promise<FileMessage>;
@@ -226,12 +227,16 @@ export declare enum ChannelType {
   OPEN = 'open',
 }
 
-export declare class ConnectionHandler {
-  onConnected: (userId: string) => void;
-  onReconnectStarted: () => void;
-  onReconnectSucceeded: () => void;
-  onReconnectFailed: () => void;
-  onDisconnected: (userId: string) => void;
+export declare class ConnectionHandler extends ConnectionHandlerParams {
+  constructor(params?: ConnectionHandlerParams);
+}
+
+declare abstract class ConnectionHandlerParams {
+  onConnected?: (userId: string) => void;
+  onReconnectStarted?: () => void;
+  onReconnectSucceeded?: () => void;
+  onReconnectFailed?: () => void;
+  onDisconnected?: (userId: string) => void;
 }
 
 export declare enum ConnectionState {
@@ -535,6 +540,7 @@ export declare enum MemberState {
   NONE = 'none',
   JOINED = 'joined',
   INVITED = 'invited',
+  LEFT = 'left',
 }
 
 export declare enum MemberStateFilter {
@@ -1200,15 +1206,19 @@ export declare enum SendingStatus {
   CANCELED = 'canceled',
 }
 
-export declare class SessionHandler {
+export declare class SessionHandler extends SessionHandlerParams {
+  constructor(params?: SessionHandlerParams);
+}
+
+declare abstract class SessionHandlerParams {
   /**
    * @deprecated since v4.0.7
    */
-  onSessionExpired: () => void;
-  onSessionTokenRequired: (resolve: SessionTokenRefreshResolve, reject: SessionTokenRefreshReject) => void;
-  onSessionError: (err: Error) => void;
-  onSessionRefreshed: () => void;
-  onSessionClosed: () => void;
+  onSessionExpired?: () => void;
+  onSessionTokenRequired?: (resolve: SessionTokenRefreshResolve, reject: SessionTokenRefreshReject) => void;
+  onSessionError?: (err: Error) => void;
+  onSessionRefreshed?: () => void;
+  onSessionClosed?: () => void;
 }
 
 declare type SessionTokenRefreshReject = (err: Error) => void;
@@ -1288,9 +1298,13 @@ export declare class User {
   deleteAllMetaData(): Promise<void>;
 }
 
-export declare class UserEventHandler {
-  onFriendsDiscovered: (users: User[]) => void;
-  onTotalUnreadMessageCountUpdated: (totalCount: number, countByCustomType: object) => void;
+export declare class UserEventHandler extends UserEventHandlerParams {
+  constructor(params?: UserEventHandlerParams);
+}
+
+declare abstract class UserEventHandlerParams {
+  onFriendsDiscovered?: (users: User[]) => void;
+  onTotalUnreadMessageCountUpdated?: (totalCount: number, countByCustomType: object) => void;
 }
 
 export declare class UserMessage extends SendableMessage {
@@ -1419,6 +1433,8 @@ export declare interface GroupChannelCreateParams {
 export declare class GroupChannelFilter {
   includeEmpty: boolean;
   nicknameContainsFilter: string;
+  nicknameStartsWithFilter: string;
+  nicknameExactMatchFilter: string;
   channelNameContainsFilter: string;
   myMemberStateFilter: MyMemberStateFilter;
   customTypesFilter: string[];
@@ -1467,6 +1483,8 @@ declare interface GroupChannelListParams {
   customTypesFilter?: string[];
   customTypeStartsWithFilter?: string;
   nicknameContainsFilter?: string;
+  nicknameStartsWithFilter?: string;
+  nicknameExactMatchFilter?: string;
   channelNameContainsFilter?: string;
   myMemberStateFilter?: MyMemberStateFilter;
   unreadChannelFilter?: UnreadChannelFilter;
@@ -1490,6 +1508,8 @@ export declare class GroupChannelListQuery extends BaseListQuery {
   readonly customTypesFilter: string[];
   readonly customTypeStartsWithFilter: string;
   readonly nicknameContainsFilter: string;
+  readonly nicknameStartsWithFilter: string;
+  readonly nicknameExactMatchFilter: string;
   readonly channelNameContainsFilter: string;
   readonly myMemberStateFilter: MyMemberStateFilter;
   readonly unreadChannelFilter: UnreadChannelFilter;
@@ -1610,7 +1630,6 @@ export declare class PublicGroupChannelListQuery extends BaseListQuery {
   readonly channelUrlsFilter: string[];
   readonly customTypesFilter: string[];
   readonly customTypeStartsWithFilter: string;
-  readonly nicknameContainsFilter: string;
   readonly channelNameContainsFilter: string;
   readonly membershipFilter: MembershipFilter;
   readonly superChannelFilter: SuperChannelFilter;

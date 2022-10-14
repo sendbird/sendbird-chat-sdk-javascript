@@ -1,5 +1,97 @@
 
 # Changelog
+## v4.1.0 (Oct 14, 2022)
+# Features
+## Polls
+Polls is released :tada: Here’s where we think it will be really powerful.
+- Collect feedback and customer satisfaction
+- Drive engagement by receiving participants in preferences
+- Run surveys and quiz shows
+- And many more!
+## Scheduled messages
+Scheduled messages is released :confetti_ball: Here’s where we think it will be really useful.
+- Let your users queue their messages for the future
+- Set helpful reminders and notifications to nudge certain actions
+- And many more!
+## Improvements
+- Fixed a cross domain issue in `OnlineDetector`
+- Fixed a bug where `MessageCollectionEventHandler.onMessagesUpdated` is wrongly called for a message already added on connect or reconnect
+
+Please note that both Polls and Scheduled Messages are released as beta features. Thus specific parameters and properties may change to improve client’s overall experience.
+
+Stay tuned for updates as we are rolling out more exciting features and see below for exact specifications :point_down:
+
+--------
+## Specification
+### Polls
+- Create
+  - `PollModule.create()`
+    - `PollCreateParams`
+    - `UserMessageCreateParams.pollId`
+- Read
+  - `PollModule.get()`
+    - `PollRetrievalParams`
+  - `SendbirdChat.createPollListQuery()`
+    - `PollListQueryParams`
+  - `GroupChannel.createPollListQuery()`
+  - `UserMessage.poll`
+- Update
+  - `GroupChannel.updatePoll()`
+    - `PollUpdateParams`
+  - `GroupChannel.closePoll()`
+- Delete
+  - `GroupChannel.deletePoll()`
+- Others:
+  - `Poll`
+  - `GroupChannel.getPollChangeLogsSinceTimestamp()`
+  - `GroupChannel.getPollChangeLogsSinceToken()`
+  - `PollData`
+  - `GroupChannelHandlerParams.onPollUpdated()`
+  - `GroupChannelHandlerParams.onPollDeleted()`
+##### Options
+- Create
+  - `GroupChannel.addPollOption()`
+- Read
+  - `PollModule.getOption()`
+    - `PollOptionRetrievalParams`
+  - `SendbirdChat.createPollVoterListQuery()`
+    - `PollVoterListQueryParams`
+  - `GroupChannel.createPollVoterListQuery()`
+- Update
+  - `GroupChannel.updatePollOption()`
+  - `GroupChannel.votePoll()`
+- Delete
+  - `GroupChannel.deletePollOption()`
+- Others:
+  - `PollOption`
+  - `GroupChannelHandlerParams.onPollVoted()`
+  - `PollStatus`
+  - `PollVoteEvent`
+  - `PollUpdateEvent`
+  - `CollectionEventSource.EVENT_POLL_UPDATED`
+  - `CollectionEventSource.EVENT_POLL_VOTED`
+  - `CollectionEventSource.SYNC_POLL_CHANGELOGS`
+---------------
+### Scheduled Messages
+- Create
+  - `GroupChannel.createScheduledUserMessage()`
+  - `GroupChannel.createScheduledFileMessage()`
+- Read
+  - `ScheduledMessageListQuery`
+  - `BaseMessage.getScheduledMessage()`
+    - `ScheduledMessageRetrievalParams`
+- Update
+  - `GroupChannel.updateScheduledUserMessage()`
+  - `GroupChannel.updateScheduledFileMessage()`
+- Delete
+  - `GroupChannel.cancelScheduledMessage()`
+- Others
+  - `ScheduledInfo`
+  - `SendingStatus.SCHEDULED`
+  - `BaseMessage.scheduledInfo`
+  - `GroupChannelModule.getTotalScheduledMessageCount()`
+    - `TotalScheduledMessageCountParams`
+
 ## v4.0.13 (Sep 28, 2022)
 - Added `nicknameStartsWithFilter` and `nicknameExactMatchFilter` in `GroupChannelListQueryParams`
 - Implemented channel membership history where clients can retrieve whether users have joined or left the channel

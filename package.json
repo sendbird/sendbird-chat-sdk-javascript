@@ -1,5 +1,5 @@
 {
-  "version": "4.0.13",
+  "version": "4.1.0",
   "description": "Sendbird SDK for JavaScript",
   "name": "@sendbird/chat",
   "author": "Sendbird <support@sendbird.com>",
@@ -32,7 +32,8 @@
     ".": "./sendbird.js",
     "./message": "./message.js",
     "./groupChannel": "./groupChannel.js",
-    "./openChannel": "./openChannel.js"
+    "./openChannel": "./openChannel.js",
+    "./poll": "./poll.js"
   },
   "react-native": "./sendbird.js",
   "typesVersions": {
@@ -45,6 +46,9 @@
       ],
       "openChannel": [
         "./openChannel.d.ts"
+      ],
+      "poll": [
+        "./poll.d.ts"
       ]
     }
   }

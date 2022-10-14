@@ -45,7 +45,7 @@ export declare class BannedUserListQuery extends ChannelDataListQuery {
   next(): Promise<RestrictedUser[]>;
 }
 
-export type BannedUserListQueryParams = ChannelDataListQueryParams;
+export type BannedUserListQueryParams = BaseListQueryParams;
 
 export declare class BaseChannel {
   url: string;
@@ -219,7 +219,10 @@ declare abstract class ChannelDataListQuery extends BaseListQuery {
   readonly channelType: ChannelType;
 }
 
-type ChannelDataListQueryParams = BaseListQueryParams;
+declare interface ChannelDataListQueryParams extends BaseListQueryParams {
+  channelUrl: string;
+  channelType: ChannelType;
+}
 
 export declare enum ChannelType {
   BASE = 'base',
@@ -431,6 +434,17 @@ export declare class GroupChannel extends BaseChannel {
   setMyPushTriggerOption(option: PushTriggerOption): Promise<PushTriggerOption>;
   setMyCountPreference(preference: CountPreference): Promise<CountPreference>;
   resetMyHistory(): Promise<GroupChannel>;
+  updatePoll(pollId: number, params: PollUpdateParams): Promise<Poll>;
+  deletePoll(pollId: number): Promise<void>;
+  closePoll(pollId: number): Promise<Poll>;
+  addPollOption(pollId: number, optionText: string): Promise<Poll>;
+  updatePollOption(pollId: number, pollOptionId: number, optionText: string): Promise<Poll>;
+  deletePollOption(pollId: number, pollOptionId: number): Promise<void>;
+  votePoll(pollId: number, pollOptionIds: number[]): Promise<PollVoteEvent>;
+  getPollChangeLogsSinceTimestamp(ts: number): Promise<PollChangelogs>;
+  getPollChangeLogsSinceToken(token: string): Promise<PollChangelogs>;
+  createPollListQuery(limit?: number): PollListQuery;
+  createPollVoterListQuery(pollId: number, pollOptionId: number, limit?: number): PollVoterListQuery;
 }
 
 export declare class GroupChannelEventContext {
@@ -528,7 +542,7 @@ export declare class MemberListQuery extends ChannelDataListQuery {
   next(): Promise<Member[]>;
 }
 
-declare interface MemberListQueryParams extends ChannelDataListQueryParams {
+declare interface MemberListQueryParams extends BaseListQueryParams {
   mutedMemberFilter?: MutedMemberFilter;
   memberStateFilter?: MemberStateFilter;
   nicknameStartsWithFilter?: string;
@@ -594,7 +608,6 @@ export declare interface MessageChangeLogsParams {
   includeThreadInfo?: boolean;
   includeMetaArray?: boolean;
   includeParentMessageInfo?: boolean;
-  includePollDetails?: boolean;
 }
 
 export declare class MessageCollection {
@@ -657,6 +670,9 @@ export declare enum MessageEventSource {
   EVENT_MESSAGE_THREADINFO_UPDATED = 'EVENT_MESSAGE_THREADINFO_UPDATED',
   EVENT_MESSAGE_OFFSET_UPDATED = 'EVENT_MESSAGE_OFFSET_UPDATED',
   REQUEST_MESSAGE = 'REQUEST_MESSAGE',
+  EVENT_POLL_UPDATED = 'EVENT_POLL_UPDATED',
+  EVENT_POLL_VOTED = 'EVENT_POLL_VOTED',
+  SYNC_POLL_CHANGELOGS = 'SYNC_POLL_CHANGELOGS',
   REQUEST_RESEND_MESSAGE = 'REQUEST_RESEND_MESSAGE',
   REQUEST_THREADED_MESSAGE = 'REQUEST_THREADED_MESSAGE',
   REQUEST_MESSAGE_CHANGELOGS = 'REQUEST_MESSAGE_CHANGELOGS',
@@ -729,7 +745,6 @@ export declare interface MessageRetrievalParams {
   includeMetaArray?: boolean;
   includeParentMessageInfo?: boolean;
   includeThreadInfo?: boolean;
-  includePollDetails?: boolean;
 }
 
 export declare enum MessageSearchOrder {
@@ -823,7 +838,7 @@ export declare class MutedUserListQuery extends ChannelDataListQuery {
   next(): Promise<RestrictedUser[]>;
 }
 
-export type MutedUserListQueryParams = ChannelDataListQueryParams;
+export type MutedUserListQueryParams = BaseListQueryParams;
 
 export declare class OGImage {
   readonly url: string;
@@ -881,18 +896,130 @@ export declare class OperatorListQuery extends ChannelDataListQuery {
   next(): Promise<User[]>;
 }
 
-export type OperatorListQueryParams = ChannelDataListQueryParams;
+export type OperatorListQueryParams = BaseListQueryParams;
 
 export declare class ParticipantListQuery extends ChannelDataListQuery {
   next(): Promise<User[]>;
 }
 
-type ParticipantListQueryParams = ChannelDataListQueryParams;
+type ParticipantListQueryParams = BaseListQueryParams;
 
 export declare class Plugin {
   readonly type: string;
   readonly vendor: string;
   readonly detail: object;
+}
+
+export declare class Poll {
+  id: number;
+  title: string;
+  createdAt: number;
+  updatedAt: number;
+  closeAt: number;
+  status: PollStatus;
+  messageId: number;
+  data?: PollData;
+  voterCount: number;
+  options: PollOption[];
+  createdBy?: string;
+  isAnonymous: boolean;
+  allowUserSuggestion: boolean;
+  allowMultipleVotes: boolean;
+  votedPollOptionIds: number[];
+  applyPollUpdateEvent(event: PollUpdateEvent): boolean;
+  applyPollVoteEvent(event: PollVoteEvent): boolean;
+}
+
+declare interface PollChangelogs {
+  updatedPolls: Poll[];
+  deletedPollIds: number[];
+  hasMore: boolean;
+  token: string;
+}
+
+export declare interface PollCreateParams {
+  title: string;
+  optionTexts: string[];
+  data?: PollData;
+  isAnonymous?: boolean;
+  allowUserSuggestion?: boolean;
+  allowMultipleVotes?: boolean;
+  closeAt?: number;
+}
+
+export declare interface PollData {
+  text: string;
+}
+
+export declare class PollListQuery extends ChannelDataListQuery {
+  next(): Promise<Poll[]>;
+}
+
+export type PollListQueryParams = ChannelDataListQueryParams;
+
+export declare class PollModule extends Module {
+  name: 'poll';
+  create(params: PollCreateParams): Promise<Poll>;
+  get(params: PollRetrievalParams): Promise<Poll>;
+  getOption(params: PollOptionRetrievalParams): Promise<PollOption>;
+}
+
+export declare class PollOption {
+  pollId: number;
+  id: number;
+  text: string;
+  voteCount: number;
+  createdBy?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export declare interface PollOptionRetrievalParams {
+  channelUrl: string;
+  channelType: ChannelType;
+  pollId: number;
+  pollOptionId: number;
+}
+
+export declare interface PollRetrievalParams {
+  channelUrl: string;
+  channelType: ChannelType;
+  pollId: number;
+}
+
+export declare enum PollStatus {
+  OPEN = 'open',
+  CLOSED = 'closed',
+}
+
+export declare class PollUpdateEvent {
+  readonly pollId: number;
+  readonly messageId: number;
+}
+
+export declare interface PollUpdateParams {
+  title?: string;
+  data?: PollData;
+  isAnonymous?: boolean;
+  allowUserSuggestion?: boolean;
+  allowMultipleVotes?: boolean;
+  closeAt?: number;
+}
+
+export declare class PollVoteEvent {
+  readonly pollId: number;
+  readonly messageId: number;
+}
+
+export declare class PollVoterListQuery extends ChannelDataListQuery {
+  readonly pollId: number;
+  readonly pollOptionId: number;
+  next(): Promise<User[]>;
+}
+
+export declare interface PollVoterListQueryParams extends ChannelDataListQueryParams {
+  pollId: number;
+  pollOptionId: number;
 }
 
 export declare class PreviousMessageListQuery extends ChannelDataListQuery {
@@ -909,7 +1036,7 @@ export declare class PreviousMessageListQuery extends ChannelDataListQuery {
   load(): Promise<BaseMessage[]>;
 }
 
-declare interface PreviousMessageListQueryParams extends ChannelDataListQueryParams {
+declare interface PreviousMessageListQueryParams extends BaseListQueryParams {
   reverse?: boolean;
   messageTypeFilter?: MessageTypeFilter;
   customTypesFilter?: string[];
@@ -1066,9 +1193,10 @@ declare class SendableMessage extends BaseMessage {
 export declare class SendbirdChat {
   readonly options: SendbirdChatOptions;
   readonly message: MessageModule;
+  readonly poll: PollModule;
   static init<Modules extends Module[]>(
     params: SendbirdChatParams<Modules>,
-  ): SendbirdChat & ModuleNamespaces<[...Modules, MessageModule]>;
+  ): SendbirdChat & ModuleNamespaces<[...Modules, MessageModule, PollModule]>;
   static get instance(): SendbirdChat;
   static get version(): string;
   get appId(): string;
@@ -1107,6 +1235,8 @@ export declare class SendbirdChat {
   createBlockedUserListQuery(params?: BlockedUserListQueryParams): BlockedUserListQuery;
   createFriendListQuery(params?: FriendListQueryParams): FriendListQuery;
   createMessageSearchQuery(params: MessageSearchQueryParams): MessageSearchQuery;
+  createPollListQuery(params: PollListQueryParams): PollListQuery;
+  createPollVoterListQuery(params: PollVoterListQueryParams): PollVoterListQuery;
   buildUserFromSerializedData(serialized: object): User;
   updateCurrentUserInfo(params?: UserUpdateParams): Promise<User>;
   updateCurrentUserInfoWithPreferredLanguages(preferredLanguages: string[]): Promise<User>;
@@ -1321,16 +1451,20 @@ export declare class UserMessage extends SendableMessage {
     parentMessage: BaseMessage;
     threadedMessages: BaseMessage[];
   }>;
+  applyPoll(poll: Poll): boolean;
+  get poll(): Poll;
 }
 
 export declare interface UserMessageCreateParams extends BaseMessageCreateParams {
   message: string;
   translationTargetLanguages?: string[];
+  pollId?: number;
 }
 
 export declare interface UserMessageUpdateParams extends BaseMessageUpdateParams {
   message?: string;
   translationTargetLanguages?: string[];
+  pollId?: number;
 }
 
 export declare enum UserOnlineState {
@@ -1466,6 +1600,9 @@ declare abstract class GroupChannelHandlerParams extends BaseChannelHandlerParam
   onUnreadMemberStatusUpdated?: (channel: GroupChannel) => void;
   onUndeliveredMemberStatusUpdated?: (channel: GroupChannel) => void;
   onTypingStatusUpdated?: (channel: GroupChannel) => void;
+  onPollUpdated?: (channel: GroupChannel, event: PollUpdateEvent) => void;
+  onPollVoted?: (channel: GroupChannel, event: PollVoteEvent) => void;
+  onPollDeleted?: (channel: GroupChannel, id: number) => void;
 }
 
 export declare enum GroupChannelListOrder {

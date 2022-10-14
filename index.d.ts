@@ -1,6 +1,7 @@
 import './message';
 import './groupChannel';
 import './openChannel';
+import './poll';
 
 export {
   ApplicationUserListQuery,

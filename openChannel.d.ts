@@ -7,5 +7,6 @@ export {
   OpenChannelModule,
   OpenChannelUpdateParams,
   ParticipantListQuery,
+  ParticipantListQueryParams,
   SendbirdOpenChat,
 } from './lib/__definition';

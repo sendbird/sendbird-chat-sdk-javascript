@@ -1,5 +1,6 @@
 export {
   Poll,
+  PollChangelogs,
   PollCreateParams,
   PollData,
   PollListQuery,

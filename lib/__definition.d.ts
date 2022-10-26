@@ -290,7 +290,7 @@ export declare type FailedMessageHandler = (err: Error, message: SendableMessage
 
 export declare type FileCompat = File | Blob | FileInfo;
 
-declare interface FileInfo {
+export declare interface FileInfo {
   name: string;
   uri: string;
   type: string;
@@ -542,7 +542,7 @@ export declare class MemberListQuery extends ChannelDataListQuery {
   next(): Promise<Member[]>;
 }
 
-declare interface MemberListQueryParams extends BaseListQueryParams {
+export declare interface MemberListQueryParams extends BaseListQueryParams {
   mutedMemberFilter?: MutedMemberFilter;
   memberStateFilter?: MemberStateFilter;
   nicknameStartsWithFilter?: string;
@@ -584,7 +584,7 @@ export declare class MemoryStore implements BaseStore {
   clear(): Promise<void>;
 }
 
-declare interface MemoryStoreParams {
+export declare interface MemoryStoreParams {
   itemSizeLimit?: number;
   delay?: number;
   encryption?: Encryption;
@@ -595,7 +595,7 @@ export declare enum MentionType {
   CHANNEL = 'channel',
 }
 
-declare interface MessageChangelogs {
+export declare interface MessageChangelogs {
   updatedMessages: BaseMessage[];
   deletedMessageIds: number[];
   hasMore: boolean;
@@ -644,9 +644,9 @@ export declare enum MessageCollectionInitPolicy {
   CACHE_AND_REPLACE_BY_API = 'cache_and_replace_by_api',
 }
 
-declare type MessageCollectionInitResultHandler = (err: Error, messages: BaseMessage[]) => void;
+export declare type MessageCollectionInitResultHandler = (err: Error, messages: BaseMessage[]) => void;
 
-declare interface MessageCollectionParams {
+export declare interface MessageCollectionParams {
   filter?: MessageFilter;
   startingPoint?: number;
   limit?: number;
@@ -767,7 +767,7 @@ export declare class MessageSearchQuery extends BaseListQuery {
   next(): Promise<BaseMessage[]>;
 }
 
-declare interface MessageSearchQueryParams extends BaseListQueryParams {
+export declare interface MessageSearchQueryParams extends BaseListQueryParams {
   keyword: string;
   reverse?: boolean;
   exactMatch?: boolean;
@@ -902,7 +902,7 @@ export declare class ParticipantListQuery extends ChannelDataListQuery {
   next(): Promise<User[]>;
 }
 
-type ParticipantListQueryParams = BaseListQueryParams;
+export type ParticipantListQueryParams = BaseListQueryParams;
 
 export declare class Plugin {
   readonly type: string;
@@ -930,7 +930,7 @@ export declare class Poll {
   applyPollVoteEvent(event: PollVoteEvent): boolean;
 }
 
-declare interface PollChangelogs {
+export declare interface PollChangelogs {
   updatedPolls: Poll[];
   deletedPollIds: number[];
   hasMore: boolean;
@@ -1036,7 +1036,7 @@ export declare class PreviousMessageListQuery extends ChannelDataListQuery {
   load(): Promise<BaseMessage[]>;
 }
 
-declare interface PreviousMessageListQueryParams extends BaseListQueryParams {
+export declare interface PreviousMessageListQueryParams extends BaseListQueryParams {
   reverse?: boolean;
   messageTypeFilter?: MessageTypeFilter;
   customTypesFilter?: string[];
@@ -1146,11 +1146,11 @@ export declare enum Role {
   NONE = 'none',
 }
 
-declare interface ScheduledFileMessageCreateParams extends FileMessageCreateParams {
+export declare interface ScheduledFileMessageCreateParams extends FileMessageCreateParams {
   scheduledAt: number;
 }
 
-declare interface ScheduledFileMessageUpdateParams extends BaseMessageUpdateParams {
+export declare interface ScheduledFileMessageUpdateParams extends BaseMessageUpdateParams {
   scheduledAt?: number;
   file?: FileCompat;
   fileUrl?: string;
@@ -1161,22 +1161,22 @@ declare interface ScheduledFileMessageUpdateParams extends BaseMessageUpdatePara
   requireAuth?: boolean;
 }
 
-declare interface ScheduledInfo {
+export declare interface ScheduledInfo {
   scheduledMessageId: number;
   scheduledAt: number;
   scheduledMessageParams?: ScheduledUserMessageCreateParams | ScheduledFileMessageCreateParams;
 }
 
-declare interface ScheduledMessageRetrievalParams {
+export declare interface ScheduledMessageRetrievalParams {
   channelUrl: string;
   scheduledMessageId: number;
 }
 
-declare interface ScheduledUserMessageCreateParams extends UserMessageCreateParams {
+export declare interface ScheduledUserMessageCreateParams extends UserMessageCreateParams {
   scheduledAt: number;
 }
 
-declare interface ScheduledUserMessageUpdateParams extends UserMessageUpdateParams {
+export declare interface ScheduledUserMessageUpdateParams extends UserMessageUpdateParams {
   scheduledAt?: number;
 }
 
@@ -1361,7 +1361,7 @@ export declare interface SnoozePeriod {
   endTs?: number;
 }
 
-declare interface StoreItem {
+export declare interface StoreItem {
   key: string;
   value: object;
   generation: number;
@@ -1403,7 +1403,7 @@ export declare class Thumbnail {
   get plainUrl(): string;
 }
 
-declare interface ThumbnailSize {
+export declare interface ThumbnailSize {
   maxWidth: number;
   maxHeight: number;
 }
@@ -1805,7 +1805,7 @@ export declare enum ScheduledMessageListOrder {
   SCHEDULED_AT = 'scheduled_at',
 }
 
-declare class ScheduledMessageListQuery extends BaseListQuery {
+export declare class ScheduledMessageListQuery extends BaseListQuery {
   readonly channelUrl: string;
   readonly order: ScheduledMessageListOrder;
   readonly reverse: boolean;
@@ -1814,7 +1814,7 @@ declare class ScheduledMessageListQuery extends BaseListQuery {
   next(): Promise<BaseMessage[]>;
 }
 
-declare interface ScheduledMessageListQueryParams extends BaseListQueryParams {
+export declare interface ScheduledMessageListQueryParams extends BaseListQueryParams {
   channelUrl?: string;
   order?: ScheduledMessageListOrder;
   reverse?: boolean;

@@ -1,5 +1,8 @@
 
 # Changelog
+## v4.1.1 (Oct 26, 2022)
+- Exported existing interfaces, `MessageSearchQueryParams` and others (twenty two in total)
+
 ## v4.1.0 (Oct 14, 2022)
 # Features
 ## Polls

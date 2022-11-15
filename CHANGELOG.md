@@ -1,5 +1,14 @@
 
 # Changelog
+
+## v4.1.2 (Nov 15, 2022)
+- Fixed a bug where Poll changelog being called when it's not enabled
+- Fixed the wrong `MessageCollection` event being triggered
+- Removed `isAnonymous` in Poll, PollCreateParams, and PollUpdateParams
+- Improved `channel.messageOffsetTimestamp` logic
+- Corrected session related error code
+- Improved stability
+
 ## v4.1.1 (Oct 26, 2022)
 - Exported existing interfaces including `MessageSearchQueryParams` and others (22 in total)
 

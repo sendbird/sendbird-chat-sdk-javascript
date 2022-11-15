@@ -198,6 +198,7 @@ declare interface BaseStore {
   init(dbname: string): Promise<void>;
   getAllKeys(): Promise<string[]>;
   get(key: string): Promise<object>;
+  getRaw(key: string): Promise<object>;
   set(item: StoreItem): Promise<object>;
   setMany(items: StoreItem[]): Promise<object[]>;
   remove(key: string): Promise<string>;
@@ -577,6 +578,7 @@ export declare class MemoryStore implements BaseStore {
   init(dbname: string): Promise<void>;
   getAllKeys(): Promise<string[]>;
   get(key: string): Promise<object>;
+  getRaw(key: string): Promise<object>;
   set(item: StoreItem): Promise<object>;
   setMany(items: StoreItem[]): Promise<object[]>;
   remove(key: string): Promise<string>;

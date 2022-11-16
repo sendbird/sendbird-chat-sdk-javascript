@@ -620,6 +620,8 @@ export declare class MessageCollection {
   get pendingMessages(): SendableMessage[];
   get hasPrevious(): boolean;
   get hasNext(): boolean;
+  private get viewTop();
+  private get viewBottom();
   setMessageCollectionHandler(handler: MessageCollectionEventHandler): void;
   initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler;
   loadPrevious(): Promise<BaseMessage[]>;
@@ -924,7 +926,6 @@ export declare class Poll {
   voterCount: number;
   options: PollOption[];
   createdBy?: string;
-  isAnonymous: boolean;
   allowUserSuggestion: boolean;
   allowMultipleVotes: boolean;
   votedPollOptionIds: number[];
@@ -943,7 +944,6 @@ export declare interface PollCreateParams {
   title: string;
   optionTexts: string[];
   data?: PollData;
-  isAnonymous?: boolean;
   allowUserSuggestion?: boolean;
   allowMultipleVotes?: boolean;
   closeAt?: number;
@@ -1002,7 +1002,6 @@ export declare class PollUpdateEvent {
 export declare interface PollUpdateParams {
   title?: string;
   data?: PollData;
-  isAnonymous?: boolean;
   allowUserSuggestion?: boolean;
   allowMultipleVotes?: boolean;
   closeAt?: number;

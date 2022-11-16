@@ -1,6 +1,9 @@
 
 # Changelog
 
+## v4.1.3 (Nov 16, 2022)
+- Improved stability
+
 ## v4.1.2 (Nov 15, 2022)
 - Fixed a bug where Poll changelog being called when it's not enabled
 - Fixed the wrong `MessageCollection` event being triggered

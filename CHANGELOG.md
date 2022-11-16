@@ -1,6 +1,11 @@
 
 # Changelog
 
+## v4.1.4 (Nov 16, 2022)
+- Replaced `SendableMessage` to `BaseMessage` in some message updating methods in `BaseChannel` and `GroupChannel`
+- Fixed a bug where poll changelog is being called when there is no poll message in a group channel
+- Fixed a bug where `SessionHandler` triggers `onSessionTokenRequired` event even when `authToken` is still valid
+
 ## v4.1.3 (Nov 16, 2022)
 - Improved stability
 

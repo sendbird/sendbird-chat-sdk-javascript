@@ -109,13 +109,13 @@ export declare class BaseChannel {
   updateFileMessage(messageId: number, params: FileMessageUpdateParams): Promise<FileMessage>;
   cancelUploadingFileMessage(requestId: string): Promise<boolean>;
   copyFileMessage(targetChannel: BaseChannel, message: FileMessage): Promise<FileMessage>;
-  deleteMessage(message: SendableMessage): Promise<void>;
+  deleteMessage(message: BaseMessage): Promise<void>;
   addReaction(message: BaseMessage, key: string): Promise<ReactionEvent>;
   deleteReaction(message: BaseMessage, key: string): Promise<ReactionEvent>;
-  createMessageMetaArrayKeys(message: SendableMessage, keys: string[]): Promise<BaseMessage>;
-  deleteMessageMetaArrayKeys(message: SendableMessage, keys: string[]): Promise<BaseMessage>;
-  addMessageMetaArrayValues(message: SendableMessage, metaArrays: MessageMetaArray[]): Promise<BaseMessage>;
-  removeMessageMetaArrayValues(message: SendableMessage, metaArrays: MessageMetaArray[]): Promise<BaseMessage>;
+  createMessageMetaArrayKeys(message: BaseMessage, keys: string[]): Promise<BaseMessage>;
+  deleteMessageMetaArrayKeys(message: BaseMessage, keys: string[]): Promise<BaseMessage>;
+  addMessageMetaArrayValues(message: BaseMessage, metaArrays: MessageMetaArray[]): Promise<BaseMessage>;
+  removeMessageMetaArrayValues(message: BaseMessage, metaArrays: MessageMetaArray[]): Promise<BaseMessage>;
   report(category: ReportCategory, description: string): Promise<void>;
   reportUser(user: User, category: ReportCategory, description: string): Promise<void>;
   reportMessage(message: SendableMessage, category: ReportCategory, description: string): Promise<void>;
@@ -390,8 +390,8 @@ export declare class GroupChannel extends BaseChannel {
   removeMember(member: Member): boolean;
   getUnreadMemberCount(message: BaseMessage): number;
   getUndeliveredMemberCount(message: BaseMessage): number;
-  getReadMembers(message: SendableMessage, includeAllMembers?: boolean): Member[];
-  getUnreadMembers(message: SendableMessage, includeAllMembers?: boolean): Member[];
+  getReadMembers(message: BaseMessage, includeAllMembers?: boolean): Member[];
+  getUnreadMembers(message: BaseMessage, includeAllMembers?: boolean): Member[];
   getReadStatus(includeAllMembers?: boolean): {
     [key: string]: ReadStatus;
   };
@@ -411,7 +411,7 @@ export declare class GroupChannel extends BaseChannel {
   updateUserMessage(messageId: number, params: UserMessageUpdateParams): Promise<UserMessage>;
   sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
   updateFileMessage(messageId: number, params: FileMessageUpdateParams): Promise<FileMessage>;
-  deleteMessage(message: SendableMessage): Promise<void>;
+  deleteMessage(message: BaseMessage): Promise<void>;
   hide(params: GroupChannelHideParams): Promise<GroupChannel>;
   unhide(): Promise<GroupChannel>;
   delete(): Promise<void>;

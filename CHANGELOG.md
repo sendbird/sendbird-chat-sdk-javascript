@@ -2,7 +2,7 @@
 # Changelog
 
 ## v4.1.5 (Nov 24, 2022)
-- `MessageCollection` now loads unsent messages from cache before `onCachedResult()` is called
+- `MessageCollection` now loads unsent messages from cache before `onCacheResult()` is called
 
 ## v4.1.4 (Nov 16, 2022)
 - Replaced `SendableMessage` to `BaseMessage` in some message updating methods in `BaseChannel` and `GroupChannel`

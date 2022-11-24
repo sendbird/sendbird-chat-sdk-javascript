@@ -1,6 +1,9 @@
 
 # Changelog
 
+## v4.1.5 (Nov 24, 2022)
+- `MessageCollection` now loads unsent messages from cache before `onCachedResult()` is called
+
 ## v4.1.4 (Nov 16, 2022)
 - Replaced `SendableMessage` to `BaseMessage` in some message updating methods in `BaseChannel` and `GroupChannel`
 - Fixed a bug where poll changelog is being called when there is no poll message in a group channel

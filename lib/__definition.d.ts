@@ -19,11 +19,13 @@ declare class AppInfo {
   readonly applicationAttributes: string[];
   readonly premiumFeatureList: string[];
   readonly enabledChannelMemberShipHistory: boolean;
+  static payloadify(appInfo: AppInfo): AppInfoParams;
 }
 
 export declare class AppleCriticalAlertOptions {
   readonly name: string;
   readonly volume: number;
+  serialize(): AppleCriticalAlertOptionsPayload;
 }
 
 export declare class ApplicationUserListQuery extends BaseListQuery {
@@ -178,6 +180,7 @@ declare interface BaseMessageCreateParams {
   isReplyToChannel?: boolean;
   pushNotificationDeliveryOption?: PushNotificationDeliveryOption;
   appleCriticalAlertOptions?: AppleCriticalAlertOptions;
+  isPinnedMessage?: boolean;
 }
 
 declare interface BaseMessageUpdateParams {
@@ -378,6 +381,8 @@ export declare class GroupChannel extends BaseChannel {
   inviter: User;
   invitedAt: number;
   joinedAt: number;
+  pinnedMessageIds: number[];
+  lastPinnedMessage: BaseMessage;
   get isHidden(): boolean;
   get isTyping(): boolean;
   get cachedUnreadMemberState(): object;
@@ -387,7 +392,7 @@ export declare class GroupChannel extends BaseChannel {
   createMessageCollection(params?: MessageCollectionParams): MessageCollection;
   createMemberListQuery(params?: MemberListQueryParams): MemberListQuery;
   addMember(member: Member, ts?: number): void;
-  removeMember(member: Member): boolean;
+  removeMember(memberOrUserId: Member | string): boolean;
   getUnreadMemberCount(message: BaseMessage): number;
   getUndeliveredMemberCount(message: BaseMessage): number;
   getReadMembers(message: BaseMessage, includeAllMembers?: boolean): Member[];
@@ -446,6 +451,8 @@ export declare class GroupChannel extends BaseChannel {
   getPollChangeLogsSinceToken(token: string): Promise<PollChangelogs>;
   createPollListQuery(limit?: number): PollListQuery;
   createPollVoterListQuery(pollId: number, pollOptionId: number, limit?: number): PollVoterListQuery;
+  pinMessage(messageId: number): Promise<void>;
+  unpinMessage(messageId: number): Promise<void>;
 }
 
 export declare class GroupChannelEventContext {
@@ -477,6 +484,7 @@ export declare enum GroupChannelEventSource {
   EVENT_MESSAGE_SENT = 'EVENT_MESSAGE_SENT',
   EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
   EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
+  EVENT_PINNED_MESSAGE_UPDATED = 'EVENT_PINNED_MESSAGE_UPDATED',
   REQUEST_CHANNEL = 'REQUEST_CHANNEL',
   REQUEST_CHANNEL_CHANGELOGS = 'REQUEST_CHANNEL_CHANGELOGS',
   SYNC_CHANNEL_BACKGROUND = 'SYNC_CHANNEL_BACKGROUND',
@@ -880,6 +888,8 @@ export declare class OpenChannel extends BaseChannel {
     customType: string,
   ): Promise<OpenChannel>;
   delete(): Promise<void>;
+  sendUserMessage(params: UserMessageCreateParams): MessageRequestHandler;
+  sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
 }
 
 export declare interface OpenChannelUpdateParams {
@@ -1604,6 +1614,7 @@ declare abstract class GroupChannelHandlerParams extends BaseChannelHandlerParam
   onPollUpdated?: (channel: GroupChannel, event: PollUpdateEvent) => void;
   onPollVoted?: (channel: GroupChannel, event: PollVoteEvent) => void;
   onPollDeleted?: (channel: GroupChannel, id: number) => void;
+  onPinnedMessageUpdated?: (channel: GroupChannel) => void;
 }
 
 export declare enum GroupChannelListOrder {

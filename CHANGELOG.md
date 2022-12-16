@@ -1,6 +1,11 @@
 
 # Changelog
 
+## v4.2.1 (Dec 16, 2022)
+### **Improvements**
+- Fixed a bug where calling `sb.connect()` right after `sb.disconnect()` throws an error given the user had entered an open channel
+- Improved stability on `WebSocket` connection handling
+
 ## v4.2.0 (Dec 9, 2022)
 ### **Features**
 ### **Pinned Message :pushpin:**

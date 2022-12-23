@@ -195,18 +195,23 @@ declare interface BaseMessageUpdateParams {
   appleCriticalAlertOptions?: AppleCriticalAlertOptions;
 }
 
-declare interface BaseStore {
+declare abstract class BaseStore {
   dbname: string;
-  itemSizeLimit: number;
-  init(dbname: string): Promise<void>;
+  readonly itemSizeLimit: number;
+  readonly metadataBuffer: number;
+  readonly encryption: Encryption;
+  constructor(props: BaseStoreParams);
+  abstract isAvailable(): Promise<boolean>;
+  abstract init(dbname: string): Promise<void>;
+  abstract clear(): Promise<void>;
+  get adjustedItemSizeLimit(): number;
+  usage(): Promise<number>;
   getAllKeys(): Promise<string[]>;
   get(key: string): Promise<object>;
-  getRaw(key: string): Promise<object>;
   set(item: StoreItem): Promise<object>;
   setMany(items: StoreItem[]): Promise<object[]>;
-  remove(key: string): Promise<string>;
+  remove(key: string): Promise<boolean>;
   removeMany(keys: string[]): Promise<string[]>;
-  clear(): Promise<void>;
 }
 
 export declare class BlockedUserListQuery extends BaseListQuery {
@@ -574,30 +579,22 @@ export declare enum MemberStateFilter {
   INVITED_BY_NON_FRIEND = 'invited_by_non_friend',
 }
 
-export declare class MemoryStore implements BaseStore {
-  dbname: string;
-  itemSizeLimit: number;
-  delay: number;
+export declare class MemoryStore extends BaseStore {
+  readonly delay: number;
   observer: Record<string, unknown>;
   constructor(params?: MemoryStoreParams);
   get rawData(): object;
   set rawData(value: object);
   observe(key: string, ops: string[], handler: () => Error): void;
+  isAvailable(): Promise<boolean>;
   init(dbname: string): Promise<void>;
-  getAllKeys(): Promise<string[]>;
-  get(key: string): Promise<object>;
-  getRaw(key: string): Promise<object>;
   set(item: StoreItem): Promise<object>;
   setMany(items: StoreItem[]): Promise<object[]>;
-  remove(key: string): Promise<string>;
-  removeMany(keys: string[]): Promise<string[]>;
   clear(): Promise<void>;
 }
 
-export declare interface MemoryStoreParams {
-  itemSizeLimit?: number;
+export declare interface MemoryStoreParams extends BaseStoreParams {
   delay?: number;
-  encryption?: Encryption;
 }
 
 export declare enum MentionType {

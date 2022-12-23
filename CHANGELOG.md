@@ -1,6 +1,11 @@
 
 # Changelog
 
+## v4.2.2 (Dec 23, 2022)
+### **Improvements**
+- Unlimited store size support
+- Fixed a bug in `MessageCollection.displose()` not to clear the event handler
+
 ## v4.2.1 (Dec 16, 2022)
 ### **Improvements**
 - Fixed a bug where calling `sb.connect()` right after `sb.disconnect()` throws an error given the user had entered an open channel

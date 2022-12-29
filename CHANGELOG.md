@@ -1,6 +1,12 @@
 
 # Changelog
 
+## v4.2.3 (Dec 29, 2022)
+### **Improvements**
+- Fixed a bug in `GroupChannelCollection.dispose()` not to clear the event handler
+- Fixed a bug in `MessageCollection.dispose()` not to clear the event handler
+- Fixed a bug in flooding semaphore keys in localStorage
+
 ## v4.2.2 (Dec 23, 2022)
 ### **Improvements**
 - Unlimited store size support

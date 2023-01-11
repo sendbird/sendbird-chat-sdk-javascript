@@ -19,13 +19,11 @@ declare class AppInfo {
   readonly applicationAttributes: string[];
   readonly premiumFeatureList: string[];
   readonly enabledChannelMemberShipHistory: boolean;
-  static payloadify(appInfo: AppInfo): AppInfoParams;
 }
 
 export declare class AppleCriticalAlertOptions {
   readonly name: string;
   readonly volume: number;
-  serialize(): AppleCriticalAlertOptionsPayload;
 }
 
 export declare class ApplicationUserListQuery extends BaseListQuery {
@@ -156,6 +154,7 @@ export declare class BaseMessage {
   createdAt: number;
   updatedAt?: number;
   scheduledInfo?: ScheduledInfo;
+  extendedMessage?: object;
   isIdentical(message: BaseMessage): boolean;
   isEqual(message: BaseMessage): boolean;
   isUserMessage(): this is UserMessage;
@@ -212,6 +211,12 @@ declare abstract class BaseStore {
   setMany(items: StoreItem[]): Promise<object[]>;
   remove(key: string): Promise<boolean>;
   removeMany(keys: string[]): Promise<string[]>;
+}
+
+declare interface BaseStoreParams {
+  encryption?: Encryption;
+  itemSizeLimit?: number;
+  metadataBuffer?: number;
 }
 
 export declare class BlockedUserListQuery extends BaseListQuery {

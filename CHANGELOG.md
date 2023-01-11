@@ -1,6 +1,13 @@
 
 # Changelog
 
+## v4.2.4 (Jan 11, 2023)
+### **Improvements**
+- Fixed a bug in `MessageCollection` where old messages are being added to the view when app reconnects
+- Added argument validation in `GroupChannel.pinMessage()` and `GroupChannel.unpinMessage()`
+- Fixed a bug where `GroupChannelHandler.onChannelChanged()` and `GroupChannelHandler.onPinnedMessageUpdated()` events are not called when `channel.lastPinnedMessage` is updated
+- Improved stability
+
 ## v4.2.3 (Dec 29, 2022)
 ### **Improvements**
 - Fixed a bug in `GroupChannelCollection.dispose()` not to clear the event handler

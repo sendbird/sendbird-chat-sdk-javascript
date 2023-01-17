@@ -1,6 +1,12 @@
 
 # Changelog
 
+## v4.2.5 (Jan 17, 2023)
+### **Improvements**
+- Fixed a bug in `MessageCollection` onMessgesAdded event tiggered for old messages
+- Fixed a bug where calling connect while offline did not reconnect even when the app came online
+- Improved stability
+
 ## v4.2.4 (Jan 11, 2023)
 ### **Improvements**
 - Fixed a bug in `MessageCollection` where old messages are being added to the view when app reconnects

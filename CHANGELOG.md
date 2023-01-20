@@ -1,6 +1,11 @@
 
 # Changelog
 
+## v4.2.6 (Jan 20, 2023)
+### **Improvements**
+- Fixed a bug of where `onChannelsAdded` event is not fired upon creating a first channel in `GroupChannelCollection` when `localCacheEnabled` is set to false.
+- Improved stability
+
 ## v4.2.5 (Jan 17, 2023)
 ### **Improvements**
 - Fixed a bug in `MessageCollection` onMessagesUpdated event triggered for old messages

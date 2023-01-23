@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v4.2.7 (Jan 24, 2023)
+### **Improvements**
+- Fixed a bug where `MessageCollection.hasPrevious` is false when there exists old messages
+
 ## v4.2.6 (Jan 20, 2023)
 ### **Improvements**
 - Fixed a bug of where `onChannelsAdded` event is not fired upon creating a first channel in `GroupChannelCollection` when `localCacheEnabled` is set to false.

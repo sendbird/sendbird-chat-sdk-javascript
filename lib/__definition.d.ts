@@ -96,8 +96,8 @@ export declare class BaseChannel {
   unfreeze(): Promise<void>;
   getMessagesByMessageId(messageId: number, params: MessageListParams): Promise<BaseMessage[]>;
   getMessagesByTimestamp(ts: number, params: MessageListParams): Promise<BaseMessage[]>;
-  getMessageChangeLogsSinceTimestamp(ts: number, params: MessageChangeLogsParams): Promise<MessageChangelogs>;
-  getMessageChangeLogsSinceToken(token: string, params: MessageChangeLogsParams): Promise<MessageChangelogs>;
+  getMessageChangeLogsSinceTimestamp(ts: number, params?: MessageChangeLogsParams): Promise<MessageChangelogs>;
+  getMessageChangeLogsSinceToken(token: string, params?: MessageChangeLogsParams): Promise<MessageChangelogs>;
   sendUserMessage(params: UserMessageCreateParams): MessageRequestHandler;
   resendUserMessage(failedMessage: UserMessage): Promise<UserMessage>;
   updateUserMessage(messageId: number, params: UserMessageUpdateParams): Promise<UserMessage>;
@@ -1696,11 +1696,11 @@ export declare class GroupChannelModule extends Module {
   getChannelWithoutCache(channelUrl: string): Promise<GroupChannel>;
   getMyGroupChannelChangeLogsByToken(
     token: string,
-    params: GroupChannelChangeLogsParams,
+    params?: GroupChannelChangeLogsParams,
   ): Promise<GroupChannelChangelogs>;
   getMyGroupChannelChangeLogsByTimestamp(
     ts: number,
-    params: GroupChannelChangeLogsParams,
+    params?: GroupChannelChangeLogsParams,
   ): Promise<GroupChannelChangelogs>;
   getGroupChannelCount(params: GroupChannelCountParams): Promise<number>;
   getUnreadItemCount(params?: UnreadItemCountParams): Promise<UnreadItemCount>;

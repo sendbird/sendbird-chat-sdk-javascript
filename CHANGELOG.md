@@ -1,6 +1,11 @@
 
 # Changelog
 
+## v4.2.8 (Jan 27, 2023)
+### **Improvements**
+- Fixed a bug where `groupChannelHandler.onChannelChanged()` is not called on pin or unpin message event
+- Parameter `params` in `getMessageChangeLogsSinceTimestamp()`, and `getMessageChangeLogsSinceToken()` is now made optional
+
 ## v4.2.7 (Jan 24, 2023)
 ### **Improvements**
 - Fixed a bug where `MessageCollection.hasPrevious` is false when there exists old messages

@@ -1,6 +1,29 @@
 
 # Changelog
 
+## v4.2.9 (Feb 01, 2023)
+### **Features**
+#### **Participant class in Open Channel**
+
+Participant is a new interface for User who joined Open Channel. It's optimized for scalability and contains much lighter information about the User than a Member in Group Channel.
+Now clients can implement Open Channels easier in SDK with more built-in capabilities. You can compare how Member, Participant, and User are different [here](https://sendbird.com/docs/chat/v4/javascript/guides/user-types)
+
+- `Participant` holds essential information about the participant like below. They contain their muted status (`is_muted`) on top of basic User information
+```
+class Participant extends User {
+  readonly isMuted: boolean;
+}
+```
+
+- `ParticipantListQuery.next()` now returns `Promise<Participant[]>`
+- For backward compatibility, the return type remains as `Promise<User[]>`, but the return value can be casted into `Promise<Participant[]>`
+
+#### **Others**
+- Added `SendbirdChatOptions.sessionTokenRefreshTimeout`. You can now set longer timeout value for session token expire. (Default: 60s, Maximum: 1800s). This means that Sendbird SDK will wait longer for your new session token, making it easier for you to reconnect to our service.
+
+### **Improvements**
+- Improved stability
+
 ## v4.2.8 (Jan 27, 2023)
 ### **Improvements**
 - Fixed a bug where `groupChannelHandler.onChannelChanged()` is not called on pin or unpin message event

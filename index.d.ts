@@ -36,6 +36,7 @@ export {
   OnlineDetectorListener,
   OperatorListQuery,
   OperatorListQueryParams,
+  Participant,
   Plugin,
   PushTemplate,
   PushTokenRegistrationState,

@@ -914,6 +914,10 @@ export declare class OperatorListQuery extends ChannelDataListQuery {
 
 export type OperatorListQueryParams = BaseListQueryParams;
 
+export declare class Participant extends User {
+  readonly isMuted: boolean;
+}
+
 export declare class ParticipantListQuery extends ChannelDataListQuery {
   next(): Promise<User[]>;
 }
@@ -1301,11 +1305,13 @@ export declare class SendbirdChatOptions {
     typingIndicatorInvalidateTime,
     typingIndicatorThrottle,
     websocketResponseTimeout,
+    sessionTokenRefreshTimeout,
   }?: {
     useMemberInfoInMessage?: boolean;
     typingIndicatorInvalidateTime?: number;
     typingIndicatorThrottle?: number;
     websocketResponseTimeout?: number;
+    sessionTokenRefreshTimeout?: number;
   });
   get useMemberInfoInMessage(): boolean;
   set useMemberInfoInMessage(value: boolean);
@@ -1315,6 +1321,8 @@ export declare class SendbirdChatOptions {
   set typingIndicatorThrottle(value: number);
   get websocketResponseTimeout(): number;
   set websocketResponseTimeout(value: number);
+  get sessionTokenRefreshTimeout(): number;
+  set sessionTokenRefreshTimeout(value: number);
 }
 
 export declare interface SendbirdChatParams<Modules extends Module[]> {

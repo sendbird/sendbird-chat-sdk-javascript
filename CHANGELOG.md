@@ -1,7 +1,7 @@
 
 # Changelog
 
-## v4.2.9 (Feb 01, 2023)
+## v4.3.0 (Feb 01, 2023)
 ### **Features**
 #### **Participant class in Open Channel**
 
@@ -18,7 +18,8 @@ class Participant extends User {
 - `ParticipantListQuery.next()` now returns `Promise<Participant[]>`
 - For backward compatibility, the return type remains as `Promise<User[]>`, but the return value can be casted into `Promise<Participant[]>`
 
-#### **Others**
+## v4.2.9 (Feb 01, 2023)
+### **Features**
 - Added `SendbirdChatOptions.sessionTokenRefreshTimeout`. You can now set longer timeout value for session token expire. (Default: 60s, Maximum: 1800s). This means that Sendbird SDK will wait longer for your new session token, making it easier for you to reconnect to our service.
 
 ### **Improvements**

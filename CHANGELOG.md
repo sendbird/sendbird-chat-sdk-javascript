@@ -1,6 +1,22 @@
 
 # Changelog
 
+## v4.3.1 (Feb 15, 2023)
+### **Improvements**
+- Fixed a bug where `poll.votedOptionIds` is not updated upon calling `poll.applyPollUpdateEvent(pollUpdateEvent)`
+- Fixed a bug where auto-resending file message fails occasionally
+- `MessageCollectionEventHandler.onMessagesDeleted`
+  - Added a new parameter `messages: BaseMessage[]`
+  - Deprecated `messageIds: number[]`
+  - `onMessagesDeleted` callback now returns either unsent or sent messages through a new parameter `messages: BaseMessage[]`, which you can use to remove pending messages
+- Fixed a bug where `MessageRequestHandler.onPending` is called when pending message is marked for auto-resend
+- Fixed a bug where `MessageCollection.hasNext` remains true after `MessageCollection.initialize()` is called with `startingPoint` as now
+- Fixed a bug where SDK calls `MessageCollectionEventHandler` when handler has not been set
+- Fixed a bug where `MessageCollectionEventHandler.onMessagesUpdated` is called on update of `GroupChannel`s `getUnreadMemberCount` and `getUndeliveredMemberCount`
+- Deprecated `EVENT_MESSAGE_READ` and `EVENT_MESSAGE_DELIVERED` in `MessageEventSource`
+- Exported `BaseMessageCreateParams` and `BaseMessageUpdateParams` 
+- Improved stability
+
 ## v4.3.0 (Feb 01, 2023)
 ### **Features**
 #### **Participant class in Open Channel**

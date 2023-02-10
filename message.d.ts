@@ -2,6 +2,8 @@ export {
   AdminMessage,
   AppleCriticalAlertOptions,
   BaseMessage,
+  BaseMessageCreateParams,
+  BaseMessageUpdateParams,
   FailedMessageHandler,
   FileInfo,
   FileMessage,

@@ -645,7 +645,16 @@ export declare interface MessageCollectionEventHandler {
   onChannelDeleted: (context: GroupChannelEventContext, channelUrl: string) => void;
   onMessagesAdded: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
   onMessagesUpdated: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
-  onMessagesDeleted: (context: MessageEventContext, channel: GroupChannel, messageIds: number[]) => void;
+  /**
+   *
+   * @param messageIds Deprecated since v4.3.1. Use messages instead.
+   */
+  onMessagesDeleted: (
+    context: MessageEventContext,
+    channel: GroupChannel,
+    messageIds: number[],
+    messages: BaseMessage[],
+  ) => void;
   onHugeGapDetected: () => void;
 }
 
@@ -678,7 +687,13 @@ export declare enum MessageEventSource {
   EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
   EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
   EVENT_MESSAGE_DELETED = 'EVENT_MESSAGE_DELETED',
+  /**
+   * @deprecated since v4.3.1
+   */
   EVENT_MESSAGE_READ = 'EVENT_MESSAGE_READ',
+  /**
+   * @deprecated since v4.3.1
+   */
   EVENT_MESSAGE_DELIVERED = 'EVENT_MESSAGE_DELIVERED',
   EVENT_MESSAGE_REACTION_UPDATED = 'EVENT_MESSAGE_REACTION_UPDATED',
   EVENT_MESSAGE_THREADINFO_UPDATED = 'EVENT_MESSAGE_THREADINFO_UPDATED',
@@ -1090,8 +1105,10 @@ export declare interface PushTokens {
 }
 
 export declare enum PushTokenType {
+  ALL = '',
   FCM = 'gcm',
   APNS = 'apns',
+  HUAWEI = 'huawei',
   UNKNOWN = 'unknown',
 }
 

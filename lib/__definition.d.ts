@@ -497,6 +497,7 @@ export declare enum GroupChannelEventSource {
   EVENT_PINNED_MESSAGE_UPDATED = 'EVENT_PINNED_MESSAGE_UPDATED',
   REQUEST_CHANNEL = 'REQUEST_CHANNEL',
   REQUEST_CHANNEL_CHANGELOGS = 'REQUEST_CHANNEL_CHANGELOGS',
+  REFRESH_CHANNEL = 'REFRESH_CHANNEL',
   SYNC_CHANNEL_BACKGROUND = 'SYNC_CHANNEL_BACKGROUND',
   SYNC_CHANNEL_CHANGELOGS = 'SYNC_CHANNEL_CHANGELOGS',
 }
@@ -1254,6 +1255,7 @@ export declare class SendbirdChat {
   connect(userId: string, authToken?: string): Promise<User>;
   reconnect(): boolean;
   disconnect(): Promise<void>;
+  disconnectWebSocket(): Promise<void>;
   setBackgroundState(): void;
   setForegroundState(): void;
   setSessionHandler(handler: SessionHandler): void;
@@ -1353,6 +1355,7 @@ export declare interface SendbirdChatParams<Modules extends Module[]> {
   localCacheEnabled?: boolean;
   localCacheEncryption?: Encryption;
   useAsyncStorageStore?: typeof AsyncStorage;
+  appStateToggleEnabled?: boolean;
 }
 
 export declare class SendbirdError extends Error {

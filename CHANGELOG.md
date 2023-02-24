@@ -1,5 +1,27 @@
 
 # Changelog
+## v4.4.0 (Feb 24, 2023)
+### **Features**
+### **Disconnect Websocket only**
+
+When you call `sb.disconnect`, it disconnects the WebSocket and clears local cache. You can think of it as logging out.
+
+In some cases, you need to only disconnect the WebSocket. You can now do it by calling `sb.disconnectWebSocket`.
+It only disconnects the WebSocket and preserves the local cache.
+```
+sb.disconnectWebSocket();
+```
+To connect again after disconnecting with disconnectWebSocket(),
+use [sb.connect()](https://sendbird.com/docs/chat/v4/javascript/application/authenticating-a-user/authentication#2-connect-to-the-sendbird-server-with-a-user-id).
+```
+const user = await sb.connect(userId: userId); 
+```
+### **Added appStateToggleEnabled param**
+Added SendbirdChatParams.appStateToggleEnabled which can be used to optionally disable internal control of Websocket connection on document.visibilityState change
+
+
+### **Improvements**
+- Fixed a bug where changed `groupChannel.members` was not updated while disconnected
 
 ## v4.3.1 (Feb 15, 2023)
 ### **Improvements**

@@ -17,7 +17,7 @@ use [sb.connect()](https://sendbird.com/docs/chat/v4/javascript/application/auth
 const user = await sb.connect(userId: userId); 
 ```
 ### **Added appStateToggleEnabled param**
-Added SendbirdChatParams.appStateToggleEnabled which can be used to optionally disable internal control of Websocket connection on document.visibilityState change
+Added `SendbirdChatParams.appStateToggleEnabled` which can be used to optionally disable internal control of Websocket connection on `document.visibilityState` change
 
 
 ### **Improvements**

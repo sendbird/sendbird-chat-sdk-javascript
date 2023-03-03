@@ -1,5 +1,29 @@
+## v4.5.0 (Mar 3, 2023)
+### **Features**
+### **Polls in Open Channel**
+Polls is now supported in both Open Channels and Group Channels!
+#### **Specification**
+- Added `Poll.serialize()`
+- Added `PollModule.buildPollFromSerializedData()`
+- Added `onPollUpdated`, `onPollVoted`, and `onPollDeleted` in `OpenChannelHandlerParams`
+- Moved following methods from `GroupChannel` to `BaseChannel`:
+    - `updatePoll()`
+    - `deletePoll()`
+    - `closePoll()`
+    - `addPollOption()`
+    - `updatePollOption()`
+    - `deletePollOption()`
+    - `votePoll()`
+    - `getPollChangeLogsSinceTimestamp()`
+    - `getPollChangeLogsSinceToken()`
+    - `createPollListQuery()`
+    - `createPollVoterListQuery()`
 
-# Changelog
+### **Improvements**
+- Fixed a bug where `GroupChannelFilter` using nicknames (`nicknameContainsFilter`, `nicknameExactMatchFilter`, and `nicknameExactMatchFilter`) includes current user's nickname when searching from locally cached group channels
+- Fixed a bug where `BaseMessage.applyThreadInfoUpdateEvent()` always returning false
+- Fixed a bug where `BaseChannel`’s `createMessageMetaArrayKeys`, `deleteMessageMetaArrayKeys`, `addMessageMetaArrayValues`, and `removeMessageMetaArrayValues` returning unexpected result when file message is given
+
 ## v4.4.0 (Feb 24, 2023)
 ### **Features**
 ### **Disconnect Websocket only**

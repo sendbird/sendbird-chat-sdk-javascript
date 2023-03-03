@@ -119,6 +119,17 @@ export declare class BaseChannel {
   report(category: ReportCategory, description: string): Promise<void>;
   reportUser(user: User, category: ReportCategory, description: string): Promise<void>;
   reportMessage(message: SendableMessage, category: ReportCategory, description: string): Promise<void>;
+  updatePoll(pollId: number, params: PollUpdateParams): Promise<Poll>;
+  deletePoll(pollId: number): Promise<void>;
+  closePoll(pollId: number): Promise<Poll>;
+  addPollOption(pollId: number, optionText: string): Promise<Poll>;
+  updatePollOption(pollId: number, pollOptionId: number, optionText: string): Promise<Poll>;
+  deletePollOption(pollId: number, pollOptionId: number): Promise<void>;
+  votePoll(pollId: number, pollOptionIds: number[]): Promise<PollVoteEvent>;
+  getPollChangeLogsSinceTimestamp(ts: number): Promise<PollChangelogs>;
+  getPollChangeLogsSinceToken(token: string): Promise<PollChangelogs>;
+  createPollListQuery(limit?: number): PollListQuery;
+  createPollVoterListQuery(pollId: number, pollOptionId: number, limit?: number): PollVoterListQuery;
 }
 
 declare abstract class BaseListQuery {
@@ -450,17 +461,6 @@ export declare class GroupChannel extends BaseChannel {
   setMyPushTriggerOption(option: PushTriggerOption): Promise<PushTriggerOption>;
   setMyCountPreference(preference: CountPreference): Promise<CountPreference>;
   resetMyHistory(): Promise<GroupChannel>;
-  updatePoll(pollId: number, params: PollUpdateParams): Promise<Poll>;
-  deletePoll(pollId: number): Promise<void>;
-  closePoll(pollId: number): Promise<Poll>;
-  addPollOption(pollId: number, optionText: string): Promise<Poll>;
-  updatePollOption(pollId: number, pollOptionId: number, optionText: string): Promise<Poll>;
-  deletePollOption(pollId: number, pollOptionId: number): Promise<void>;
-  votePoll(pollId: number, pollOptionIds: number[]): Promise<PollVoteEvent>;
-  getPollChangeLogsSinceTimestamp(ts: number): Promise<PollChangelogs>;
-  getPollChangeLogsSinceToken(token: string): Promise<PollChangelogs>;
-  createPollListQuery(limit?: number): PollListQuery;
-  createPollVoterListQuery(pollId: number, pollOptionId: number, limit?: number): PollVoterListQuery;
   pinMessage(messageId: number): Promise<void>;
   unpinMessage(messageId: number): Promise<void>;
 }
@@ -963,6 +963,7 @@ export declare class Poll {
   votedPollOptionIds: number[];
   applyPollUpdateEvent(event: PollUpdateEvent): boolean;
   applyPollVoteEvent(event: PollVoteEvent): boolean;
+  serialize(): object;
 }
 
 export declare interface PollChangelogs {
@@ -996,6 +997,7 @@ export declare class PollModule extends Module {
   create(params: PollCreateParams): Promise<Poll>;
   get(params: PollRetrievalParams): Promise<Poll>;
   getOption(params: PollOptionRetrievalParams): Promise<PollOption>;
+  buildPollFromSerializedData(serialized: object): Poll;
 }
 
 export declare class PollOption {
@@ -1317,17 +1319,20 @@ export declare class SendbirdChat {
 }
 
 export declare class SendbirdChatOptions {
+  websocketPayloadDecompression: boolean;
   constructor({
     useMemberInfoInMessage,
     typingIndicatorInvalidateTime,
     typingIndicatorThrottle,
     websocketResponseTimeout,
+    websocketPayloadDecompression,
     sessionTokenRefreshTimeout,
   }?: {
     useMemberInfoInMessage?: boolean;
     typingIndicatorInvalidateTime?: number;
     typingIndicatorThrottle?: number;
     websocketResponseTimeout?: number;
+    websocketPayloadDecompression?: boolean;
     sessionTokenRefreshTimeout?: number;
   });
   get useMemberInfoInMessage(): boolean;
@@ -1942,6 +1947,9 @@ declare abstract class OpenChannelHandlerParams extends BaseChannelHandlerParams
   onUserEntered?: (channel: OpenChannel, user: User) => void;
   onUserExited?: (channel: OpenChannel, user: User) => void;
   onChannelParticipantCountChanged?: (channel: OpenChannel) => void;
+  onPollUpdated?: (channel: OpenChannel, event: PollUpdateEvent) => void;
+  onPollVoted?: (channel: OpenChannel, event: PollVoteEvent) => void;
+  onPollDeleted?: (channel: OpenChannel, id: number) => void;
 }
 
 export declare class OpenChannelListQuery extends BaseListQuery {

@@ -1,3 +1,5 @@
+# Changelog
+
 ## v4.5.0 (Mar 3, 2023)
 ### **Features**
 ### **Polls in Open Channel**

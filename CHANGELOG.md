@@ -1,7 +1,4 @@
 # Changelog
-
-## v4.6.0 (Mar 16, 2023)
-
 ## v4.6.0 (Mar 16, 2023)
 ### **Features**
 ### **Set your own Local Caching DB size**
@@ -21,6 +18,7 @@ const localCacheConfig: LocalCacheConfig = new LocalCacheConfig({
 - Fixed a bug where SDK reconnects internally in disconnected state after `disconnectWebsocket()` is called
 - Fixed a bug to use `MemoryStore` when SDK is running in a browser that does not support `indexedDB`
 - Improvement stability
+
 ## v4.5.0 (Mar 3, 2023)
 ### **Features**
 ### **Polls in Open Channel**

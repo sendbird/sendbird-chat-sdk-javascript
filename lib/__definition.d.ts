@@ -61,6 +61,7 @@ export declare class BaseChannel {
   isGroupChannel(): this is GroupChannel;
   isOpenChannel(): this is OpenChannel;
   get cachedMetaData(): object;
+  get messageCollectionLastAccessedAt(): number;
   isIdentical(channel: BaseChannel): boolean;
   isEqual(channel: BaseChannel): boolean;
   createOperatorListQuery(params?: OperatorListQueryParams): OperatorListQuery;
@@ -239,6 +240,16 @@ export declare interface BlockedUserListQueryParams extends BaseListQueryParams 
   userIdsFilter?: string[];
 }
 
+export declare class CachedChannelInfo {
+  get channel(): GroupChannel;
+  get cachedMessageCount(): number;
+}
+
+declare enum CachedDataClearOrder {
+  CUSTOM = 'custom',
+  MESSAGE_COLLECTION_ACCESSED_AT = 'messagecollection_accessed_at',
+}
+
 declare abstract class ChannelDataListQuery extends BaseListQuery {
   readonly channelUrl: string;
   readonly channelType: ChannelType;
@@ -254,6 +265,8 @@ export declare enum ChannelType {
   GROUP = 'group',
   OPEN = 'open',
 }
+
+declare type Comparator<T> = (value: T, other: T) => number;
 
 export declare class ConnectionHandler extends ConnectionHandlerParams {
   constructor(params?: ConnectionHandlerParams);
@@ -498,6 +511,7 @@ export declare enum GroupChannelEventSource {
   REQUEST_CHANNEL = 'REQUEST_CHANNEL',
   REQUEST_CHANNEL_CHANGELOGS = 'REQUEST_CHANNEL_CHANGELOGS',
   REFRESH_CHANNEL = 'REFRESH_CHANNEL',
+  CHANNEL_LASTACCESSEDAT_UPDATED = 'CHANNEL_LASTACCESSEDAT_UPDATED',
   SYNC_CHANNEL_BACKGROUND = 'SYNC_CHANNEL_BACKGROUND',
   SYNC_CHANNEL_CHANGELOGS = 'SYNC_CHANNEL_CHANGELOGS',
 }
@@ -529,6 +543,21 @@ export declare enum HiddenState {
 
 export declare interface InvitationPreference {
   autoAccept: boolean;
+}
+
+export declare class LocalCacheConfig {
+  constructor({
+    maxSize,
+    clearOrder,
+    customClearOrderComparator,
+  }?: {
+    maxSize?: number;
+    clearOrder?: CachedDataClearOrder;
+    customClearOrderComparator?: any;
+  });
+  get maxSize(): number;
+  get clearOrder(): CachedDataClearOrder;
+  get clearOrderComparator(): Comparator<CachedChannelInfo>;
 }
 
 export declare enum LogLevel {
@@ -1241,6 +1270,7 @@ export declare class SendbirdChat {
   get logLevel(): LogLevel;
   set logLevel(val: LogLevel);
   get isCacheEnabled(): boolean;
+  get localCacheConfig(): LocalCacheConfig;
   get ekey(): string;
   get currentUser(): User;
   get connectionState(): ConnectionState;
@@ -1252,6 +1282,7 @@ export declare class SendbirdChat {
   setOnlineListener(listener: OnlineDetectorListener): void;
   setOfflineListener(listener: OnlineDetectorListener): void;
   initializeCache(userId: string): Promise<void>;
+  getCacheDataSize(): Promise<number>;
   clearCachedData(): Promise<void>;
   clearCachedMessages(channelUrls: string[]): Promise<void>;
   connect(userId: string, authToken?: string): Promise<User>;
@@ -1358,6 +1389,7 @@ export declare interface SendbirdChatParams<Modules extends Module[]> {
   logLevel?: LogLevel;
   debugMode?: boolean;
   localCacheEnabled?: boolean;
+  localCacheConfig?: LocalCacheConfig;
   localCacheEncryption?: Encryption;
   useAsyncStorageStore?: typeof AsyncStorage;
   appStateToggleEnabled?: boolean;
@@ -1937,6 +1969,7 @@ export declare interface OpenChannelCreateParams {
   data?: string;
   customType?: string;
   operatorUserIds?: string[];
+  isEphemeral?: boolean;
 }
 
 export declare class OpenChannelHandler extends OpenChannelHandlerParams {

@@ -1,5 +1,26 @@
 # Changelog
 
+## v4.6.0 (Mar 16, 2023)
+
+## v4.6.0 (Mar 16, 2023)
+### **Features**
+### **Set your own Local Caching DB size**
+You can now control the size of your local cache. Starting from 64mb, decide how much you want to store (Default: 256mb).
+Once the size limit is reached, the SDK will automatically remove messages and channels with pre-specified logic (`clearOrder`)  so that you don't have to actively manage it.
+- Added DB size related properties in `LocalCacheConfig`
+```ts
+const localCacheConfig: LocalCacheConfig = new LocalCacheConfig({
+   maxSize: 256,
+   clearOrder: CachedDataClearOrder.MESSAGE_COLLECTION_ACCESSED_AT,
+});
+```
+### **Improvements**
+- Added `SendbirdErrorCode.DATABASE_ERROR`
+- Added `getCachedDataSize()` in SendBirdChat
+- Added `OpenChannelCreateParams.isEphemeral`
+- Fixed a bug where SDK reconnects internally in disconnected state after `disconnectWebsocket()` is called
+- Fixed a bug to use `MemoryStore` when SDK is running in a browser that does not support `indexedDB`
+- Improvement stability
 ## v4.5.0 (Mar 3, 2023)
 ### **Features**
 ### **Polls in Open Channel**

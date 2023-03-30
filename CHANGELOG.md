@@ -6,6 +6,8 @@
 - Added `fetch` polyfill with `AbortController` support
 - Fixed a bug where messages in `MessageCollection` not carrying `parentMessage` value when they should
 - Improved stability
+
+## v4.6.0 (Mar 16, 2023)
 ### **Features**
 ### **Set your own Local Caching DB size**
 You can now control the size of your local cache. Starting from 64mb, decide how much you want to store (Default: 256mb).

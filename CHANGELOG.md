@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.7.0 (Apr 17, 2023)
+### **Improvements**
+- Fixed a bug where `GroupChannelCollection` could not handle `EVENT_MESSAGE_SENT`\n
 ## v4.6.2 (Apr 05, 2023)
 ### **Improvements**
 - Fixed a bug where `GroupChannelCollection` could not handle `EVENT_MESSAGE_SENT`\n

@@ -1,11 +1,20 @@
 # Changelog
 
 ## v4.7.0 (Apr 17, 2023)
+### Features
+### (Moderation) Automatically detect when user is unmuted
+You can now automatically detect when a muted user is unmuted by leveraging `MessageCollections`.
+Clients will now receive `MessageCollectionHandler.onChannelUpdated()` with `GroupChannelContext.GroupChannelEventSource.EVENT_CHANNEL_UNMUTED` when an user is unmuted after their muted duration has expired, on top of explict unmute calls. This now means that you can easily transition user’s experience and allow them to chat even more seamlessly.
+Note that this is a `MessageCollections` only feature! We recommend all of our clients to give it a try if you haven’t
 ### **Improvements**
-- Fixed a bug where `GroupChannelCollection` could not handle `EVENT_MESSAGE_SENT`\n
+- Fixed a bug when broken `disconnect()` before cache initialization
+- Fixed a bug where `LOGI` error command processing
+- Added `collection.close()` when `disconnect()` is called
+- Added support for `AbortController` compatibility
+- Improved stability
 ## v4.6.2 (Apr 05, 2023)
 ### **Improvements**
-- Fixed a bug where `GroupChannelCollection` could not handle `EVENT_MESSAGE_SENT`\n
+- Fixed a bug where `GroupChannelCollection` could not handle `EVENT_MESSAGE_SENT`
 ## v4.6.1 (Mar 29, 2023)
 
 ### **Improvements**

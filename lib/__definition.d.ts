@@ -18,6 +18,7 @@ declare class AppInfo {
   readonly useReaction: boolean;
   readonly applicationAttributes: string[];
   readonly premiumFeatureList: string[];
+  readonly deviceTokenCache: boolean;
   readonly enabledChannelMemberShipHistory: boolean;
 }
 
@@ -1547,6 +1548,42 @@ export declare enum UserOnlineState {
   ONLINE = 'online',
   OFFLINE = 'offline',
   NON_AVAILABLE = 'nonavailable',
+}
+
+declare class UserProfile {
+  appInfo: AppInfo;
+  user: User;
+  connectedAt: number;
+  firstConnectedAt: number;
+  pingInterval: number;
+  pongTimeout: number;
+  reconnectInterval: number;
+  reconnectMaxInterval: number;
+  reconnectRetryCount: number;
+  reconnectIntervalMultiple: number;
+  maxUnreadCountOnSuperGroup: number;
+  profileImageEncryption: boolean;
+  concurrentCallLimit: number;
+  backOffDelay: number;
+  constructor(_iid: string, payload: UserProfilePayload);
+  static payloadify(profile: UserProfile): UserProfilePayload;
+  apply(): void;
+}
+
+declare interface UserProfilePayload extends UserPayload, AppInfoParams {
+  ping_interval?: number;
+  pong_timeout?: number;
+  reconnect?: {
+    interval?: number;
+    max_interval?: number;
+    retry_cnt?: number;
+    mul?: number;
+  };
+  login_ts?: number;
+  max_unread_cnt_on_super_group?: number;
+  profile_image_encryption?: boolean;
+  concurrent_call_limit?: number;
+  back_off_delay?: number;
 }
 
 export declare interface UserUpdateParams {

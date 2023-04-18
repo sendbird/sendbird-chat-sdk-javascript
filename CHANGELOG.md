@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.7.1 (Apr 18, 2023)
+### **Improvements**
+- Fixed a bug on `AbortController` import\n
 ## v4.7.0 (Apr 17, 2023)
 ### Features
 ### (Moderation) Automatically detect when user is unmuted

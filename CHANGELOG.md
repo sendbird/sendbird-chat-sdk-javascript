@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.7.2 (Apr 19, 2023)
+### **Improvements**
+- Fixed a bug where `MessageCollection.initialize()` would throw an Error in some cases\n
 ## v4.7.1 (Apr 18, 2023)
 ### **Improvements**
 - Fixed a bug on `AbortController` import\n

@@ -1,5 +1,5 @@
 {
-  "version": "4.7.2",
+  "version": "4.8.0",
   "description": "Sendbird SDK for JavaScript",
   "name": "@sendbird/chat",
   "author": "Sendbird <support@sendbird.com>",
@@ -29,11 +29,26 @@
   "types": "index.d.ts",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./sendbird.js",
-    "./message": "./message.js",
-    "./groupChannel": "./groupChannel.js",
-    "./openChannel": "./openChannel.js",
-    "./poll": "./poll.js"
+    ".": {
+      "types": "./sendbird.d.ts",
+      "default": "./sendbird.js"
+    },
+    "./message": {
+      "types": "./message.d.ts",
+      "default": "./message.js"
+    },
+    "./groupChannel": {
+      "types": "./groupChannel.d.ts",
+      "default": "./groupChannel.js"
+    },
+    "./openChannel": {
+      "types": "./openChannel.d.ts",
+      "default": "./openChannel.js"
+    },
+    "./poll": {
+      "types": "./poll.d.ts",
+      "default": "./poll.js"
+    }
   },
   "react-native": "./sendbird.js",
   "typesVersions": {

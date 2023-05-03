@@ -1,11 +1,30 @@
 # Changelog
 
+## v4.8.0 (May 03, 2023)
+### **Features**
+### PinnedMessageListQuery
+You can now retrieve all pinned messages in a GroupChannel by the `PinnedMessageListQuery`.
+
+- Added `PinnedMessage`
+- Added `PinnedMessageListQuery`, `PinnedMessageListQueryParams`
+- Added `groupChannel.createPinnedMessageListQuery()`
+
+```
+const query = groupChannel.createPinnedMessageListQuery(params);
+const pinnedMessages = await query.next();
+```
+
+### **Improvements**
+- Improvements stability
+
 ## v4.7.2 (Apr 19, 2023)
 ### **Improvements**
-- Fixed a bug where `MessageCollection.initialize()` would throw an Error in some cases\n
+- Fixed a bug where `MessageCollection.initialize()` would throw an Error in some cases
+
 ## v4.7.1 (Apr 18, 2023)
 ### **Improvements**
-- Fixed a bug on `AbortController` import\n
+- Fixed a bug on `AbortController` import
+
 ## v4.7.0 (Apr 17, 2023)
 ### Features
 ### (Moderation) Automatically detect when user is unmuted
@@ -18,11 +37,12 @@ Note that this is a `MessageCollections` only feature! We recommend all of our c
 - Added `collection.close()` when `disconnect()` is called
 - Added support for `AbortController` compatibility
 - Improved stability
+
 ## v4.6.2 (Apr 05, 2023)
 ### **Improvements**
 - Fixed a bug where `GroupChannelCollection` could not handle `EVENT_MESSAGE_SENT`
-## v4.6.1 (Mar 29, 2023)
 
+## v4.6.1 (Mar 29, 2023)
 ### **Improvements**
 - Added `fetch` polyfill with `AbortController` support
 - Fixed a bug where messages in `MessageCollection` not carrying `parentMessage` value when they should

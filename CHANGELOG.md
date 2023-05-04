@@ -3,7 +3,7 @@
 ## v4.8.1 (May 04, 2023)
 ### **Improvements**
 - Improved stability
-\n
+
 ## v4.8.0 (May 03, 2023)
 ### **Features**
 ### PinnedMessageListQuery

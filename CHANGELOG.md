@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.8.2 (May 12, 2023)
+### **Improvements**
+- Fixed a bug that `PublicGroupChannelListQuery` overwrites the cache with missing properties\n
 ## v4.8.1 (May 04, 2023)
 ### **Improvements**
 - Improved stability

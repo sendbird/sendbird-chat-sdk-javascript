@@ -21,6 +21,7 @@ declare class AppInfo {
   readonly deviceTokenCache: boolean;
   readonly enabledChannelMemberShipHistory: boolean;
   readonly allowSdkStatsUpload: boolean;
+  readonly uikitConfigInfo: UIKitConfigInfo;
 }
 
 export declare class AppleCriticalAlertOptions {
@@ -1371,6 +1372,7 @@ export declare class SendbirdChat {
   getAllEmoji(): Promise<EmojiContainer>;
   getEmojiCategory(categoryId: number): Promise<EmojiCategory>;
   getEmoji(emojiKey: string): Promise<Emoji>;
+  getUIKitConfiguration(): Promise<UIKitConfiguration>;
 }
 
 export declare class SendbirdChatOptions {
@@ -1506,6 +1508,15 @@ export declare class Thumbnail {
 export declare interface ThumbnailSize {
   maxWidth: number;
   maxHeight: number;
+}
+
+export declare class UIKitConfigInfo {
+  lastUpdatedAt: number;
+  static payloadify(configInfo: UIKitConfigInfo): UIKitConfigInfoPayload;
+}
+
+declare interface UIKitConfiguration {
+  json: object;
 }
 
 export declare class User {

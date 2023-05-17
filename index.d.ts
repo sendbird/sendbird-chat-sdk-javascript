@@ -56,6 +56,7 @@ export {
   SessionHandler,
   SnoozePeriod,
   StoreItem,
+  UIKitConfigInfo,
   User,
   UserEventHandler,
   UserOnlineState,

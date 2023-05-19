@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.8.4 (May 19, 2023)
+### **Improvements**
+- Fixed a bug where channel metadat disappears when receiving channel events
+\n
 ## v4.8.3 (May 17, 2023)
 ### **Improvements**
 - Added handling of session revocation.

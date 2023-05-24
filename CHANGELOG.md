@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.8.5 (May 24, 2023)
+### **Improvements**
+- Fixed a bug in the environment that does not allow local storage access
+- Improved stability
+\n
 ## v4.8.4 (May 19, 2023)
 ### **Improvements**
 - Fixed a bug where channel metadat disappears when receiving channel events

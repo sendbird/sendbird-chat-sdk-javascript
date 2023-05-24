@@ -1,5 +1,5 @@
 {
-  "version": "4.8.4",
+  "version": "4.8.5",
   "description": "Sendbird SDK for JavaScript",
   "name": "@sendbird/chat",
   "author": "Sendbird <support@sendbird.com>",
@@ -25,13 +25,14 @@
     }
   },
   "type": "module",
-  "main": "sendbird.js",
+  "main": "index.js",
   "types": "index.d.ts",
+  "react-native": "./index.js",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./sendbird.d.ts",
-      "default": "./sendbird.js"
+      "types": "./index.d.ts",
+      "default": "./index.js"
     },
     "./message": {
       "types": "./message.d.ts",
@@ -50,7 +51,6 @@
       "default": "./poll.js"
     }
   },
-  "react-native": "./sendbird.js",
   "typesVersions": {
     "*": {
       "message": [

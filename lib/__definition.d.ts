@@ -215,13 +215,13 @@ declare abstract class BaseStore {
   readonly metadataBuffer: number;
   readonly encryption: Encryption;
   constructor(props: BaseStoreParams);
-  abstract isAvailable(): Promise<boolean>;
+  abstract checkAvailability(): Promise<void>;
   abstract init(dbname: string): Promise<void>;
   abstract clear(): Promise<void>;
   get adjustedItemSizeLimit(): number;
   usage(): Promise<number>;
   getAllKeys(): Promise<string[]>;
-  get(key: string): Promise<object>;
+  get(key: string): Promise<object | null>;
   set(item: StoreItem): Promise<object>;
   setMany(items: StoreItem[]): Promise<object[]>;
   remove(key: string): Promise<boolean>;
@@ -620,12 +620,12 @@ export declare enum MemberStateFilter {
 
 export declare class MemoryStore extends BaseStore {
   readonly delay: number;
-  observer: Record<string, unknown>;
+  observer: Record<string, object>;
   constructor(params?: MemoryStoreParams);
   get rawData(): object;
   set rawData(value: object);
   observe(key: string, ops: string[], handler: () => Error): void;
-  isAvailable(): Promise<boolean>;
+  checkAvailability(): Promise<void>;
   init(dbname: string): Promise<void>;
   set(item: StoreItem): Promise<object>;
   setMany(items: StoreItem[]): Promise<object[]>;
@@ -1466,7 +1466,6 @@ export declare interface SnoozePeriod {
 export declare interface StoreItem {
   key: string;
   value: object;
-  generation: number;
 }
 
 export declare interface ThreadedMessageListParams {

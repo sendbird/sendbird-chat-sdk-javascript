@@ -4,19 +4,21 @@
 ### **Improvements**
 - Fixed a bug in the environment that does not allow local storage access
 - Improved stability
-\n
+
 ## v4.8.4 (May 19, 2023)
 ### **Improvements**
 - Fixed a bug where channel metadat disappears when receiving channel events
-\n
+
 ## v4.8.3 (May 17, 2023)
 ### **Improvements**
-- Added handling of session revocation.
-- Fixed a bug that session refresh fails when session token is expired.
-- Improved stability.\n
+- Added handling of session revocation
+- Fixed a bug that session refresh fails when session token is expired
+- Improved stability
+
 ## v4.8.2 (May 12, 2023)
 ### **Improvements**
-- Fixed a bug that `PublicGroupChannelListQuery` overwrites the cache with missing properties\n
+- Fixed a bug that `PublicGroupChannelListQuery` overwrites the cache with missing properties
+
 ## v4.8.1 (May 04, 2023)
 ### **Improvements**
 - Improved stability

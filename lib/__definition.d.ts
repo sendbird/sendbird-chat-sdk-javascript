@@ -20,6 +20,7 @@ declare class AppInfo {
   readonly premiumFeatureList: string[];
   readonly deviceTokenCache: boolean;
   readonly enabledChannelMemberShipHistory: boolean;
+  readonly multipleFilesMessageFileCountLimit: number;
   readonly allowSdkStatsUpload: boolean;
   readonly uikitConfigInfo: UIKitConfigInfo;
 }
@@ -174,6 +175,7 @@ export declare class BaseMessage {
   isEqual(message: BaseMessage): boolean;
   isUserMessage(): this is UserMessage;
   isFileMessage(): this is FileMessage;
+  isMultipleFilesMessage(): this is MultipleFilesMessage;
   isAdminMessage(): this is AdminMessage;
   serialize(): object;
   getMetaArraysByKeys(keys: string[]): MessageMetaArray[];
@@ -369,6 +371,13 @@ export declare interface FileMessageCreateParams extends BaseMessageCreateParams
 
 export type FileMessageUpdateParams = BaseMessageUpdateParams;
 
+export declare type FileUploadHandler = (
+  requestId: string,
+  index: number,
+  uploadableFileInfo: UploadableFileInfo,
+  err?: Error,
+) => void;
+
 export declare interface FriendChangelogs {
   addedUsers: User[];
   updatedUsers: User[];
@@ -453,6 +462,7 @@ export declare class GroupChannel extends BaseChannel {
   sendUserMessage(params: UserMessageCreateParams): MessageRequestHandler;
   updateUserMessage(messageId: number, params: UserMessageUpdateParams): Promise<UserMessage>;
   sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
+  sendMultipleFilesMessage(params: MultipleFilesMessageCreateParams): MultipleFilesMessageRequestHandler;
   updateFileMessage(messageId: number, params: FileMessageUpdateParams): Promise<FileMessage>;
   deleteMessage(message: BaseMessage): Promise<void>;
   hide(params: GroupChannelHideParams): Promise<GroupChannel>;
@@ -788,7 +798,7 @@ declare interface MessageMetaArrayPayload {
 
 export declare class MessageModule extends Module {
   name: 'message';
-  buildMessageFromSerializedData(serialized: object): UserMessage | FileMessage | AdminMessage;
+  buildMessageFromSerializedData(serialized: object): UserMessage | FileMessage | MultipleFilesMessage | AdminMessage;
   buildSenderFromSerializedData(serialized: object): Sender;
   getMessage(params: MessageRetrievalParams): Promise<BaseMessage>;
   getScheduledMessage(params: ScheduledMessageRetrievalParams): Promise<BaseMessage>;
@@ -877,6 +887,30 @@ declare type ModuleNamespaces<T extends Module[], M extends T[number] = T[number
     ? Omit<M, keyof Module>
     : never;
 };
+
+export declare class MultipleFilesMessage extends SendableMessage {
+  messageParams: MultipleFilesMessageCreateParams;
+  readonly fileInfoList: UploadedFileInfo[];
+  readonly messageSurvivalSeconds: number;
+  getThreadedMessagesByTimestamp(
+    ts: number,
+    params: ThreadedMessageListParams,
+  ): Promise<{
+    parentMessage: BaseMessage;
+    threadedMessages: BaseMessage[];
+  }>;
+}
+
+export declare interface MultipleFilesMessageCreateParams extends BaseMessageCreateParams {
+  fileInfoList: UploadableFileInfo[];
+}
+
+export declare class MultipleFilesMessageRequestHandler extends MessageRequestHandler {
+  onFileUploaded(handler: FileUploadHandler): MultipleFilesMessageRequestHandler;
+  onPending(handler: MessageHandler): MultipleFilesMessageRequestHandler;
+  onFailed(handler: FailedMessageHandler): MultipleFilesMessageRequestHandler;
+  onSucceeded(handler: MessageHandler): MultipleFilesMessageRequestHandler;
+}
 
 export declare interface MutedInfo {
   isMuted: boolean;
@@ -1511,11 +1545,29 @@ export declare interface ThumbnailSize {
 
 export declare class UIKitConfigInfo {
   lastUpdatedAt: number;
-  static payloadify(configInfo: UIKitConfigInfo): UIKitConfigInfoPayload;
 }
 
 declare interface UIKitConfiguration {
+  string: string;
   json: object;
+}
+
+export declare interface UploadableFileInfo {
+  file?: FileCompat;
+  fileUrl?: string;
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+  thumbnailSizes?: ThumbnailSize[];
+}
+
+export declare class UploadedFileInfo {
+  readonly plainUrl: string;
+  readonly fileName: string;
+  readonly mimeType: string;
+  readonly fileSize: number;
+  readonly thumbnails: Thumbnail[];
+  get url(): string;
 }
 
 export declare class User {

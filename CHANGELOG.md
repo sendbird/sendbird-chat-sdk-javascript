@@ -1,9 +1,48 @@
 # Changelog
 
 ## v4.9.0 (Jun 01, 2023)
+### **Features**
+### MultipleFilesMessage
+You can send a `MultipleFilesMessage` that contains multiple files in a single message via `GroupChannel.sendMultipleFilesMessage()`
+- Added `MultipleFilesMessage`
+- Added `UploadedFileInfo`
+- Added `MultipleFilesMessageCreateParams`
+- Added `UploadableFileInfo`
+- Added `MultipleFilesMessageRequestHandler`
+- Added `FileUploadHandler`
+- Added `GroupChannel.sendMultipleFilesMessage()`
+- Updated return type of `MessageModule.buildMessageFromSerializedData()`
+- Added `AppInfo.multipleFilesMessageFileCountLimit`
+
+```typescript
+const params: MultipleFilesMessageCreateParams = {
+  fileInfoList: UPLOADABLE_FILE_INFO_LIST,
+};
+
+groupChannel.sendMultipleFilesMessage(params)
+  .onPending((message: MultipleFilesMessage) => {
+    // ...
+  })
+  .onFailed((err: SendbirdError, message: MultipleFilesMessage) => {
+    // ...
+  })
+  .onSucceeded((message: MultipleFilesMessage) => {
+    // ...
+  })
+  .onFileUploaded((
+    requestId: string,
+    index: number,
+    uploadableFileInfo: UploadableFileInfo,
+    err?: Error
+  ) => {
+    // ...
+  });
+```
+
 ### **Improvements**
-- Fixed a bug in the environment that does not allow local storage access
-- Improved stability
+- Fixed a bug that database is broken in some environment
+- Added raw payload for UIKit configuration request
+
 ## v4.8.5 (May 24, 2023)
 ### **Improvements**
 - Fixed a bug in the environment that does not allow local storage access

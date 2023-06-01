@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.9.0 (Jun 01, 2023)
+### **Improvements**
+- Fixed a bug in the environment that does not allow local storage access
+- Improved stability
 ## v4.8.5 (May 24, 2023)
 ### **Improvements**
 - Fixed a bug in the environment that does not allow local storage access

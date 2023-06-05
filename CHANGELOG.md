@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.9.1 (Jun 05, 2023)
+### **Features**
+### **Improvements**
+- Fixed a bug where the name, size, and type of FileMessage's PendingMessage were set to default values
 ## v4.9.0 (Jun 01, 2023)
 ### **Features**
 ### MultipleFilesMessage

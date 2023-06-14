@@ -1,6 +1,13 @@
 # Changelog
 
-## v4.9.1 (Jun 05, 2023)
+## v4.9.2 (Jun 14, 2023)
+#### **IMPORTANT NOTICE**
+```diff
+- JS Chat SDK version `4.9.1` and `4.9.2` has a CRTICAL BUG where FileMessage is NOT received when sent from an Android device. Please SKIP version `4.9.0` and `4.9.1`, and update to version `4.9.2` or above instead.
+```
+​
+### **Improvements**
+- Fixed a bug where FileMessage is sent as a MultipleFilesMessage## v4.9.1 (Jun 05, 2023)
 ### **Features**
 ### **Improvements**
 - Fixed a bug where the name, size, and type of FileMessage's PendingMessage were set to default values

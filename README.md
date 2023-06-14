@@ -15,6 +15,11 @@
 
 <br />
 
+<span style="color:red">**IMPORTANT NOTICE**</span><br>
+```
+JS Chat SDK version `4.9.1` and `4.9.2` has a CRTICAL BUG where FileMessage is NOT received when sent from an Android device. Please SKIP version `4.9.0` and `4.9.1`, and update to version `4.9.2` or above instead.
+```
+
 ## Introduction
 
 The Sendbird Chat SDK for JavaScript allows you to add real-time chat into your client app with minimal effort. Sendbird offers a feature rich, scalable, and proven chat solution depended on by companies like Reddit, Hinge, PubG and Paytm.

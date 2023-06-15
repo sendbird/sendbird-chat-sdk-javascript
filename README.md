@@ -17,7 +17,7 @@
 
 <span style="color:red">**IMPORTANT NOTICE**</span><br>
 ```
-JS Chat SDK version `4.9.1` and `4.9.2` has a CRTICAL BUG where FileMessage is NOT received when sent from an Android device. Please SKIP version `4.9.0` and `4.9.1`, and update to version `4.9.2` or above instead.
+JS Chat SDK version `4.9.0` and `4.9.1` has a CRTICAL BUG where FileMessage is NOT received when sent from an Android device. Please SKIP version `4.9.0` and `4.9.1`, and update to version `4.9.2` or above instead.
 ```
 
 ## Introduction

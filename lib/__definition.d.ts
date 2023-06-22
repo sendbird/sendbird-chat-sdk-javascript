@@ -31,10 +31,10 @@ export declare class AppleCriticalAlertOptions {
 }
 
 export declare class ApplicationUserListQuery extends BaseListQuery {
-  readonly userIdsFilter: string[];
-  readonly metaDataKeyFilter: string;
-  readonly metaDataValuesFilter: string[];
-  readonly nicknameStartsWithFilter: string;
+  readonly userIdsFilter: string[] | null;
+  readonly metaDataKeyFilter: string | null;
+  readonly metaDataValuesFilter: string[] | null;
+  readonly nicknameStartsWithFilter: string | null;
   next(): Promise<User[]>;
 }
 
@@ -52,7 +52,7 @@ export declare class BannedUserListQuery extends ChannelDataListQuery {
 export type BannedUserListQueryParams = BaseListQueryParams;
 
 export declare class BaseChannel {
-  url: string;
+  readonly url: string;
   channelType: ChannelType;
   name: string;
   coverUrl: string;
@@ -60,7 +60,7 @@ export declare class BaseChannel {
   data: string;
   isFrozen: boolean;
   isEphemeral: boolean;
-  creator: User;
+  creator: User | null;
   createdAt: number;
   isGroupChannel(): this is GroupChannel;
   isOpenChannel(): this is OpenChannel;
@@ -132,7 +132,7 @@ export declare class BaseChannel {
   deletePollOption(pollId: number, pollOptionId: number): Promise<void>;
   votePoll(pollId: number, pollOptionIds: number[]): Promise<PollVoteEvent>;
   getPollChangeLogsSinceTimestamp(ts: number): Promise<PollChangelogs>;
-  getPollChangeLogsSinceToken(token: string): Promise<PollChangelogs>;
+  getPollChangeLogsSinceToken(token: string | null): Promise<PollChangelogs>;
   createPollListQuery(limit?: number): PollListQuery;
   createPollVoterListQuery(pollId: number, pollOptionId: number, limit?: number): PollVoterListQuery;
 }
@@ -148,29 +148,29 @@ declare interface BaseListQueryParams {
 }
 
 export declare class BaseMessage {
-  channelUrl: string;
-  channelType: ChannelType;
+  readonly channelUrl: string;
+  readonly channelType: ChannelType;
   messageId: number;
-  parentMessageId?: number;
-  parentMessage?: BaseMessage;
-  silent?: boolean;
-  isOperatorMessage?: boolean;
-  messageType?: MessageType;
-  data?: string;
-  customType?: string;
-  mentionType?: MentionType;
-  mentionedUsers?: User[];
-  mentionedUserIds?: string[];
-  mentionedMessageTemplate?: string;
-  threadInfo?: ThreadInfo;
-  reactions?: Reaction[];
-  metaArrays?: MessageMetaArray[];
-  ogMetaData?: OGMetaData;
-  appleCriticalAlertOptions?: AppleCriticalAlertOptions;
+  parentMessageId: number;
+  parentMessage: BaseMessage | null;
+  silent: boolean;
+  isOperatorMessage: boolean;
+  messageType: MessageType;
+  data: string;
+  customType: string;
+  mentionType: MentionType | null;
+  mentionedUsers: User[] | null;
+  mentionedUserIds: string[] | null;
+  mentionedMessageTemplate: string;
+  threadInfo: ThreadInfo | null;
+  reactions: Reaction[];
+  metaArrays: MessageMetaArray[];
+  ogMetaData: OGMetaData | null;
+  appleCriticalAlertOptions: AppleCriticalAlertOptions | null;
   createdAt: number;
-  updatedAt?: number;
-  scheduledInfo?: ScheduledInfo;
-  extendedMessage?: object;
+  updatedAt: number;
+  scheduledInfo: ScheduledInfo | null;
+  extendedMessage: object;
   isIdentical(message: BaseMessage): boolean;
   isEqual(message: BaseMessage): boolean;
   isUserMessage(): this is UserMessage;
@@ -237,7 +237,7 @@ declare interface BaseStoreParams {
 }
 
 export declare class BlockedUserListQuery extends BaseListQuery {
-  readonly userIdsFilter: string[];
+  readonly userIdsFilter: string[] | null;
   next(): Promise<User[]>;
 }
 
@@ -329,7 +329,7 @@ export declare interface Encryption {
   decrypt: (encrypted: object) => object;
 }
 
-export declare type FailedMessageHandler = (err: Error, message: SendableMessage) => void;
+export declare type FailedMessageHandler = (err: Error | null, message: SendableMessage | null) => void;
 
 export declare type FileCompat = File | Blob | FileInfo;
 
@@ -340,7 +340,7 @@ export declare interface FileInfo {
 }
 
 export declare class FileMessage extends SendableMessage {
-  messageParams: FileMessageCreateParams;
+  messageParams: FileMessageCreateParams | null;
   readonly plainUrl: string;
   readonly requireAuth: boolean;
   readonly name: string;
@@ -415,7 +415,7 @@ export declare class GroupChannel extends BaseChannel {
   memberCount: number;
   joinedMemberCount: number;
   hiddenState: HiddenState;
-  lastMessage: BaseMessage;
+  lastMessage: BaseMessage | null;
   messageOffsetTimestamp: number;
   messageSurvivalSeconds: number;
   myMemberState: MemberState;
@@ -424,11 +424,11 @@ export declare class GroupChannel extends BaseChannel {
   myLastRead: number;
   myCountPreference: CountPreference;
   myPushTriggerOption: PushTriggerOption;
-  inviter: User;
+  inviter: User | null;
   invitedAt: number;
   joinedAt: number;
   pinnedMessageIds: number[];
-  lastPinnedMessage: BaseMessage;
+  lastPinnedMessage: BaseMessage | null;
   get isHidden(): boolean;
   get isTyping(): boolean;
   get cachedUnreadMemberState(): object;
@@ -446,7 +446,7 @@ export declare class GroupChannel extends BaseChannel {
   getUnreadMembers(message: BaseMessage, includeAllMembers?: boolean): Member[];
   getReadStatus(includeAllMembers?: boolean): {
     [key: string]: ReadStatus;
-  };
+  } | null;
   getTypingUsers(): Member[];
   invalidateTypingStatus(): boolean;
   refresh(): Promise<GroupChannel>;
@@ -560,15 +560,7 @@ export declare interface InvitationPreference {
 }
 
 export declare class LocalCacheConfig {
-  constructor({
-    maxSize,
-    clearOrder,
-    customClearOrderComparator,
-  }?: {
-    maxSize?: number;
-    clearOrder?: CachedDataClearOrder;
-    customClearOrderComparator?: any;
-  });
+  constructor({ maxSize, clearOrder, customClearOrderComparator }?: LocalCacheConfigParams);
   get maxSize(): number;
   get clearOrder(): CachedDataClearOrder;
   get clearOrderComparator(): Comparator<CachedChannelInfo>;
@@ -584,8 +576,8 @@ export declare enum LogLevel {
 }
 
 export declare class Member extends RestrictedUser {
-  state: MemberState;
-  role: Role;
+  state: MemberState | null;
+  role: Role | null;
   isMuted: boolean;
   isBlockedByMe: boolean;
   isBlockingMe: boolean;
@@ -599,7 +591,7 @@ export declare enum MemberListOrder {
 export declare class MemberListQuery extends ChannelDataListQuery {
   readonly mutedMemberFilter: MutedMemberFilter;
   readonly memberStateFilter: MemberStateFilter;
-  readonly nicknameStartsWithFilter: string;
+  readonly nicknameStartsWithFilter: string | null;
   readonly operatorFilter: OperatorFilter;
   readonly order: MemberListOrder;
   next(): Promise<Member[]>;
@@ -711,7 +703,7 @@ export declare enum MessageCollectionInitPolicy {
   CACHE_AND_REPLACE_BY_API = 'cache_and_replace_by_api',
 }
 
-export declare type MessageCollectionInitResultHandler = (err: Error, messages: BaseMessage[]) => void;
+export declare type MessageCollectionInitResultHandler = (err: Error | null, messages: BaseMessage[] | null) => void;
 
 export declare interface MessageCollectionParams {
   filter?: MessageFilter;
@@ -760,8 +752,8 @@ export declare enum MessageEventSource {
 
 export declare class MessageFilter {
   messageTypeFilter: MessageTypeFilter;
-  customTypesFilter: string[];
-  senderUserIdsFilter: string[];
+  customTypesFilter: string[] | null;
+  senderUserIdsFilter: string[] | null;
   replyType: ReplyType;
   clone(): MessageFilter;
   match(message: BaseMessage): boolean;
@@ -792,16 +784,16 @@ export declare class MessageMetaArray {
 }
 
 declare interface MessageMetaArrayPayload {
-  'key': string;
-  'value'?: string[];
+  key: string;
+  value?: string[];
 }
 
 export declare class MessageModule extends Module {
   name: 'message';
   buildMessageFromSerializedData(serialized: object): UserMessage | FileMessage | MultipleFilesMessage | AdminMessage;
   buildSenderFromSerializedData(serialized: object): Sender;
-  getMessage(params: MessageRetrievalParams): Promise<BaseMessage>;
-  getScheduledMessage(params: ScheduledMessageRetrievalParams): Promise<BaseMessage>;
+  getMessage(params: MessageRetrievalParams): Promise<BaseMessage | null>;
+  getScheduledMessage(params: ScheduledMessageRetrievalParams): Promise<BaseMessage | null>;
 }
 
 export declare class MessageRequestHandler {
@@ -831,11 +823,11 @@ export declare class MessageSearchQuery extends BaseListQuery {
   readonly exactMatch: boolean;
   readonly channelUrl: string;
   readonly channelCustomType: string;
-  readonly messageTimestampFrom: number;
-  readonly messageTimestampTo: number;
+  readonly messageTimestampFrom: number | null;
+  readonly messageTimestampTo: number | null;
   readonly order: MessageSearchOrder;
   readonly advancedQuery: boolean;
-  readonly targetFields: string[];
+  readonly targetFields: string[] | null;
   totalCount: number;
   next(): Promise<BaseMessage[]>;
 }
@@ -889,7 +881,7 @@ declare type ModuleNamespaces<T extends Module[], M extends T[number] = T[number
 };
 
 export declare class MultipleFilesMessage extends SendableMessage {
-  messageParams: MultipleFilesMessageCreateParams;
+  messageParams: MultipleFilesMessageCreateParams | null;
   readonly fileInfoList: UploadedFileInfo[];
   readonly messageSurvivalSeconds: number;
   getThreadedMessagesByTimestamp(
@@ -939,18 +931,18 @@ export type MutedUserListQueryParams = BaseListQueryParams;
 
 export declare class OGImage {
   readonly url: string;
-  readonly secureUrl: string;
-  readonly type: string;
+  readonly secureUrl: string | null;
+  readonly type: string | null;
   readonly width: number;
   readonly height: number;
-  readonly alt: string;
+  readonly alt: string | null;
 }
 
 export declare class OGMetaData {
-  readonly title: string;
-  readonly url: string;
-  readonly description: string;
-  readonly defaultImage: OGImage;
+  readonly title: string | null;
+  readonly url: string | null;
+  readonly description: string | null;
+  readonly defaultImage: OGImage | null;
 }
 
 export declare type OnlineDetectorListener = (callback: () => void) => (() => void) | undefined;
@@ -1012,11 +1004,11 @@ export declare class PinnedMessage {
 }
 
 export declare class PinnedMessageListQuery extends ChannelDataListQuery {
-  readonly includeMetaArray: boolean;
-  readonly includeReactions: boolean;
-  readonly includeParentMessageInfo: boolean;
-  readonly includeThreadInfo: boolean;
-  readonly includePollDetails: boolean;
+  readonly includeMetaArray?: boolean;
+  readonly includeReactions?: boolean;
+  readonly includeParentMessageInfo?: boolean;
+  readonly includeThreadInfo?: boolean;
+  readonly includePollDetails?: boolean;
   next(): Promise<PinnedMessage[]>;
 }
 
@@ -1036,16 +1028,16 @@ export declare class Plugin {
 
 export declare class Poll {
   id: number;
-  title: string;
+  title: string | null;
   createdAt: number;
   updatedAt: number;
   closeAt: number;
   status: PollStatus;
   messageId: number;
-  data?: PollData;
+  data: PollData | null;
   voterCount: number;
   options: PollOption[];
-  createdBy?: string;
+  createdBy: string | null;
   allowUserSuggestion: boolean;
   allowMultipleVotes: boolean;
   votedPollOptionIds: number[];
@@ -1091,9 +1083,9 @@ export declare class PollModule extends Module {
 export declare class PollOption {
   pollId: number;
   id: number;
-  text: string;
+  text: string | null;
   voteCount: number;
-  createdBy?: string;
+  createdBy: string | null;
   createdAt: number;
   updatedAt: number;
 }
@@ -1148,8 +1140,8 @@ export declare interface PollVoterListQueryParams extends ChannelDataListQueryPa
 export declare class PreviousMessageListQuery extends ChannelDataListQuery {
   readonly reverse: boolean;
   readonly messageTypeFilter: MessageTypeFilter;
-  readonly customTypesFilter: string[];
-  readonly senderUserIdsFilter: string[];
+  readonly customTypesFilter: string[] | null;
+  readonly senderUserIdsFilter: string[] | null;
   readonly replyType: ReplyType;
   readonly includeMetaArray: boolean;
   readonly includeReactions: boolean;
@@ -1220,7 +1212,7 @@ export declare class ReactionEvent {
   readonly messageId: number;
   readonly userId: string;
   readonly key: string;
-  readonly operation: ReactionEventOperation;
+  readonly operation: ReactionEventOperation | null;
   readonly updatedAt: number;
 }
 
@@ -1254,8 +1246,8 @@ export declare class RestrictedUser extends User {
 }
 
 export declare class RestrictionInfo {
-  readonly restrictionType: RestrictionType;
-  readonly description: string;
+  readonly restrictionType: RestrictionType | null;
+  readonly description: string | null;
   readonly endAt: number;
 }
 
@@ -1296,7 +1288,7 @@ export declare interface ScheduledMessageRetrievalParams {
 }
 
 export declare interface ScheduledUserMessageCreateParams extends UserMessageCreateParams {
-  scheduledAt: number;
+  scheduledAt?: number;
 }
 
 export declare interface ScheduledUserMessageUpdateParams extends UserMessageUpdateParams {
@@ -1304,7 +1296,7 @@ export declare interface ScheduledUserMessageUpdateParams extends UserMessageUpd
 }
 
 declare class SendableMessage extends BaseMessage {
-  sender: Sender;
+  readonly sender: Sender;
   reqId: string;
   replyToChannel: boolean;
   sendingStatus: SendingStatus;
@@ -1323,20 +1315,20 @@ export declare class SendbirdChat {
   static get instance(): SendbirdChat;
   static get version(): string;
   get appId(): string;
-  get appInfo(): AppInfo;
+  get appInfo(): AppInfo | null;
   get appVersion(): string;
   get debugMode(): boolean;
   get logLevel(): LogLevel;
   set logLevel(val: LogLevel);
   get isCacheEnabled(): boolean;
-  get localCacheConfig(): LocalCacheConfig;
+  get localCacheConfig(): LocalCacheConfig | null;
   get ekey(): string;
-  get currentUser(): User;
+  get currentUser(): User | null;
   get connectionState(): ConnectionState;
   get lastConnectedAt(): number;
-  get fcmPushToken(): string;
-  get apnsPushToken(): string;
-  getMemoryStoreForDebugging(): MemoryStore;
+  get fcmPushToken(): string | null;
+  get apnsPushToken(): string | null;
+  getMemoryStoreForDebugging(): MemoryStore | null;
   addExtension(key: string, version: string): void;
   setOnlineListener(listener: OnlineDetectorListener): void;
   setOfflineListener(listener: OnlineDetectorListener): void;
@@ -1344,7 +1336,7 @@ export declare class SendbirdChat {
   getCacheDataSize(): Promise<number>;
   clearCachedData(): Promise<void>;
   clearCachedMessages(channelUrls: string[]): Promise<void>;
-  connect(userId: string, authToken?: string): Promise<User>;
+  connect(userId: string, authToken?: string): Promise<User | null>;
   reconnect(): boolean;
   disconnect(): Promise<void>;
   disconnectWebSocket(): Promise<void>;
@@ -1419,12 +1411,12 @@ export declare class SendbirdChatOptions {
     websocketPayloadDecompression,
     sessionTokenRefreshTimeout,
   }?: {
-    useMemberInfoInMessage?: boolean;
-    typingIndicatorInvalidateTime?: number;
-    typingIndicatorThrottle?: number;
-    websocketResponseTimeout?: number;
-    websocketPayloadDecompression?: boolean;
-    sessionTokenRefreshTimeout?: number;
+    useMemberInfoInMessage?: boolean | undefined;
+    typingIndicatorInvalidateTime?: number | undefined;
+    typingIndicatorThrottle?: number | undefined;
+    websocketResponseTimeout?: number | undefined;
+    websocketPayloadDecompression?: boolean | undefined;
+    sessionTokenRefreshTimeout?: number | undefined;
   });
   get useMemberInfoInMessage(): boolean;
   set useMemberInfoInMessage(value: boolean);
@@ -1489,7 +1481,7 @@ declare abstract class SessionHandlerParams {
 
 declare type SessionTokenRefreshReject = (err: Error) => void;
 
-declare type SessionTokenRefreshResolve = (authToken: string) => void;
+declare type SessionTokenRefreshResolve = (authToken: string | null) => void;
 
 export declare interface SnoozePeriod {
   isSnoozeOn: boolean;
@@ -1563,8 +1555,8 @@ export declare interface UploadableFileInfo {
 
 export declare class UploadedFileInfo {
   readonly plainUrl: string;
-  readonly fileName: string;
-  readonly mimeType: string;
+  readonly fileName: string | null;
+  readonly mimeType: string | null;
   readonly fileSize: number;
   readonly thumbnails: Thumbnail[];
   get url(): string;
@@ -1578,10 +1570,10 @@ export declare class User {
   metaData: object;
   connectionStatus: UserOnlineState;
   isActive: boolean;
-  lastSeenAt: number;
-  preferredLanguages: string[];
-  friendDiscoveryKey: string;
-  friendName: string;
+  lastSeenAt: number | null;
+  preferredLanguages: string[] | null;
+  friendDiscoveryKey: string | null;
+  friendName: string | null;
   get profileUrl(): string;
   serialize(): object;
   createMetaData(input: MetaData): Promise<object>;
@@ -1601,7 +1593,7 @@ declare abstract class UserEventHandlerParams {
 
 export declare class UserMessage extends SendableMessage {
   message: string;
-  messageParams: UserMessageCreateParams;
+  messageParams: UserMessageCreateParams | null;
   readonly translations: object;
   readonly translationTargetLanguages: string[];
   readonly messageSurvivalSeconds: number;
@@ -1614,7 +1606,7 @@ export declare class UserMessage extends SendableMessage {
     threadedMessages: BaseMessage[];
   }>;
   applyPoll(poll: Poll): boolean;
-  get poll(): Poll;
+  get poll(): Poll | null;
 }
 
 export declare interface UserMessageCreateParams extends BaseMessageCreateParams {
@@ -1728,22 +1720,22 @@ export declare interface GroupChannelCreateParams {
 
 export declare class GroupChannelFilter {
   includeEmpty: boolean;
-  nicknameContainsFilter: string;
-  nicknameStartsWithFilter: string;
-  nicknameExactMatchFilter: string;
+  nicknameContainsFilter: string | null;
+  nicknameStartsWithFilter: string | null;
+  nicknameExactMatchFilter: string | null;
   channelNameContainsFilter: string;
   myMemberStateFilter: MyMemberStateFilter;
-  customTypesFilter: string[];
-  channelUrlsFilter: string[];
+  customTypesFilter: string[] | null;
+  channelUrlsFilter: string[] | null;
   superChannelFilter: SuperChannelFilter;
   publicChannelFilter: PublicChannelFilter;
-  customTypeStartsWithFilter: string;
+  customTypeStartsWithFilter: string | null;
   unreadChannelFilter: UnreadChannelFilter;
   hiddenChannelFilter: HiddenChannelFilter;
   includeFrozen: boolean;
-  get searchFilter(): GroupChannelSearchFilter;
-  setSearchFilter(fields: GroupChannelSearchField[], query: string): void;
-  get userIdsFilter(): GroupChannelUserIdsFilter;
+  get searchFilter(): GroupChannelSearchFilter | null;
+  setSearchFilter(fields?: GroupChannelSearchField[], query?: string): void;
+  get userIdsFilter(): GroupChannelUserIdsFilter | null;
   setUserIdsFilter(userIds: string[], includeMode: boolean, queryType?: QueryType): void;
   clone(): GroupChannelFilter;
   match(channel: GroupChannel, currentUserId: string): boolean;
@@ -1804,12 +1796,12 @@ export declare class GroupChannelListQuery extends BaseListQuery {
   readonly includeEmpty: boolean;
   readonly includeFrozen: boolean;
   readonly includeMetaData: boolean;
-  readonly channelUrlsFilter: string[];
-  readonly customTypesFilter: string[];
-  readonly customTypeStartsWithFilter: string;
-  readonly nicknameContainsFilter: string;
-  readonly nicknameStartsWithFilter: string;
-  readonly nicknameExactMatchFilter: string;
+  readonly channelUrlsFilter: string[] | null;
+  readonly customTypesFilter: string[] | null;
+  readonly customTypeStartsWithFilter: string | null;
+  readonly nicknameContainsFilter: string | null;
+  readonly nicknameStartsWithFilter: string | null;
+  readonly nicknameExactMatchFilter: string | null;
   readonly channelNameContainsFilter: string;
   readonly myMemberStateFilter: MyMemberStateFilter;
   readonly unreadChannelFilter: UnreadChannelFilter;
@@ -1818,10 +1810,10 @@ export declare class GroupChannelListQuery extends BaseListQuery {
   readonly hiddenChannelFilter: HiddenChannelFilter;
   readonly searchFilter: GroupChannelSearchFilter;
   readonly userIdsFilter: GroupChannelUserIdsFilter;
-  readonly metadataKey: string;
-  readonly metadataValues: string[];
-  readonly metadataOrderKeyFilter: string;
-  readonly metadataValueStartsWith: string;
+  readonly metadataKey: string | null;
+  readonly metadataValues: string[] | null;
+  readonly metadataOrderKeyFilter: string | null;
+  readonly metadataValueStartsWith: string | null;
   readonly order: GroupChannelListOrder;
   serialize(): object;
   next(): Promise<GroupChannel[]>;
@@ -1880,7 +1872,7 @@ export declare enum GroupChannelSearchField {
 }
 
 export declare interface GroupChannelSearchFilter {
-  query?: string;
+  query?: string | null;
   fields?: GroupChannelSearchField[];
 }
 
@@ -1927,16 +1919,16 @@ export declare class PublicGroupChannelListQuery extends BaseListQuery {
   readonly includeEmpty: boolean;
   readonly includeFrozen: boolean;
   readonly includeMetaData: boolean;
-  readonly channelUrlsFilter: string[];
-  readonly customTypesFilter: string[];
-  readonly customTypeStartsWithFilter: string;
-  readonly channelNameContainsFilter: string;
+  readonly channelUrlsFilter: string[] | null;
+  readonly customTypesFilter: string[] | null;
+  readonly customTypeStartsWithFilter: string | null;
+  readonly channelNameContainsFilter: string | null;
   readonly membershipFilter: MembershipFilter;
   readonly superChannelFilter: SuperChannelFilter;
-  readonly metadataKey: string;
-  readonly metadataValues: string[];
-  readonly metadataOrderKeyFilter: string;
-  readonly metadataValueStartsWith: string;
+  readonly metadataKey: string | null;
+  readonly metadataValues: string[] | null;
+  readonly metadataOrderKeyFilter: string | null;
+  readonly metadataValueStartsWith: string | null;
   readonly order: PublicGroupChannelListOrder;
   next(): Promise<GroupChannel[]>;
 }
@@ -1969,10 +1961,10 @@ export declare enum ScheduledMessageListOrder {
 }
 
 export declare class ScheduledMessageListQuery extends BaseListQuery {
-  readonly channelUrl: string;
-  readonly order: ScheduledMessageListOrder;
+  readonly channelUrl: string | null;
+  readonly order: ScheduledMessageListOrder | null;
   readonly reverse: boolean;
-  readonly scheduledStatus: ScheduledStatus[];
+  readonly scheduledStatus: ScheduledStatus[] | null;
   readonly messageTypeFilter: MessageTypeFilter;
   next(): Promise<BaseMessage[]>;
 }
@@ -2074,9 +2066,9 @@ declare abstract class OpenChannelHandlerParams extends BaseChannelHandlerParams
 export declare class OpenChannelListQuery extends BaseListQuery {
   readonly includeFrozen: boolean;
   readonly includeMetaData: boolean;
-  readonly nameKeyword: string;
-  readonly urlKeyword: string;
-  readonly customTypes: string[];
+  readonly nameKeyword: string | null;
+  readonly urlKeyword: string | null;
+  readonly customTypes: string[] | null;
   next(): Promise<OpenChannel[]>;
 }
 

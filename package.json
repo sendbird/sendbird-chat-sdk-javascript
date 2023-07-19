@@ -1,5 +1,5 @@
 {
-  "version": "4.9.3",
+  "version": "4.9.4-rc.0",
   "description": "Sendbird SDK for JavaScript",
   "name": "@sendbird/chat",
   "author": "Sendbird <support@sendbird.com>",
@@ -24,29 +24,38 @@
       "optional": true
     }
   },
-  "type": "module",
-  "main": "index.js",
+  "main": "cjs/index.js",
+  "module": "index.js",
   "types": "index.d.ts",
   "react-native": "./index.js",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
+      "import": "./index.js",
+      "require": "./cjs/index.js",
       "types": "./index.d.ts",
       "default": "./index.js"
     },
     "./message": {
+      "import": "./message.js",
+      "require": "./cjs/message.js",
       "types": "./message.d.ts",
       "default": "./message.js"
     },
     "./groupChannel": {
+      "import": "./groupChannel.js",
+      "require": "./cjs/groupChannel.js",
       "types": "./groupChannel.d.ts",
       "default": "./groupChannel.js"
     },
     "./openChannel": {
+      "import": "./openChannel.js",
+      "require": "./cjs/openChannel.js",
       "types": "./openChannel.d.ts",
       "default": "./openChannel.js"
     },
     "./poll": {
+      "import": "./poll.js",
+      "require": "./cjs/poll.js",
       "types": "./poll.d.ts",
       "default": "./poll.js"
     }

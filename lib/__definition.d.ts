@@ -329,7 +329,7 @@ export declare interface Encryption {
   decrypt: (encrypted: object) => object;
 }
 
-export declare type FailedMessageHandler = (err: Error | null, message: SendableMessage | null) => void;
+export declare type FailedMessageHandler = (err: Error, message: SendableMessage | null) => void;
 
 export declare type FileCompat = File | Blob | FileInfo;
 
@@ -509,6 +509,7 @@ export declare enum GroupChannelEventSource {
   EVENT_CHANNEL_ACCEPTED_INVITE = 'EVENT_CHANNEL_ACCEPTED_INVITE',
   EVENT_CHANNEL_DECLINED_INVITE = 'EVENT_CHANNEL_DECLINED_INVITE',
   EVENT_CHANNEL_OPERATOR_UPDATED = 'EVENT_CHANNEL_OPERATOR_UPDATED',
+  EVENT_CHANNEL_BANNED = 'EVENT_CHANNEL_BANNED',
   EVENT_CHANNEL_MUTED = 'EVENT_CHANNEL_MUTED',
   EVENT_CHANNEL_UNMUTED = 'EVENT_CHANNEL_UNMUTED',
   EVENT_CHANNEL_FROZEN = 'EVENT_CHANNEL_FROZEN',
@@ -564,6 +565,12 @@ export declare class LocalCacheConfig {
   get maxSize(): number;
   get clearOrder(): CachedDataClearOrder;
   get clearOrderComparator(): Comparator<CachedChannelInfo>;
+}
+
+declare interface LocalCacheConfigParams {
+  maxSize?: number;
+  clearOrder?: CachedDataClearOrder;
+  customClearOrderComparator?: Comparator<CachedChannelInfo>;
 }
 
 export declare enum LogLevel {

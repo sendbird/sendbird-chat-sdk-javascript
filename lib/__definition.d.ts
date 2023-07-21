@@ -329,7 +329,7 @@ export declare interface Encryption {
   decrypt: (encrypted: object) => object;
 }
 
-export declare type FailedMessageHandler = (err: Error | null, message: SendableMessage | null) => void;
+export declare type FailedMessageHandler = (err: Error, message: SendableMessage | null) => void;
 
 export declare type FileCompat = File | Blob | FileInfo;
 
@@ -509,6 +509,7 @@ export declare enum GroupChannelEventSource {
   EVENT_CHANNEL_ACCEPTED_INVITE = 'EVENT_CHANNEL_ACCEPTED_INVITE',
   EVENT_CHANNEL_DECLINED_INVITE = 'EVENT_CHANNEL_DECLINED_INVITE',
   EVENT_CHANNEL_OPERATOR_UPDATED = 'EVENT_CHANNEL_OPERATOR_UPDATED',
+  EVENT_CHANNEL_BANNED = 'EVENT_CHANNEL_BANNED',
   EVENT_CHANNEL_MUTED = 'EVENT_CHANNEL_MUTED',
   EVENT_CHANNEL_UNMUTED = 'EVENT_CHANNEL_UNMUTED',
   EVENT_CHANNEL_FROZEN = 'EVENT_CHANNEL_FROZEN',
@@ -564,6 +565,12 @@ export declare class LocalCacheConfig {
   get maxSize(): number;
   get clearOrder(): CachedDataClearOrder;
   get clearOrderComparator(): Comparator<CachedChannelInfo>;
+}
+
+export declare interface LocalCacheConfigParams {
+  maxSize?: number;
+  clearOrder?: CachedDataClearOrder;
+  customClearOrderComparator?: Comparator<CachedChannelInfo>;
 }
 
 export declare enum LogLevel {
@@ -1336,7 +1343,7 @@ export declare class SendbirdChat {
   getCacheDataSize(): Promise<number>;
   clearCachedData(): Promise<void>;
   clearCachedMessages(channelUrls: string[]): Promise<void>;
-  connect(userId: string, authToken?: string): Promise<User | null>;
+  connect(userId: string, authToken?: string): Promise<User>;
   reconnect(): boolean;
   disconnect(): Promise<void>;
   disconnectWebSocket(): Promise<void>;
@@ -1663,6 +1670,7 @@ export declare interface GroupChannelChangelogs {
   deletedChannelUrls: string[];
   hasMore: boolean;
   token: string;
+  ts?: number;
 }
 
 export declare interface GroupChannelChangeLogsParams {

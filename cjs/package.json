@@ -27,7 +27,7 @@
   "main": "cjs/index.js",
   "module": "index.js",
   "types": "index.d.ts",
-  "type": "module",
+  "type": "commonjs",
   "react-native": "./index.js",
   "exports": {
     ".": {

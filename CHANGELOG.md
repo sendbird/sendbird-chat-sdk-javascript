@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.9.4 (July 21, 2023)
+### **Improvements**
+- Added `EVENT_CHANNEL_BANNED` to `GroupchannelEventSource`
+- Changed `err` the argument of `FailedMessageHandler` to not nullable type
+- Changed return value type of `sb.connect()` to not nullable type
+- Fixed a bug where don't get channel Info in Cache in `GroupChannelCollection`
+- Fixed a bug where return empty result in `loadPrevious` in `MessageCollection`
+- Fixed a bug where HugeGap check in `MessageCollection`
+- Fixed a bug where `Poll.applyPollVoteEvent()` not updating `Poll.voterCount`
+- Fixed a bug where the group channel changelogs did not update the group channel metadata
+- Improved stability
 ## v4.9.3 (Jun 22, 2023)
 ### **Improvements**
 - Fixed a bug where `sb.connect()` fails when `localCacheEnabled` set to false in browsers with disabled Cookies

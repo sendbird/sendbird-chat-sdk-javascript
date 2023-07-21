@@ -27,6 +27,7 @@ export {
   FriendListQueryParams,
   InvitationPreference,
   LocalCacheConfig,
+  LocalCacheConfigParams,
   LogLevel,
   MemoryStore,
   MemoryStoreParams,

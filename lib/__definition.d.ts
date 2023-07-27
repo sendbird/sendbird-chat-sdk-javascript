@@ -684,21 +684,21 @@ export declare class MessageCollection {
 }
 
 export declare interface MessageCollectionEventHandler {
-  onChannelUpdated: (context: GroupChannelEventContext, channel: GroupChannel) => void;
-  onChannelDeleted: (context: GroupChannelEventContext, channelUrl: string) => void;
-  onMessagesAdded: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
-  onMessagesUpdated: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
+  onChannelUpdated?: (context: GroupChannelEventContext, channel: GroupChannel) => void;
+  onChannelDeleted?: (context: GroupChannelEventContext, channelUrl: string) => void;
+  onMessagesAdded?: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
+  onMessagesUpdated?: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
   /**
    *
    * @param messageIds Deprecated since v4.3.1. Use messages instead.
    */
-  onMessagesDeleted: (
+  onMessagesDeleted?: (
     context: MessageEventContext,
     channel: GroupChannel,
     messageIds: number[],
     messages: BaseMessage[],
   ) => void;
-  onHugeGapDetected: () => void;
+  onHugeGapDetected?: () => void;
 }
 
 export declare class MessageCollectionInitHandler {
@@ -1690,9 +1690,9 @@ export declare class GroupChannelCollection {
 }
 
 export declare interface GroupChannelCollectionEventHandler {
-  onChannelsAdded: (context: GroupChannelEventContext, channels: BaseChannel[]) => void;
-  onChannelsUpdated: (context: GroupChannelEventContext, channels: BaseChannel[]) => void;
-  onChannelsDeleted: (context: GroupChannelEventContext, channelUrls: string[]) => void;
+  onChannelsAdded?: (context: GroupChannelEventContext, channels: BaseChannel[]) => void;
+  onChannelsUpdated?: (context: GroupChannelEventContext, channels: BaseChannel[]) => void;
+  onChannelsDeleted?: (context: GroupChannelEventContext, channelUrls: string[]) => void;
 }
 
 export declare interface GroupChannelCollectionParams {
@@ -1756,7 +1756,7 @@ export declare class GroupChannelHandler extends GroupChannelHandlerParams {
 declare abstract class GroupChannelHandlerParams extends BaseChannelHandlerParams {
   onUserJoined?: (channel: GroupChannel, user: User) => void;
   onUserLeft?: (channel: GroupChannel, user: User) => void;
-  onUserReceivedInvitation?: (channel: GroupChannel, inviter: User, invitees: User[]) => void;
+  onUserReceivedInvitation?: (channel: GroupChannel, inviter: User | null, invitees: User[]) => void;
   onUserDeclinedInvitation?: (channel: GroupChannel, inviter: User, invitee: User) => void;
   onChannelHidden?: (channel: GroupChannel) => void;
   onUnreadMemberStatusUpdated?: (channel: GroupChannel) => void;

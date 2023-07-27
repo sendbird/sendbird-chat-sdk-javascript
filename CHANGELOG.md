@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.9.5 (July 27, 2023)
+### **Improvements**
+- Fixed bug when received `CHANNEL_INVITE` event inviter is null
+- Updated `MessageCollectionEventHandler` members to be optional
 ## v4.9.4 (July 21, 2023)
 ### **Improvements**
 - Added `EVENT_CHANNEL_BANNED` to `GroupchannelEventSource`

@@ -22,6 +22,7 @@ declare class AppInfo {
   readonly enabledChannelMemberShipHistory: boolean;
   readonly multipleFilesMessageFileCountLimit: number;
   readonly allowSdkStatsUpload: boolean;
+  readonly notificationInfo: NotificationInfo | null;
   readonly uikitConfigInfo: UIKitConfigInfo;
 }
 
@@ -49,21 +50,23 @@ export declare class BannedUserListQuery extends ChannelDataListQuery {
   next(): Promise<RestrictedUser[]>;
 }
 
-export type BannedUserListQueryParams = BaseListQueryParams;
+export declare interface BannedUserListQueryParams extends BaseListQueryParams {}
 
 export declare class BaseChannel {
-  readonly url: string;
+  get url(): string;
+  get name(): string;
+  set name(value: string);
+  get createdAt(): number;
   channelType: ChannelType;
-  name: string;
   coverUrl: string;
   customType: string;
   data: string;
   isFrozen: boolean;
   isEphemeral: boolean;
   creator: User | null;
-  createdAt: number;
   isGroupChannel(): this is GroupChannel;
   isOpenChannel(): this is OpenChannel;
+  isFeedChannel(): this is FeedChannel;
   get cachedMetaData(): object;
   get messageCollectionLastAccessedAt(): number;
   isIdentical(channel: BaseChannel): boolean;
@@ -137,6 +140,10 @@ export declare class BaseChannel {
   createPollVoterListQuery(pollId: number, pollOptionId: number, limit?: number): PollVoterListQuery;
 }
 
+declare class BaseChannelEventContext {
+  readonly source: CollectionEventSource;
+}
+
 declare abstract class BaseListQuery {
   readonly limit: number;
   get hasNext(): boolean;
@@ -184,6 +191,50 @@ export declare class BaseMessage {
   applyParentMessage(parentMessage: BaseMessage): boolean;
 }
 
+declare class BaseMessageCollection<Channel extends BaseChannel> {
+  readonly filter: MessageFilter;
+  get channel(): Channel;
+  get succeededMessages(): BaseMessage[];
+  get failedMessages(): SendableMessage[];
+  get pendingMessages(): SendableMessage[];
+  get hasPrevious(): boolean;
+  get hasNext(): boolean;
+  private get viewTop();
+  private get viewBottom();
+  initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler;
+  loadPrevious(): Promise<BaseMessage[]>;
+  loadNext(): Promise<BaseMessage[]>;
+  removeFailedMessage(reqId: string): Promise<void>;
+  dispose(): void;
+}
+
+declare interface BaseMessageCollectionEventHandler<
+  Channel extends BaseChannel,
+  ChannelEventContext extends BaseChannelEventContext,
+  MessageEventContext extends BaseMessageEventContext,
+> {
+  onChannelUpdated?: (context: ChannelEventContext, channel: Channel) => void;
+  onChannelDeleted?: (context: ChannelEventContext, channelUrl: string) => void;
+  onMessagesAdded?: (context: MessageEventContext, channel: Channel, messages: BaseMessage[]) => void;
+  onMessagesUpdated?: (context: MessageEventContext, channel: Channel, messages: BaseMessage[]) => void;
+  /**
+   * @param messageIds Deprecated since v4.3.1. Use messages instead.
+   */
+  onMessagesDeleted?: (
+    context: MessageEventContext,
+    channel: Channel,
+    messageIds: number[],
+    messages: BaseMessage[],
+  ) => void;
+  onHugeGapDetected?: () => void;
+}
+
+declare interface BaseMessageCollectionParams {
+  filter?: MessageFilter;
+  startingPoint?: number;
+  limit?: number;
+}
+
 export declare interface BaseMessageCreateParams {
   data?: string;
   customType?: string;
@@ -197,6 +248,10 @@ export declare interface BaseMessageCreateParams {
   pushNotificationDeliveryOption?: PushNotificationDeliveryOption;
   appleCriticalAlertOptions?: AppleCriticalAlertOptions;
   isPinnedMessage?: boolean;
+}
+
+declare class BaseMessageEventContext {
+  readonly source: CollectionEventSource;
 }
 
 export declare interface BaseMessageUpdateParams {
@@ -269,6 +324,78 @@ export declare enum ChannelType {
   BASE = 'base',
   GROUP = 'group',
   OPEN = 'open',
+  FEED = 'feed',
+}
+
+export declare enum CollectionEventSource {
+  UNKNOWN = 'UNKNOWN',
+  EVENT_CHANNEL_CREATED = 'EVENT_CHANNEL_CREATED',
+  EVENT_CHANNEL_UPDATED = 'EVENT_CHANNEL_UPDATED',
+  EVENT_CHANNEL_DELETED = 'EVENT_CHANNEL_DELETED',
+  EVENT_CHANNEL_READ = 'EVENT_CHANNEL_READ',
+  EVENT_CHANNEL_DELIVERED = 'EVENT_CHANNEL_DELIVERED',
+  EVENT_CHANNEL_INVITED = 'EVENT_CHANNEL_INVITED',
+  EVENT_CHANNEL_JOINED = 'EVENT_CHANNEL_JOINED',
+  EVENT_CHANNEL_LEFT = 'EVENT_CHANNEL_LEFT',
+  EVENT_CHANNEL_ACCEPTED_INVITE = 'EVENT_CHANNEL_ACCEPTED_INVITE',
+  EVENT_CHANNEL_DECLINED_INVITE = 'EVENT_CHANNEL_DECLINED_INVITE',
+  EVENT_CHANNEL_OPERATOR_UPDATED = 'EVENT_CHANNEL_OPERATOR_UPDATED',
+  EVENT_CHANNEL_BANNED = 'EVENT_CHANNEL_BANNED',
+  EVENT_CHANNEL_UNBANNED = 'EVENT_CHANNEL_UNBANNED',
+  EVENT_CHANNEL_MUTED = 'EVENT_CHANNEL_MUTED',
+  EVENT_CHANNEL_UNMUTED = 'EVENT_CHANNEL_UNMUTED',
+  EVENT_CHANNEL_FROZEN = 'EVENT_CHANNEL_FROZEN',
+  EVENT_CHANNEL_UNFROZEN = 'EVENT_CHANNEL_UNFROZEN',
+  EVENT_CHANNEL_HIDDEN = 'EVENT_CHANNEL_HIDDEN',
+  EVENT_CHANNEL_UNHIDDEN = 'EVENT_CHANNEL_UNHIDDEN',
+  EVENT_CHANNEL_RESET_HISTORY = 'EVENT_CHANNEL_RESET_HISTORY',
+  EVENT_CHANNEL_TYPING_STATUS_UPDATE = 'EVENT_CHANNEL_TYPING_STATUS_UPDATE',
+  EVENT_CHANNEL_MEMBER_COUNT_UPDATED = 'EVENT_CHANNEL_MEMBER_COUNT_UPDATED',
+  EVENT_CHANNEL_METADATA_CREATED = 'EVENT_CHANNEL_METADATA_CREATED',
+  EVENT_CHANNEL_METADATA_UPDATED = 'EVENT_CHANNEL_METADATA_UPDATED',
+  EVENT_CHANNEL_METADATA_DELETED = 'EVENT_CHANNEL_METADATA_DELETED',
+  EVENT_CHANNEL_METACOUNTER_CREATED = 'EVENT_CHANNEL_METACOUNTER_CREATED',
+  EVENT_CHANNEL_METACOUNTER_UPDATED = 'EVENT_CHANNEL_METACOUNTER_UPDATED',
+  EVENT_CHANNEL_METACOUNTER_DELETED = 'EVENT_CHANNEL_METACOUNTER_DELETED',
+  EVENT_MESSAGE_SENT = 'EVENT_MESSAGE_SENT',
+  EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
+  EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
+  EVENT_PINNED_MESSAGE_UPDATED = 'EVENT_PINNED_MESSAGE_UPDATED',
+  REQUEST_CHANNEL = 'REQUEST_CHANNEL',
+  REQUEST_CHANNEL_CHANGELOGS = 'REQUEST_CHANNEL_CHANGELOGS',
+  REFRESH_CHANNEL = 'REFRESH_CHANNEL',
+  CHANNEL_LASTACCESSEDAT_UPDATED = 'CHANNEL_LASTACCESSEDAT_UPDATED',
+  SYNC_CHANNEL_BACKGROUND = 'SYNC_CHANNEL_BACKGROUND',
+  SYNC_CHANNEL_CHANGELOGS = 'SYNC_CHANNEL_CHANGELOGS',
+  EVENT_MESSAGE_SENT_SUCCESS = 'EVENT_MESSAGE_SENT_SUCCESS',
+  EVENT_MESSAGE_SENT_FAILED = 'EVENT_MESSAGE_SENT_FAILED',
+  EVENT_MESSAGE_SENT_PENDING = 'EVENT_MESSAGE_SENT_PENDING',
+  EVENT_MESSAGE_DELETED = 'EVENT_MESSAGE_DELETED',
+  /**
+   * @deprecated since v4.3.1
+   */
+  EVENT_MESSAGE_READ = 'EVENT_MESSAGE_READ',
+  /**
+   * @deprecated since v4.3.1
+   */
+  EVENT_MESSAGE_DELIVERED = 'EVENT_MESSAGE_DELIVERED',
+  EVENT_MESSAGE_REACTION_UPDATED = 'EVENT_MESSAGE_REACTION_UPDATED',
+  EVENT_MESSAGE_THREADINFO_UPDATED = 'EVENT_MESSAGE_THREADINFO_UPDATED',
+  EVENT_MESSAGE_OFFSET_UPDATED = 'EVENT_MESSAGE_OFFSET_UPDATED',
+  REQUEST_MESSAGE = 'REQUEST_MESSAGE',
+  EVENT_POLL_UPDATED = 'EVENT_POLL_UPDATED',
+  EVENT_POLL_VOTED = 'EVENT_POLL_VOTED',
+  SYNC_POLL_CHANGELOGS = 'SYNC_POLL_CHANGELOGS',
+  REQUEST_RESEND_MESSAGE = 'REQUEST_RESEND_MESSAGE',
+  REQUEST_THREADED_MESSAGE = 'REQUEST_THREADED_MESSAGE',
+  REQUEST_MESSAGE_CHANGELOGS = 'REQUEST_MESSAGE_CHANGELOGS',
+  SYNC_MESSAGE_FILL = 'SYNC_MESSAGE_FILL',
+  SYNC_MESSAGE_BACKGROUND = 'SYNC_MESSAGE_BACKGROUND',
+  SYNC_MESSAGE_CHANGELOGS = 'SYNC_MESSAGE_CHANGELOGS',
+  LOCAL_MESSAGE_PENDING_CREATED = 'LOCAL_MESSAGE_PENDING_CREATED',
+  LOCAL_MESSAGE_FAILED = 'LOCAL_MESSAGE_FAILED',
+  LOCAL_MESSAGE_CANCELED = 'LOCAL_MESSAGE_CANCELED',
+  LOCAL_MESSAGE_RESEND_STARTED = 'LOCAL_MESSAGE_RESEND_STARTED',
 }
 
 declare type Comparator<T> = (value: T, other: T) => number;
@@ -296,6 +423,19 @@ export declare enum CountPreference {
   UNREAD_MESSAGE_COUNT_ONLY = 'unread_message_count_only',
   UNREAD_MENTION_COUNT_ONLY = 'unread_mention_count_only',
   OFF = 'off',
+}
+
+export declare interface DeviceOsInfo {
+  platform: DeviceOsPlatform;
+  version?: string;
+}
+
+export declare enum DeviceOsPlatform {
+  ANDROID = 'android',
+  IOS = 'ios',
+  WEB = 'web',
+  MOBILE_WEB = 'mobile_web',
+  WINDOWS = 'windows',
 }
 
 export declare interface DoNotDisturbPreference {
@@ -330,6 +470,25 @@ export declare interface Encryption {
 }
 
 export declare type FailedMessageHandler = (err: Error, message: SendableMessage | null) => void;
+
+export declare class FeedChannel extends BaseChannel {
+  get url(): string;
+  get name(): string;
+  set name(value: string);
+  get createdAt(): number;
+  get members(): Member[];
+  get memberCount(): number;
+  get myMemberState(): MemberState;
+  get myLastRead(): number;
+  get lastMessage(): BaseMessage | null;
+  get unreadMessageCount(): number;
+  serialize(): object;
+  refresh(): Promise<FeedChannel>;
+  markAsRead(): Promise<void>;
+  createNotificationCollection(params?: NotificationCollectionParams): NotificationCollection;
+}
+
+export declare class FeedChannelEventContext extends BaseChannelEventContext {}
 
 export declare type FileCompat = File | Blob | FileInfo;
 
@@ -369,7 +528,7 @@ export declare interface FileMessageCreateParams extends BaseMessageCreateParams
   requireAuth?: boolean;
 }
 
-export type FileMessageUpdateParams = BaseMessageUpdateParams;
+export declare interface FileMessageUpdateParams extends BaseMessageUpdateParams {}
 
 export declare type FileUploadHandler = (
   requestId: string,
@@ -395,7 +554,7 @@ export declare class FriendListQuery extends BaseListQuery {
   next(): Promise<User[]>;
 }
 
-export type FriendListQueryParams = BaseListQueryParams;
+export declare interface FriendListQueryParams extends BaseListQueryParams {}
 
 export declare class GroupChannel extends BaseChannel {
   readonly isDistinct: boolean;
@@ -404,6 +563,7 @@ export declare class GroupChannel extends BaseChannel {
   readonly isExclusive: boolean;
   readonly isPublic: boolean;
   readonly isDiscoverable: boolean;
+  readonly isChatNotification: boolean;
   readonly isAccessCodeRequired: boolean;
   /**
    * @deprecated
@@ -492,44 +652,7 @@ export declare class GroupChannel extends BaseChannel {
   unpinMessage(messageId: number): Promise<void>;
 }
 
-export declare class GroupChannelEventContext {
-  readonly source: GroupChannelEventSource;
-}
-
-export declare enum GroupChannelEventSource {
-  UNKNOWN = 'UNKNOWN',
-  EVENT_CHANNEL_CREATED = 'EVENT_CHANNEL_CREATED',
-  EVENT_CHANNEL_UPDATED = 'EVENT_CHANNEL_UPDATED',
-  EVENT_CHANNEL_DELETED = 'EVENT_CHANNEL_DELETED',
-  EVENT_CHANNEL_READ = 'EVENT_CHANNEL_READ',
-  EVENT_CHANNEL_DELIVERED = 'EVENT_CHANNEL_DELIVERED',
-  EVENT_CHANNEL_INVITED = 'EVENT_CHANNEL_INVITED',
-  EVENT_CHANNEL_JOINED = 'EVENT_CHANNEL_JOINED',
-  EVENT_CHANNEL_LEFT = 'EVENT_CHANNEL_LEFT',
-  EVENT_CHANNEL_ACCEPTED_INVITE = 'EVENT_CHANNEL_ACCEPTED_INVITE',
-  EVENT_CHANNEL_DECLINED_INVITE = 'EVENT_CHANNEL_DECLINED_INVITE',
-  EVENT_CHANNEL_OPERATOR_UPDATED = 'EVENT_CHANNEL_OPERATOR_UPDATED',
-  EVENT_CHANNEL_BANNED = 'EVENT_CHANNEL_BANNED',
-  EVENT_CHANNEL_MUTED = 'EVENT_CHANNEL_MUTED',
-  EVENT_CHANNEL_UNMUTED = 'EVENT_CHANNEL_UNMUTED',
-  EVENT_CHANNEL_FROZEN = 'EVENT_CHANNEL_FROZEN',
-  EVENT_CHANNEL_UNFROZEN = 'EVENT_CHANNEL_UNFROZEN',
-  EVENT_CHANNEL_HIDDEN = 'EVENT_CHANNEL_HIDDEN',
-  EVENT_CHANNEL_UNHIDDEN = 'EVENT_CHANNEL_UNHIDDEN',
-  EVENT_CHANNEL_RESET_HISTORY = 'EVENT_CHANNEL_RESET_HISTORY',
-  EVENT_CHANNEL_TYPING_STATUS_UPDATE = 'EVENT_CHANNEL_TYPING_STATUS_UPDATE',
-  EVENT_CHANNEL_MEMBER_COUNT_UPDATED = 'EVENT_CHANNEL_MEMBER_COUNT_UPDATED',
-  EVENT_MESSAGE_SENT = 'EVENT_MESSAGE_SENT',
-  EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
-  EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
-  EVENT_PINNED_MESSAGE_UPDATED = 'EVENT_PINNED_MESSAGE_UPDATED',
-  REQUEST_CHANNEL = 'REQUEST_CHANNEL',
-  REQUEST_CHANNEL_CHANGELOGS = 'REQUEST_CHANNEL_CHANGELOGS',
-  REFRESH_CHANNEL = 'REFRESH_CHANNEL',
-  CHANNEL_LASTACCESSEDAT_UPDATED = 'CHANNEL_LASTACCESSEDAT_UPDATED',
-  SYNC_CHANNEL_BACKGROUND = 'SYNC_CHANNEL_BACKGROUND',
-  SYNC_CHANNEL_CHANGELOGS = 'SYNC_CHANNEL_CHANGELOGS',
-}
+export declare class GroupChannelEventContext extends BaseChannelEventContext {}
 
 export declare interface GroupChannelHideParams {
   hidePreviousMessages?: boolean;
@@ -665,41 +788,15 @@ export declare interface MessageChangeLogsParams {
   includeParentMessageInfo?: boolean;
 }
 
-export declare class MessageCollection {
-  readonly filter: MessageFilter;
-  get channel(): GroupChannel;
-  get succeededMessages(): BaseMessage[];
-  get failedMessages(): SendableMessage[];
-  get pendingMessages(): SendableMessage[];
-  get hasPrevious(): boolean;
-  get hasNext(): boolean;
-  private get viewTop();
-  private get viewBottom();
+export declare class MessageCollection extends BaseMessageCollection<GroupChannel> {
   setMessageCollectionHandler(handler: MessageCollectionEventHandler): void;
-  initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler;
-  loadPrevious(): Promise<BaseMessage[]>;
-  loadNext(): Promise<BaseMessage[]>;
-  removeFailedMessage(reqId: string): Promise<void>;
-  dispose(): void;
 }
 
-export declare interface MessageCollectionEventHandler {
-  onChannelUpdated?: (context: GroupChannelEventContext, channel: GroupChannel) => void;
-  onChannelDeleted?: (context: GroupChannelEventContext, channelUrl: string) => void;
-  onMessagesAdded?: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
-  onMessagesUpdated?: (context: MessageEventContext, channel: GroupChannel, messages: BaseMessage[]) => void;
-  /**
-   *
-   * @param messageIds Deprecated since v4.3.1. Use messages instead.
-   */
-  onMessagesDeleted?: (
-    context: MessageEventContext,
-    channel: GroupChannel,
-    messageIds: number[],
-    messages: BaseMessage[],
-  ) => void;
-  onHugeGapDetected?: () => void;
-}
+export declare type MessageCollectionEventHandler = BaseMessageCollectionEventHandler<
+  GroupChannel,
+  GroupChannelEventContext,
+  MessageEventContext
+>;
 
 export declare class MessageCollectionInitHandler {
   onCacheResult(handler: MessageCollectionInitResultHandler): MessageCollectionInitHandler;
@@ -712,50 +809,9 @@ export declare enum MessageCollectionInitPolicy {
 
 export declare type MessageCollectionInitResultHandler = (err: Error | null, messages: BaseMessage[] | null) => void;
 
-export declare interface MessageCollectionParams {
-  filter?: MessageFilter;
-  startingPoint?: number;
-  limit?: number;
-}
+export declare interface MessageCollectionParams extends BaseMessageCollectionParams {}
 
-export declare class MessageEventContext {
-  readonly source: MessageEventSource;
-}
-
-export declare enum MessageEventSource {
-  UNKNOWN = 'UNKNOWN',
-  EVENT_MESSAGE_SENT_SUCCESS = 'EVENT_MESSAGE_SENT_SUCCESS',
-  EVENT_MESSAGE_SENT_FAILED = 'EVENT_MESSAGE_SENT_FAILED',
-  EVENT_MESSAGE_SENT_PENDING = 'EVENT_MESSAGE_SENT_PENDING',
-  EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
-  EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
-  EVENT_MESSAGE_DELETED = 'EVENT_MESSAGE_DELETED',
-  /**
-   * @deprecated since v4.3.1
-   */
-  EVENT_MESSAGE_READ = 'EVENT_MESSAGE_READ',
-  /**
-   * @deprecated since v4.3.1
-   */
-  EVENT_MESSAGE_DELIVERED = 'EVENT_MESSAGE_DELIVERED',
-  EVENT_MESSAGE_REACTION_UPDATED = 'EVENT_MESSAGE_REACTION_UPDATED',
-  EVENT_MESSAGE_THREADINFO_UPDATED = 'EVENT_MESSAGE_THREADINFO_UPDATED',
-  EVENT_MESSAGE_OFFSET_UPDATED = 'EVENT_MESSAGE_OFFSET_UPDATED',
-  REQUEST_MESSAGE = 'REQUEST_MESSAGE',
-  EVENT_POLL_UPDATED = 'EVENT_POLL_UPDATED',
-  EVENT_POLL_VOTED = 'EVENT_POLL_VOTED',
-  SYNC_POLL_CHANGELOGS = 'SYNC_POLL_CHANGELOGS',
-  REQUEST_RESEND_MESSAGE = 'REQUEST_RESEND_MESSAGE',
-  REQUEST_THREADED_MESSAGE = 'REQUEST_THREADED_MESSAGE',
-  REQUEST_MESSAGE_CHANGELOGS = 'REQUEST_MESSAGE_CHANGELOGS',
-  SYNC_MESSAGE_FILL = 'SYNC_MESSAGE_FILL',
-  SYNC_MESSAGE_BACKGROUND = 'SYNC_MESSAGE_BACKGROUND',
-  SYNC_MESSAGE_CHANGELOGS = 'SYNC_MESSAGE_CHANGELOGS',
-  LOCAL_MESSAGE_PENDING_CREATED = 'LOCAL_MESSAGE_PENDING_CREATED',
-  LOCAL_MESSAGE_FAILED = 'LOCAL_MESSAGE_FAILED',
-  LOCAL_MESSAGE_CANCELED = 'LOCAL_MESSAGE_CANCELED',
-  LOCAL_MESSAGE_RESEND_STARTED = 'LOCAL_MESSAGE_RESEND_STARTED',
-}
+export declare class MessageEventContext extends BaseMessageEventContext {}
 
 export declare class MessageFilter {
   messageTypeFilter: MessageTypeFilter;
@@ -934,7 +990,28 @@ export declare class MutedUserListQuery extends ChannelDataListQuery {
   next(): Promise<RestrictedUser[]>;
 }
 
-export type MutedUserListQueryParams = BaseListQueryParams;
+export declare interface MutedUserListQueryParams extends BaseListQueryParams {}
+
+export declare class NotificationCollection extends BaseMessageCollection<FeedChannel> {
+  setMessageCollectionHandler(handler: NotificationCollectionEventHandler): void;
+}
+
+export declare type NotificationCollectionEventHandler = BaseMessageCollectionEventHandler<
+  FeedChannel,
+  FeedChannelEventContext,
+  NotificationEventContext
+>;
+
+export declare interface NotificationCollectionParams extends BaseMessageCollectionParams {}
+
+export declare class NotificationEventContext extends BaseMessageEventContext {}
+
+export declare class NotificationInfo {
+  readonly isEnabled: boolean;
+  readonly feedChannels: Record<string, string>;
+  readonly templateListToken: string | null;
+  readonly settingsUpdatedAt: number;
+}
 
 export declare class OGImage {
   readonly url: string;
@@ -994,7 +1071,7 @@ export declare class OperatorListQuery extends ChannelDataListQuery {
   next(): Promise<User[]>;
 }
 
-export type OperatorListQueryParams = BaseListQueryParams;
+export declare interface OperatorListQueryParams extends BaseListQueryParams {}
 
 export declare class Participant extends User {
   readonly isMuted: boolean;
@@ -1004,7 +1081,7 @@ export declare class ParticipantListQuery extends ChannelDataListQuery {
   next(): Promise<User[]>;
 }
 
-export type ParticipantListQueryParams = BaseListQueryParams;
+export declare interface ParticipantListQueryParams extends BaseListQueryParams {}
 
 export declare class PinnedMessage {
   readonly message: BaseMessage;
@@ -1077,7 +1154,7 @@ export declare class PollListQuery extends ChannelDataListQuery {
   next(): Promise<Poll[]>;
 }
 
-export type PollListQueryParams = ChannelDataListQueryParams;
+export declare interface PollListQueryParams extends ChannelDataListQueryParams {}
 
 export declare class PollModule extends Module {
   name: 'poll';
@@ -1337,6 +1414,11 @@ export declare class SendbirdChat {
   get apnsPushToken(): string | null;
   getMemoryStoreForDebugging(): MemoryStore | null;
   addExtension(key: string, version: string): void;
+  addSendbirdExtensions(
+    sendbirdExtensions: SendbirdSdkInfo[],
+    deviceOS: DeviceOsInfo,
+    customData?: Record<string, string>,
+  ): boolean;
   setOnlineListener(listener: OnlineDetectorListener): void;
   setOfflineListener(listener: OnlineDetectorListener): void;
   initializeCache(userId: string): Promise<void>;
@@ -1458,6 +1540,31 @@ export declare class SendbirdError extends Error {
   readonly code: number;
 }
 
+export declare enum SendbirdPlatform {
+  ANDROID = 'android',
+  IOS = 'ios',
+  JS = 'js',
+  UNREAL = 'unreal',
+  UNITY = 'unity',
+  REACT_NATIVE = 'react-native',
+  FLUTTER = 'flutter',
+}
+
+export declare enum SendbirdProduct {
+  CHAT = 'chat',
+  CALLS = 'calls',
+  DESK = 'desk',
+  LIVE = 'live',
+  UIKIT_CHAT = 'uikit-chat',
+  UIKIT_LIVE = 'uikit-live',
+}
+
+export declare interface SendbirdSdkInfo {
+  product: SendbirdProduct;
+  platform: SendbirdPlatform;
+  version: string;
+}
+
 export declare class Sender extends User {
   role: Role;
   isBlockedByMe: boolean;
@@ -1551,6 +1658,12 @@ declare interface UIKitConfiguration {
   json: object;
 }
 
+export declare interface UnreadMessageCount {
+  groupChannelCount: number;
+  feedChannelCount: number;
+  customTypeUnreadCount: Record<string, number>;
+}
+
 export declare interface UploadableFileInfo {
   file?: FileCompat;
   fileUrl?: string;
@@ -1595,6 +1708,8 @@ export declare class UserEventHandler extends UserEventHandlerParams {
 
 declare abstract class UserEventHandlerParams {
   onFriendsDiscovered?: (users: User[]) => void;
+  onTotalUnreadMessageCountChanged?: (unreadMessageCount: UnreadMessageCount) => void;
+  /** @deprecated */
   onTotalUnreadMessageCountUpdated?: (totalCount: number, countByCustomType: object) => void;
 }
 
@@ -1677,6 +1792,7 @@ export declare interface GroupChannelChangeLogsParams {
   customTypes?: string[];
   includeEmpty?: boolean;
   includeFrozen?: boolean;
+  includeChatNotification?: boolean;
 }
 
 export declare class GroupChannelCollection {
@@ -1725,6 +1841,73 @@ export declare interface GroupChannelCreateParams {
   operatorUserIds?: string[];
   messageSurvivalSeconds?: number;
 }
+
+export declare type GroupChannelEventSource = CollectionEventSource;
+
+export declare const GroupChannelEventSource: {
+  UNKNOWN: CollectionEventSource.UNKNOWN;
+  EVENT_CHANNEL_CREATED: CollectionEventSource.EVENT_CHANNEL_CREATED;
+  EVENT_CHANNEL_UPDATED: CollectionEventSource.EVENT_CHANNEL_UPDATED;
+  EVENT_CHANNEL_DELETED: CollectionEventSource.EVENT_CHANNEL_DELETED;
+  EVENT_CHANNEL_READ: CollectionEventSource.EVENT_CHANNEL_READ;
+  EVENT_CHANNEL_DELIVERED: CollectionEventSource.EVENT_CHANNEL_DELIVERED;
+  EVENT_CHANNEL_INVITED: CollectionEventSource.EVENT_CHANNEL_INVITED;
+  EVENT_CHANNEL_JOINED: CollectionEventSource.EVENT_CHANNEL_JOINED;
+  EVENT_CHANNEL_LEFT: CollectionEventSource.EVENT_CHANNEL_LEFT;
+  EVENT_CHANNEL_ACCEPTED_INVITE: CollectionEventSource.EVENT_CHANNEL_ACCEPTED_INVITE;
+  EVENT_CHANNEL_DECLINED_INVITE: CollectionEventSource.EVENT_CHANNEL_DECLINED_INVITE;
+  EVENT_CHANNEL_OPERATOR_UPDATED: CollectionEventSource.EVENT_CHANNEL_OPERATOR_UPDATED;
+  EVENT_CHANNEL_BANNED: CollectionEventSource.EVENT_CHANNEL_BANNED;
+  EVENT_CHANNEL_UNBANNED: CollectionEventSource.EVENT_CHANNEL_UNBANNED;
+  EVENT_CHANNEL_MUTED: CollectionEventSource.EVENT_CHANNEL_MUTED;
+  EVENT_CHANNEL_UNMUTED: CollectionEventSource.EVENT_CHANNEL_UNMUTED;
+  EVENT_CHANNEL_FROZEN: CollectionEventSource.EVENT_CHANNEL_FROZEN;
+  EVENT_CHANNEL_UNFROZEN: CollectionEventSource.EVENT_CHANNEL_UNFROZEN;
+  EVENT_CHANNEL_HIDDEN: CollectionEventSource.EVENT_CHANNEL_HIDDEN;
+  EVENT_CHANNEL_UNHIDDEN: CollectionEventSource.EVENT_CHANNEL_UNHIDDEN;
+  EVENT_CHANNEL_RESET_HISTORY: CollectionEventSource.EVENT_CHANNEL_RESET_HISTORY;
+  EVENT_CHANNEL_TYPING_STATUS_UPDATE: CollectionEventSource.EVENT_CHANNEL_TYPING_STATUS_UPDATE;
+  EVENT_CHANNEL_MEMBER_COUNT_UPDATED: CollectionEventSource.EVENT_CHANNEL_MEMBER_COUNT_UPDATED;
+  EVENT_CHANNEL_METADATA_CREATED: CollectionEventSource.EVENT_CHANNEL_METADATA_CREATED;
+  EVENT_CHANNEL_METADATA_UPDATED: CollectionEventSource.EVENT_CHANNEL_METADATA_UPDATED;
+  EVENT_CHANNEL_METADATA_DELETED: CollectionEventSource.EVENT_CHANNEL_METADATA_DELETED;
+  EVENT_CHANNEL_METACOUNTER_CREATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
+  EVENT_CHANNEL_METACOUNTER_UPDATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
+  EVENT_CHANNEL_METACOUNTER_DELETED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
+  EVENT_MESSAGE_SENT: CollectionEventSource.EVENT_MESSAGE_SENT;
+  EVENT_MESSAGE_RECEIVED: CollectionEventSource.EVENT_MESSAGE_RECEIVED;
+  EVENT_MESSAGE_UPDATED: CollectionEventSource.EVENT_MESSAGE_UPDATED;
+  EVENT_PINNED_MESSAGE_UPDATED: CollectionEventSource.EVENT_PINNED_MESSAGE_UPDATED;
+  REQUEST_CHANNEL: CollectionEventSource.REQUEST_CHANNEL;
+  REQUEST_CHANNEL_CHANGELOGS: CollectionEventSource.REQUEST_CHANNEL_CHANGELOGS;
+  REFRESH_CHANNEL: CollectionEventSource.REFRESH_CHANNEL;
+  CHANNEL_LASTACCESSEDAT_UPDATED: CollectionEventSource.CHANNEL_LASTACCESSEDAT_UPDATED;
+  SYNC_CHANNEL_BACKGROUND: CollectionEventSource.SYNC_CHANNEL_BACKGROUND;
+  SYNC_CHANNEL_CHANGELOGS: CollectionEventSource.SYNC_CHANNEL_CHANGELOGS;
+  EVENT_MESSAGE_SENT_SUCCESS: CollectionEventSource.EVENT_MESSAGE_SENT_SUCCESS;
+  EVENT_MESSAGE_SENT_FAILED: CollectionEventSource.EVENT_MESSAGE_SENT_FAILED;
+  EVENT_MESSAGE_SENT_PENDING: CollectionEventSource.EVENT_MESSAGE_SENT_PENDING;
+  EVENT_MESSAGE_DELETED: CollectionEventSource.EVENT_MESSAGE_DELETED;
+  EVENT_MESSAGE_READ: CollectionEventSource.EVENT_MESSAGE_READ;
+  EVENT_MESSAGE_DELIVERED: CollectionEventSource.EVENT_MESSAGE_DELIVERED;
+  EVENT_MESSAGE_REACTION_UPDATED: CollectionEventSource.EVENT_MESSAGE_REACTION_UPDATED;
+  EVENT_MESSAGE_THREADINFO_UPDATED: CollectionEventSource.EVENT_MESSAGE_THREADINFO_UPDATED;
+  EVENT_MESSAGE_OFFSET_UPDATED: CollectionEventSource.EVENT_MESSAGE_OFFSET_UPDATED;
+  REQUEST_MESSAGE: CollectionEventSource.REQUEST_MESSAGE;
+  EVENT_POLL_UPDATED: CollectionEventSource.EVENT_POLL_UPDATED;
+  EVENT_POLL_VOTED: CollectionEventSource.EVENT_POLL_VOTED;
+  SYNC_POLL_CHANGELOGS: CollectionEventSource.SYNC_POLL_CHANGELOGS;
+  REQUEST_RESEND_MESSAGE: CollectionEventSource.REQUEST_RESEND_MESSAGE;
+  REQUEST_THREADED_MESSAGE: CollectionEventSource.REQUEST_THREADED_MESSAGE;
+  REQUEST_MESSAGE_CHANGELOGS: CollectionEventSource.REQUEST_MESSAGE_CHANGELOGS;
+  SYNC_MESSAGE_FILL: CollectionEventSource.SYNC_MESSAGE_FILL;
+  SYNC_MESSAGE_BACKGROUND: CollectionEventSource.SYNC_MESSAGE_BACKGROUND;
+  SYNC_MESSAGE_CHANGELOGS: CollectionEventSource.SYNC_MESSAGE_CHANGELOGS;
+  LOCAL_MESSAGE_PENDING_CREATED: CollectionEventSource.LOCAL_MESSAGE_PENDING_CREATED;
+  LOCAL_MESSAGE_FAILED: CollectionEventSource.LOCAL_MESSAGE_FAILED;
+  LOCAL_MESSAGE_CANCELED: CollectionEventSource.LOCAL_MESSAGE_CANCELED;
+  LOCAL_MESSAGE_RESEND_STARTED: CollectionEventSource.LOCAL_MESSAGE_RESEND_STARTED;
+};
 
 export declare class GroupChannelFilter {
   includeEmpty: boolean;
@@ -1779,6 +1962,7 @@ declare interface GroupChannelListParams {
   includeEmpty?: boolean;
   includeFrozen?: boolean;
   includeMetaData?: boolean;
+  includeChatNotification?: boolean;
   channelUrlsFilter?: string[];
   customTypesFilter?: string[];
   customTypeStartsWithFilter?: string;
@@ -1804,6 +1988,7 @@ export declare class GroupChannelListQuery extends BaseListQuery {
   readonly includeEmpty: boolean;
   readonly includeFrozen: boolean;
   readonly includeMetaData: boolean;
+  readonly includeChatNotification: boolean;
   readonly channelUrlsFilter: string[] | null;
   readonly customTypesFilter: string[] | null;
   readonly customTypeStartsWithFilter: string | null;
@@ -1902,6 +2087,73 @@ export declare enum MembershipFilter {
   ALL = 'all',
   JOINED = 'joined',
 }
+
+export declare type MessageEventSource = CollectionEventSource;
+
+export declare const MessageEventSource: {
+  UNKNOWN: CollectionEventSource.UNKNOWN;
+  EVENT_CHANNEL_CREATED: CollectionEventSource.EVENT_CHANNEL_CREATED;
+  EVENT_CHANNEL_UPDATED: CollectionEventSource.EVENT_CHANNEL_UPDATED;
+  EVENT_CHANNEL_DELETED: CollectionEventSource.EVENT_CHANNEL_DELETED;
+  EVENT_CHANNEL_READ: CollectionEventSource.EVENT_CHANNEL_READ;
+  EVENT_CHANNEL_DELIVERED: CollectionEventSource.EVENT_CHANNEL_DELIVERED;
+  EVENT_CHANNEL_INVITED: CollectionEventSource.EVENT_CHANNEL_INVITED;
+  EVENT_CHANNEL_JOINED: CollectionEventSource.EVENT_CHANNEL_JOINED;
+  EVENT_CHANNEL_LEFT: CollectionEventSource.EVENT_CHANNEL_LEFT;
+  EVENT_CHANNEL_ACCEPTED_INVITE: CollectionEventSource.EVENT_CHANNEL_ACCEPTED_INVITE;
+  EVENT_CHANNEL_DECLINED_INVITE: CollectionEventSource.EVENT_CHANNEL_DECLINED_INVITE;
+  EVENT_CHANNEL_OPERATOR_UPDATED: CollectionEventSource.EVENT_CHANNEL_OPERATOR_UPDATED;
+  EVENT_CHANNEL_BANNED: CollectionEventSource.EVENT_CHANNEL_BANNED;
+  EVENT_CHANNEL_UNBANNED: CollectionEventSource.EVENT_CHANNEL_UNBANNED;
+  EVENT_CHANNEL_MUTED: CollectionEventSource.EVENT_CHANNEL_MUTED;
+  EVENT_CHANNEL_UNMUTED: CollectionEventSource.EVENT_CHANNEL_UNMUTED;
+  EVENT_CHANNEL_FROZEN: CollectionEventSource.EVENT_CHANNEL_FROZEN;
+  EVENT_CHANNEL_UNFROZEN: CollectionEventSource.EVENT_CHANNEL_UNFROZEN;
+  EVENT_CHANNEL_HIDDEN: CollectionEventSource.EVENT_CHANNEL_HIDDEN;
+  EVENT_CHANNEL_UNHIDDEN: CollectionEventSource.EVENT_CHANNEL_UNHIDDEN;
+  EVENT_CHANNEL_RESET_HISTORY: CollectionEventSource.EVENT_CHANNEL_RESET_HISTORY;
+  EVENT_CHANNEL_TYPING_STATUS_UPDATE: CollectionEventSource.EVENT_CHANNEL_TYPING_STATUS_UPDATE;
+  EVENT_CHANNEL_MEMBER_COUNT_UPDATED: CollectionEventSource.EVENT_CHANNEL_MEMBER_COUNT_UPDATED;
+  EVENT_CHANNEL_METADATA_CREATED: CollectionEventSource.EVENT_CHANNEL_METADATA_CREATED;
+  EVENT_CHANNEL_METADATA_UPDATED: CollectionEventSource.EVENT_CHANNEL_METADATA_UPDATED;
+  EVENT_CHANNEL_METADATA_DELETED: CollectionEventSource.EVENT_CHANNEL_METADATA_DELETED;
+  EVENT_CHANNEL_METACOUNTER_CREATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
+  EVENT_CHANNEL_METACOUNTER_UPDATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
+  EVENT_CHANNEL_METACOUNTER_DELETED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
+  EVENT_MESSAGE_SENT: CollectionEventSource.EVENT_MESSAGE_SENT;
+  EVENT_MESSAGE_RECEIVED: CollectionEventSource.EVENT_MESSAGE_RECEIVED;
+  EVENT_MESSAGE_UPDATED: CollectionEventSource.EVENT_MESSAGE_UPDATED;
+  EVENT_PINNED_MESSAGE_UPDATED: CollectionEventSource.EVENT_PINNED_MESSAGE_UPDATED;
+  REQUEST_CHANNEL: CollectionEventSource.REQUEST_CHANNEL;
+  REQUEST_CHANNEL_CHANGELOGS: CollectionEventSource.REQUEST_CHANNEL_CHANGELOGS;
+  REFRESH_CHANNEL: CollectionEventSource.REFRESH_CHANNEL;
+  CHANNEL_LASTACCESSEDAT_UPDATED: CollectionEventSource.CHANNEL_LASTACCESSEDAT_UPDATED;
+  SYNC_CHANNEL_BACKGROUND: CollectionEventSource.SYNC_CHANNEL_BACKGROUND;
+  SYNC_CHANNEL_CHANGELOGS: CollectionEventSource.SYNC_CHANNEL_CHANGELOGS;
+  EVENT_MESSAGE_SENT_SUCCESS: CollectionEventSource.EVENT_MESSAGE_SENT_SUCCESS;
+  EVENT_MESSAGE_SENT_FAILED: CollectionEventSource.EVENT_MESSAGE_SENT_FAILED;
+  EVENT_MESSAGE_SENT_PENDING: CollectionEventSource.EVENT_MESSAGE_SENT_PENDING;
+  EVENT_MESSAGE_DELETED: CollectionEventSource.EVENT_MESSAGE_DELETED;
+  EVENT_MESSAGE_READ: CollectionEventSource.EVENT_MESSAGE_READ;
+  EVENT_MESSAGE_DELIVERED: CollectionEventSource.EVENT_MESSAGE_DELIVERED;
+  EVENT_MESSAGE_REACTION_UPDATED: CollectionEventSource.EVENT_MESSAGE_REACTION_UPDATED;
+  EVENT_MESSAGE_THREADINFO_UPDATED: CollectionEventSource.EVENT_MESSAGE_THREADINFO_UPDATED;
+  EVENT_MESSAGE_OFFSET_UPDATED: CollectionEventSource.EVENT_MESSAGE_OFFSET_UPDATED;
+  REQUEST_MESSAGE: CollectionEventSource.REQUEST_MESSAGE;
+  EVENT_POLL_UPDATED: CollectionEventSource.EVENT_POLL_UPDATED;
+  EVENT_POLL_VOTED: CollectionEventSource.EVENT_POLL_VOTED;
+  SYNC_POLL_CHANGELOGS: CollectionEventSource.SYNC_POLL_CHANGELOGS;
+  REQUEST_RESEND_MESSAGE: CollectionEventSource.REQUEST_RESEND_MESSAGE;
+  REQUEST_THREADED_MESSAGE: CollectionEventSource.REQUEST_THREADED_MESSAGE;
+  REQUEST_MESSAGE_CHANGELOGS: CollectionEventSource.REQUEST_MESSAGE_CHANGELOGS;
+  SYNC_MESSAGE_FILL: CollectionEventSource.SYNC_MESSAGE_FILL;
+  SYNC_MESSAGE_BACKGROUND: CollectionEventSource.SYNC_MESSAGE_BACKGROUND;
+  SYNC_MESSAGE_CHANGELOGS: CollectionEventSource.SYNC_MESSAGE_CHANGELOGS;
+  LOCAL_MESSAGE_PENDING_CREATED: CollectionEventSource.LOCAL_MESSAGE_PENDING_CREATED;
+  LOCAL_MESSAGE_FAILED: CollectionEventSource.LOCAL_MESSAGE_FAILED;
+  LOCAL_MESSAGE_CANCELED: CollectionEventSource.LOCAL_MESSAGE_CANCELED;
+  LOCAL_MESSAGE_RESEND_STARTED: CollectionEventSource.LOCAL_MESSAGE_RESEND_STARTED;
+};
 
 export declare enum MyMemberStateFilter {
   ALL = 'all',
@@ -2109,4 +2361,161 @@ export declare class OpenChannelModule extends Module {
 
 export declare type SendbirdOpenChat = SendbirdChat & {
   openChannel: OpenChannelModule;
+};
+
+export declare interface FeedChannelChangelogs {
+  updatedChannels: FeedChannel[];
+  deletedChannelUrls: string[];
+  hasMore: boolean;
+  token: string;
+}
+
+export declare interface FeedChannelChangeLogsParams {
+  includeEmpty?: boolean;
+}
+
+export declare class FeedChannelHandler extends FeedChannelHandlerParams {
+  constructor(params?: FeedChannelHandlerParams);
+}
+
+declare abstract class FeedChannelHandlerParams extends BaseChannelHandlerParams {
+  onUnreadMemberStatusUpdated?: (channel: FeedChannel) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onUserMuted?: (channel: BaseChannel, user: RestrictedUser) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onUserUnmuted?: (channel: BaseChannel, user: User) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onUserBanned?: (channel: BaseChannel, user: RestrictedUser) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onUserUnbanned?: (channel: BaseChannel, user: User) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onChannelFrozen?: (channel: BaseChannel) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onChannelUnfrozen?: (channel: BaseChannel) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onOperatorUpdated?: (channel: BaseChannel, users: User[]) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onMetaDataCreated?: (channel: BaseChannel, metaData: MetaData) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onMetaDataUpdated?: (channel: BaseChannel, metaData: MetaData) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onMetaDataDeleted?: (channel: BaseChannel, metaDataKeys: string[]) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onMetaCounterCreated?: (channel: BaseChannel, metaCounter: MetaCounter) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onMetaCounterUpdated?: (channel: BaseChannel, metaCounter: MetaCounter) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onMetaCounterDeleted?: (channel: BaseChannel, metaCounterKeys: string[]) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onReactionUpdated?: (channel: BaseChannel, reactionEvent: ReactionEvent) => void;
+  /**
+   * @ignore This is not supported in FeedChannel
+   * @deprecated
+   * */
+  onThreadInfoUpdated?: (channel: BaseChannel, threadInfoUpdateEvent: ThreadInfoUpdateEvent) => void;
+}
+
+declare interface FeedChannelListParams {
+  includeEmpty?: boolean;
+}
+
+export declare class FeedChannelListQuery extends BaseListQuery {
+  readonly includeEmpty: boolean;
+  next(): Promise<FeedChannel[]>;
+}
+
+export declare interface FeedChannelListQueryParams extends BaseListQueryParams, FeedChannelListParams {}
+
+export declare class FeedChannelModule extends Module {
+  name: 'feedChannel';
+  createMyFeedChannelListQuery(params?: FeedChannelListQueryParams): FeedChannelListQuery;
+  addFeedChannelHandler(key: string, handler: FeedChannelHandler): void;
+  removeFeedChannelHandler(key: string): void;
+  removeAllFeedChannelHandlers(): void;
+  getChannel(channelUrl: string): Promise<FeedChannel>;
+  getMyFeedChannelChangeLogsByTimestamp(
+    timestamp: number,
+    params?: FeedChannelChangeLogsParams,
+  ): Promise<FeedChannelChangelogs>;
+  getMyFeedChannelChangeLogsByToken(
+    token: string,
+    params?: FeedChannelChangeLogsParams,
+  ): Promise<FeedChannelChangelogs>;
+  getTotalUnreadMessageCount(params?: TotalUnreadMessageCountParams): Promise<number>;
+  getGlobalNotificationChannelSetting(): Promise<GlobalNotificationChannelSetting>;
+  getNotificationTemplateListByToken(
+    token: string,
+    params?: NotificationTemplateListParams,
+  ): Promise<NotificationTemplateListResult>;
+  getNotificationTemplate(key: string): Promise<NotificationTemplate>;
+}
+
+export declare interface GlobalNotificationChannelSetting {
+  jsonString: string;
+}
+
+export declare interface NotificationTemplate {
+  jsonString: string;
+}
+
+export declare interface NotificationTemplateList {
+  jsonString: string;
+}
+
+export declare interface NotificationTemplateListParams {
+  reverse?: boolean;
+  keys?: string[];
+  limit?: number;
+}
+
+declare interface NotificationTemplateListResult {
+  hasMore: boolean;
+  token: string;
+  notificationTemplateList: NotificationTemplateList;
+}
+
+export declare type SendbirdFeedChat = SendbirdChat & {
+  feedChannel: FeedChannelModule;
 };

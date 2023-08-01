@@ -1,9 +1,40 @@
 # Changelog
 
+## v4.9.6 (Aug 1, 2023)
+### **Notifications**
+- Added `FeedChannelModule`
+  - `FeedChannelModule` could be imported from `@sendbird/chat/feedChannel`
+  - Added `createMyFeedChannelListQuery()` to create `FeedChannelListQuery`
+  - Added `getChannel()`, `getMyFeedChannelChangeLogsByTimestamp()`, `getMyFeedChannelChangeLogsByToken()` to fetch `FeedChannel` data
+  - Added `getGlobalNotificationChannelSetting()` to get notification settings
+  - Added `getNotificationTemplateListByToken()`, `getNotificationTemplate()` to fetch `NotificationTemplate`
+- Added `FeedChannelHandler`
+- Added `FeedChannel`
+  - Added `FEED` channel type
+  - Added `createNotificationCollection()` to create `NotificationCollection`
+  - Added `refresh()` to refresh the feed channel
+  - Added `markAsRead()`
+- Added `FeedChannelListQuery`
+- Added `NotificationCollection`
+  - `NotificationCollection` acts as same as `MessageCollection`
+- Added `isChatNotification` in `GroupChannel`
+- Added `includeChatNotification` in `GroupChannelListQuery`, `GroupChannelListParams`, `GroupChannelChangeLogsParams`
+- Added `notificationInfo` in `AppInfo`
+- Added `onTotalUnreadMessageCountChanged` in `UserEventHandler`
+  - Deprecated `onTotalUnreadMessageCountUpdated` in `UserEventHandler`
+
+### **Improvements**
+- Added meta data and meta counter related event to pass to `GroupChannelCollection`
+- Fixed a bug in parsing parent message info
+- Fixed a bug where a deactivated or deleted user hangs on reconnect
+- Fixed a bug where the removed metadata would not be updated when receiving the channel's metadata from the server
+- Improved stability
+
 ## v4.9.5 (July 27, 2023)
 ### **Improvements**
 - Fixed bug when received `CHANNEL_INVITE` event inviter is null
 - Updated `MessageCollectionEventHandler` members to be optional
+
 ## v4.9.4 (July 21, 2023)
 ### **Improvements**
 - Added `EVENT_CHANNEL_BANNED` to `GroupchannelEventSource`
@@ -15,6 +46,7 @@
 - Fixed a bug where `Poll.applyPollVoteEvent()` not updating `Poll.voterCount`
 - Fixed a bug where the group channel changelogs did not update the group channel metadata
 - Improved stability
+
 ## v4.9.3 (Jun 22, 2023)
 ### **Improvements**
 - Fixed a bug where `sb.connect()` fails when `localCacheEnabled` set to false in browsers with disabled Cookies

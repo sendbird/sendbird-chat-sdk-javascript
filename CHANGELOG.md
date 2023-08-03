@@ -2,7 +2,6 @@
 
 ## v4.9.7 (Aug 3, 2023)
 ### **Improvements**
-### **Improvements**
 - Fixed a bug where `HugeGabCheck` in `MessageCollection` has missed some filters
 
 ## v4.9.6 (Aug 1, 2023)

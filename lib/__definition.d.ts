@@ -199,8 +199,6 @@ declare class BaseMessageCollection<Channel extends BaseChannel> {
   get pendingMessages(): SendableMessage[];
   get hasPrevious(): boolean;
   get hasNext(): boolean;
-  private get viewTop();
-  private get viewBottom();
   initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler;
   loadPrevious(): Promise<BaseMessage[]>;
   loadNext(): Promise<BaseMessage[]>;

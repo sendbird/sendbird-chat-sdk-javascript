@@ -68,4 +68,5 @@ export {
   UnreadItemCount,
   UnreadItemCountParams,
   UnreadItemKey,
+  UnreadMessageCount,
 } from './lib/__definition';

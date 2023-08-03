@@ -2,6 +2,7 @@ import './message';
 import './groupChannel';
 import './openChannel';
 import './poll';
+import './feedChannel';
 
 export {
   ApplicationUserListQuery,
@@ -13,8 +14,11 @@ export {
   BlockedUserListQueryParams,
   CachedChannelInfo,
   ChannelType,
+  CollectionEventSource,
   ConnectionHandler,
   ConnectionState,
+  DeviceOsInfo,
+  DeviceOsPlatform,
   DoNotDisturbPreference,
   Emoji,
   EmojiCategory,
@@ -36,6 +40,7 @@ export {
   MutedInfo,
   MutedUserListQuery,
   MutedUserListQueryParams,
+  NotificationInfo,
   OnlineDetectorListener,
   OperatorListQuery,
   OperatorListQueryParams,
@@ -54,6 +59,9 @@ export {
   SendbirdChatOptions,
   SendbirdChatParams,
   SendbirdError,
+  SendbirdPlatform,
+  SendbirdProduct,
+  SendbirdSdkInfo,
   SessionHandler,
   SnoozePeriod,
   StoreItem,
@@ -64,5 +72,5 @@ export {
   UserUpdateParams,
 } from './lib/__definition';
 
-import { SendbirdChat as SendbirdChat } from './lib/__definition';
+import { SendbirdChat } from './lib/__definition';
 export default SendbirdChat;

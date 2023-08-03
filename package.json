@@ -1,5 +1,5 @@
 {
-  "version": "4.9.5",
+  "version": "4.9.7",
   "description": "Sendbird SDK for JavaScript",
   "name": "@sendbird/chat",
   "author": "Sendbird <support@sendbird.com>",
@@ -59,6 +59,12 @@
       "import": "./poll.js",
       "require": "./cjs/poll.js",
       "default": "./poll.js"
+    },
+    "./feedChannel": {
+      "types": "./feedChannel.d.ts",
+      "import": "./feedChannel.js",
+      "require": "./cjs/feedChannel.js",
+      "default": "./feedChannel.js"
     }
   },
   "typesVersions": {
@@ -74,6 +80,9 @@
       ],
       "poll": [
         "./poll.d.ts"
+      ],
+      "feedChannel": [
+        "./feedChannel.d.ts"
       ]
     }
   }

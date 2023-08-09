@@ -107,16 +107,32 @@ export declare class BaseChannel {
   getMessageChangeLogsSinceTimestamp(ts: number, params?: MessageChangeLogsParams): Promise<MessageChangelogs>;
   getMessageChangeLogsSinceToken(token: string, params?: MessageChangeLogsParams): Promise<MessageChangelogs>;
   sendUserMessage(params: UserMessageCreateParams): MessageRequestHandler;
+  /**
+   * @deprecated since v4.9.8. Use resendMessage() instead.
+   */
   resendUserMessage(failedMessage: UserMessage): Promise<UserMessage>;
   updateUserMessage(messageId: number, params: UserMessageUpdateParams): Promise<UserMessage>;
+  /**
+   * @deprecated since v4.9.8. Use copyMessage() instead.
+   */
   copyUserMessage(targetChannel: BaseChannel, message: UserMessage): Promise<UserMessage>;
   translateUserMessage(targetMessage: UserMessage, languages: string[]): Promise<UserMessage>;
   sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
   sendFileMessages(paramsList: FileMessageCreateParams[]): MessageRequestHandler;
+  /**
+   * @deprecated since v4.9.8. Use resendMessage() instead.
+   */
   resendFileMessage(failedMessage: FileMessage, file?: FileCompat): Promise<FileMessage>;
+  resendMessage(failedMessage: FileMessage, file?: FileCompat): MessageRequestHandler<FileMessage>;
+  resendMessage(failedMessage: UserMessage): MessageRequestHandler<UserMessage>;
   updateFileMessage(messageId: number, params: FileMessageUpdateParams): Promise<FileMessage>;
   cancelUploadingFileMessage(requestId: string): Promise<boolean>;
+  /**
+   * @deprecated since v4.9.8. Use copyMessage() instead.
+   */
   copyFileMessage(targetChannel: BaseChannel, message: FileMessage): Promise<FileMessage>;
+  copyMessage(channel: BaseChannel, message: FileMessage): MessageRequestHandler<FileMessage>;
+  copyMessage(channel: BaseChannel, message: UserMessage): MessageRequestHandler<UserMessage>;
   deleteMessage(message: BaseMessage): Promise<void>;
   addReaction(message: BaseMessage, key: string): Promise<ReactionEvent>;
   deleteReaction(message: BaseMessage, key: string): Promise<ReactionEvent>;
@@ -467,7 +483,7 @@ export declare interface Encryption {
   decrypt: (encrypted: object) => object;
 }
 
-export declare type FailedMessageHandler = (err: Error, message: SendableMessage | null) => void;
+export declare type FailedMessageHandler<T> = (err: Error, message: T | null) => void;
 
 export declare class FeedChannel extends BaseChannel {
   get url(): string;
@@ -648,6 +664,12 @@ export declare class GroupChannel extends BaseChannel {
   resetMyHistory(): Promise<GroupChannel>;
   pinMessage(messageId: number): Promise<void>;
   unpinMessage(messageId: number): Promise<void>;
+  resendMessage(failedMessage: MultipleFilesMessage): MultipleFilesMessageRequestHandler<MultipleFilesMessage>;
+  resendMessage(failedMessage: FileMessage, file?: FileCompat): MessageRequestHandler<FileMessage>;
+  resendMessage(failedMessage: UserMessage): MessageRequestHandler<UserMessage>;
+  copyMessage(channel: GroupChannel, message: MultipleFilesMessage): MessageRequestHandler<MultipleFilesMessage>;
+  copyMessage(channel: BaseChannel, message: FileMessage): MessageRequestHandler<FileMessage>;
+  copyMessage(channel: BaseChannel, message: UserMessage): MessageRequestHandler<UserMessage>;
 }
 
 export declare class GroupChannelEventContext extends BaseChannelEventContext {}
@@ -820,7 +842,7 @@ export declare class MessageFilter {
   match(message: BaseMessage): boolean;
 }
 
-export declare type MessageHandler = (message: SendableMessage) => void;
+export declare type MessageHandler<T> = (message: T) => void;
 
 export declare interface MessageListParams {
   prevResultSize: number;
@@ -857,10 +879,10 @@ export declare class MessageModule extends Module {
   getScheduledMessage(params: ScheduledMessageRetrievalParams): Promise<BaseMessage | null>;
 }
 
-export declare class MessageRequestHandler {
-  onPending(handler: MessageHandler): MessageRequestHandler;
-  onFailed(handler: FailedMessageHandler): MessageRequestHandler;
-  onSucceeded(handler: MessageHandler): MessageRequestHandler;
+export declare class MessageRequestHandler<T extends SendableMessage = SendableMessage> {
+  onPending(handler: MessageHandler<T>): MessageRequestHandler<T>;
+  onFailed(handler: FailedMessageHandler<T>): MessageRequestHandler<T>;
+  onSucceeded(handler: MessageHandler<T>): MessageRequestHandler<T>;
 }
 
 export declare interface MessageRetrievalParams {
@@ -958,11 +980,13 @@ export declare interface MultipleFilesMessageCreateParams extends BaseMessageCre
   fileInfoList: UploadableFileInfo[];
 }
 
-export declare class MultipleFilesMessageRequestHandler extends MessageRequestHandler {
-  onFileUploaded(handler: FileUploadHandler): MultipleFilesMessageRequestHandler;
-  onPending(handler: MessageHandler): MultipleFilesMessageRequestHandler;
-  onFailed(handler: FailedMessageHandler): MultipleFilesMessageRequestHandler;
-  onSucceeded(handler: MessageHandler): MultipleFilesMessageRequestHandler;
+export declare class MultipleFilesMessageRequestHandler<
+  T extends SendableMessage = SendableMessage,
+> extends MessageRequestHandler<T> {
+  onFileUploaded(handler: FileUploadHandler): MultipleFilesMessageRequestHandler<T>;
+  onPending(handler: MessageHandler<T>): MultipleFilesMessageRequestHandler<T>;
+  onFailed(handler: FailedMessageHandler<T>): MultipleFilesMessageRequestHandler<T>;
+  onSucceeded(handler: MessageHandler<T>): MultipleFilesMessageRequestHandler<T>;
 }
 
 export declare interface MutedInfo {
@@ -1922,6 +1946,8 @@ export declare class GroupChannelFilter {
   unreadChannelFilter: UnreadChannelFilter;
   hiddenChannelFilter: HiddenChannelFilter;
   includeFrozen: boolean;
+  createdAfter: number;
+  createdBefore: number;
   get searchFilter(): GroupChannelSearchFilter | null;
   setSearchFilter(fields?: GroupChannelSearchField[], query?: string): void;
   get userIdsFilter(): GroupChannelUserIdsFilter | null;
@@ -1980,6 +2006,8 @@ declare interface GroupChannelListParams {
   metadataOrderKeyFilter?: string;
   metadataValueStartsWith?: string;
   order?: GroupChannelListOrder;
+  createdAfter?: number;
+  createdBefore?: number;
 }
 
 export declare class GroupChannelListQuery extends BaseListQuery {
@@ -2006,6 +2034,8 @@ export declare class GroupChannelListQuery extends BaseListQuery {
   readonly metadataOrderKeyFilter: string | null;
   readonly metadataValueStartsWith: string | null;
   readonly order: GroupChannelListOrder;
+  readonly createdAfter: number;
+  readonly createdBefore: number;
   serialize(): object;
   next(): Promise<GroupChannel[]>;
 }

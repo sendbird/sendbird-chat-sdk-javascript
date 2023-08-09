@@ -1,5 +1,57 @@
 # Changelog
 
+## v4.9.8 (Aug 9, 2023)
+### **Features**
+- Added `BaseChannel.copyMessage()` that supports user, file, and multiple files message
+- Added `BaseChannel.resendMessage()` that supports user, file, and multiple files message
+
+```typescript
+// Copy a succeeded multiple files message.
+channelA.copyMessage(channelB, multipleFilesMessageToCopy)
+  .onPending((message: MultipleFilesMessage) => {
+    // ...
+  })
+  .onFailed((err: SendbirdError, message: MultipleFilesMessage) => {
+    // ...
+  })
+  .onSucceeded((message: MultipleFilesMessage) => {
+    // ...
+  });
+
+// Resend a failed or canceled multiple files message.
+channel.resendMessage(failedOrCanceledMultipleFilesMessage)
+  .onPending((message: MultipleFilesMessage) => {
+    // ...
+  })
+  .onFailed((err: SendbirdError, message: MultipleFilesMessage) => {
+    // ...
+  })
+  .onSucceeded((message: MultipleFilesMessage) => {
+    // ...
+  })
+  .onFileUploaded((
+    requestId: string,
+    index: number,
+    uploadableFileInfo: UploadableFileInfo,
+    err?: Error
+  ) => {
+    // ...
+  });
+```
+
+### **Deprecated**
+- Deprecated `BaseChannel.copyUserMessage()`
+- Deprecated `BaseChannel.copyFileMessage()`
+- Deprecated `BaseChannel.resendUserMessage()`
+- Deprecated `BaseChannel.resendFileMessage()`
+
+### **Improvements**
+- Changed `MessageHandler`, `FailedMessageHandler`, `MessageRequestHandler`, and `MultipleFilesMessageRequestHandler` to have generic message type
+- Fixed the bug where reply messages were not being automatically resent
+- Fixed the bug where initializing the message collection without result handler throws an error
+- Fixed the bug where message collection updating the left group channel
+- Added `createdAfter` and `createdBefore` filters in `GroupChannelListQuery`
+
 ## v4.9.7 (Aug 3, 2023)
 ### **Improvements**
 - Fixed a bug where `HugeGabCheck` in `MessageCollection` has missed some filters

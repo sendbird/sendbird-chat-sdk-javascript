@@ -194,6 +194,7 @@ export declare class BaseMessage {
   updatedAt: number;
   scheduledInfo: ScheduledInfo | null;
   extendedMessage: object;
+  notificationData: NotificationData | null;
   isIdentical(message: BaseMessage): boolean;
   isEqual(message: BaseMessage): boolean;
   isUserMessage(): this is UserMessage;
@@ -1015,6 +1016,7 @@ export declare class MutedUserListQuery extends ChannelDataListQuery {
 export declare interface MutedUserListQueryParams extends BaseListQueryParams {}
 
 export declare class NotificationCollection extends BaseMessageCollection<FeedChannel> {
+  dispose(): void;
   setMessageCollectionHandler(handler: NotificationCollectionEventHandler): void;
 }
 
@@ -1106,7 +1108,7 @@ export declare class ParticipantListQuery extends ChannelDataListQuery {
 export declare interface ParticipantListQueryParams extends BaseListQueryParams {}
 
 export declare class PinnedMessage {
-  readonly message: BaseMessage;
+  readonly message: BaseMessage | null;
 }
 
 export declare class PinnedMessageListQuery extends ChannelDataListQuery {
@@ -1447,6 +1449,7 @@ export declare class SendbirdChat {
   getCacheDataSize(): Promise<number>;
   clearCachedData(): Promise<void>;
   clearCachedMessages(channelUrls: string[]): Promise<void>;
+  authenticateFeed(userId: string, authToken?: string): Promise<User>;
   connect(userId: string, authToken?: string): Promise<User>;
   reconnect(): boolean;
   disconnect(): Promise<void>;
@@ -1658,12 +1661,12 @@ export declare class ThreadInfoUpdateEvent {
 }
 
 export declare class Thumbnail {
-  readonly url: string;
+  readonly plainUrl: string;
   readonly width: number;
   readonly height: number;
   readonly realWidth: number;
   readonly realHeight: number;
-  get plainUrl(): string;
+  get url(): string;
 }
 
 export declare interface ThumbnailSize {
@@ -2518,6 +2521,7 @@ export declare class FeedChannelModule extends Module {
     params?: NotificationTemplateListParams,
   ): Promise<NotificationTemplateListResult>;
   getNotificationTemplate(key: string): Promise<NotificationTemplate>;
+  refreshNotificationCollections(): void;
 }
 
 export declare interface GlobalNotificationChannelSetting {
@@ -2547,3 +2551,12 @@ declare interface NotificationTemplateListResult {
 export declare type SendbirdFeedChat = SendbirdChat & {
   feedChannel: FeedChannelModule;
 };
+
+export declare interface NotificationData {
+  label?: string;
+  templateKey: string;
+  templateVariables: {
+    key: string;
+    value: string;
+  };
+}

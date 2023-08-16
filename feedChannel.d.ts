@@ -11,6 +11,7 @@ export {
   NotificationCollection,
   NotificationCollectionEventHandler,
   NotificationCollectionParams,
+  NotificationData,
   NotificationEventContext,
   NotificationTemplate,
   NotificationTemplateList,

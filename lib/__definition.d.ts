@@ -487,6 +487,9 @@ export declare interface Encryption {
 export declare type FailedMessageHandler<T> = (err: Error, message: T | null) => void;
 
 export declare class FeedChannel extends BaseChannel {
+  readonly isCategoryFilterEnabled: boolean;
+  readonly isTemplateLabelEnabled: boolean;
+  readonly notificationCategories: NotificationCategory[];
   get url(): string;
   get name(): string;
   set name(value: string);
@@ -705,16 +708,18 @@ export declare interface InvitationPreference {
 }
 
 export declare class LocalCacheConfig {
-  constructor({ maxSize, clearOrder, customClearOrderComparator }?: LocalCacheConfigParams);
+  constructor({ maxSize, clearOrder, customClearOrderComparator, enableAutoResend }?: LocalCacheConfigParams);
   get maxSize(): number;
   get clearOrder(): CachedDataClearOrder;
   get clearOrderComparator(): Comparator<CachedChannelInfo>;
+  get enableAutoResend(): boolean;
 }
 
 export declare interface LocalCacheConfigParams {
   maxSize?: number;
   clearOrder?: CachedDataClearOrder;
   customClearOrderComparator?: Comparator<CachedChannelInfo>;
+  enableAutoResend?: boolean;
 }
 
 export declare enum LogLevel {
@@ -1015,6 +1020,13 @@ export declare class MutedUserListQuery extends ChannelDataListQuery {
 
 export declare interface MutedUserListQueryParams extends BaseListQueryParams {}
 
+export declare class NotificationCategory {
+  readonly id: number;
+  readonly name: string;
+  isDefault: boolean;
+  get customType(): string;
+}
+
 export declare class NotificationCollection extends BaseMessageCollection<FeedChannel> {
   dispose(): void;
   setMessageCollectionHandler(handler: NotificationCollectionEventHandler): void;
@@ -1027,6 +1039,16 @@ export declare type NotificationCollectionEventHandler = BaseMessageCollectionEv
 >;
 
 export declare interface NotificationCollectionParams extends BaseMessageCollectionParams {}
+
+export declare interface NotificationData {
+  label?: string;
+  tags?: string[];
+  templateKey: string;
+  templateVariables: {
+    key: string;
+    value: boolean | number | string;
+  };
+}
 
 export declare class NotificationEventContext extends BaseMessageEventContext {}
 
@@ -2551,12 +2573,3 @@ declare interface NotificationTemplateListResult {
 export declare type SendbirdFeedChat = SendbirdChat & {
   feedChannel: FeedChannelModule;
 };
-
-export declare interface NotificationData {
-  label?: string;
-  templateKey: string;
-  templateVariables: {
-    key: string;
-    value: string;
-  };
-}

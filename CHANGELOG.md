@@ -1,5 +1,28 @@
 # Changelog
 
+## v4.9.10 (Aug 30, 2023)
+### **Notification**
+- Added `isCategoryFilterEnabled` in `FeedChannel`.
+- Added `isTemplateLabelEnabled` in `FeedChannel`.
+- Added `notificationCategories` in `FeedChannel`.
+- Added `tags` in `NotificationData`
+
+### **Improvements**
+- Added `enableAutoResend` in `LocalCacheConfig` to control auto-resending feature when local cache is enabled
+- Fixed a bug that cache is cleared unintentionally
+- Improvement stability
+
+## v4.9.9 (Aug 16, 2023)
+### **Notification**
+- Added `authenticateFeed()` in `SendbirdChat` to log in without connection
+- Added `refreshNotificationCollections()` in `SendbirdChat` to manually catch up the recent updates
+- Added `notificationData` in `BaseMessage`
+
+### **Improvements**
+- Fixed a bug that reconnection hangs for deactivated user
+- Fixed bug not parsing for string array type thumbnails
+- Fixed a bug where message parsing throws the wrong exception
+
 ## v4.9.8 (Aug 9, 2023)
 ### **Features**
 - Added `BaseChannel.copyMessage()` that supports user, file, and multiple files message

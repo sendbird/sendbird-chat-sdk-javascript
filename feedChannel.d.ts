@@ -8,6 +8,7 @@ export {
   FeedChannelListQueryParams,
   FeedChannelModule,
   GlobalNotificationChannelSetting,
+  NotificationCategory,
   NotificationCollection,
   NotificationCollectionEventHandler,
   NotificationCollectionParams,

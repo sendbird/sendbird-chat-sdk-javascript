@@ -1,4 +1,8 @@
 # Changelog
+## v4.9.11 (Sep 14, 2023)
+### **Improvements**
+- Fixed a bug that session refreshes even if the session is revoked or deactivated
+- Improvement stability
 
 ## v4.9.10 (Aug 30, 2023)
 ### **Notification**

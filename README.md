@@ -32,7 +32,7 @@ Once this is in place, take a look at [all the other features](https://sendbird.
 
 ### Documentation
 
-Find out more about Sendbird Chat for JavaScript in [the documentation](https://sendbird.com/docs/chat/v4/javascript/getting-started/about-chat-sdk). If you have any comments, questions or feature requests, let us know in the [Sendbird community](https://community.sendbird.com).
+Find out more about Sendbird Chat for JavaScript in [the documentation](https://sendbird.com/docs/chat/v4/javascript/getting-started/send-first-message). If you have any comments, questions or feature requests, let us know in the [Sendbird community](https://community.sendbird.com).
 
 <br />
 

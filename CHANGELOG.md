@@ -1,4 +1,14 @@
 # Changelog
+## v4.9.12 (Sep 22, 2023)
+### **Notifications**
+- Added `NotificationMessage`
+  - `NotificationMessage` uses `notificationId` as key instead of `messageId`
+  - `FeedChannel` to have `NotificationMessage` as `lastMessage`
+
+### **Improvements**
+- Fixed a bug that `markAsRead()` fails with `authenticateFeed()`
+- Fixed a bug that `onSessionClosed()` is called unintentionally
+
 ## v4.9.11 (Sep 14, 2023)
 ### **Improvements**
 - Fixed a bug that session refreshes even if the session is revoked or deactivated

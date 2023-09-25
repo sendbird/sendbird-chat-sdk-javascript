@@ -170,76 +170,64 @@ declare interface BaseListQueryParams {
   limit?: number;
 }
 
-export declare class BaseMessage {
-  readonly channelUrl: string;
-  readonly channelType: ChannelType;
+export declare class BaseMessage extends MessagePrototype {
   messageId: number;
   parentMessageId: number;
   parentMessage: BaseMessage | null;
   silent: boolean;
   isOperatorMessage: boolean;
-  messageType: MessageType;
-  data: string;
-  customType: string;
-  mentionType: MentionType | null;
-  mentionedUsers: User[] | null;
-  mentionedUserIds: string[] | null;
-  mentionedMessageTemplate: string;
   threadInfo: ThreadInfo | null;
   reactions: Reaction[];
-  metaArrays: MessageMetaArray[];
   ogMetaData: OGMetaData | null;
   appleCriticalAlertOptions: AppleCriticalAlertOptions | null;
-  createdAt: number;
-  updatedAt: number;
   scheduledInfo: ScheduledInfo | null;
-  extendedMessage: object;
-  notificationData: NotificationData | null;
   isIdentical(message: BaseMessage): boolean;
-  isEqual(message: BaseMessage): boolean;
-  isUserMessage(): this is UserMessage;
-  isFileMessage(): this is FileMessage;
-  isMultipleFilesMessage(): this is MultipleFilesMessage;
-  isAdminMessage(): this is AdminMessage;
-  serialize(): object;
-  getMetaArraysByKeys(keys: string[]): MessageMetaArray[];
   applyThreadInfoUpdateEvent(threadInfoUpdateEvent: ThreadInfoUpdateEvent): boolean;
   applyReactionEvent(reactionEvent: ReactionEvent): void;
   applyParentMessage(parentMessage: BaseMessage): boolean;
 }
 
-declare class BaseMessageCollection<Channel extends BaseChannel> {
+declare abstract class BaseMessageCollection<
+  Channel extends BaseChannel,
+  Message extends MessagePrototype,
+  MessageKeyType extends number | string,
+> {
   readonly filter: MessageFilter;
+  protected keyOf(message: Message): MessageKeyType;
   get channel(): Channel;
-  get succeededMessages(): BaseMessage[];
+  get succeededMessages(): Message[];
   get failedMessages(): SendableMessage[];
   get pendingMessages(): SendableMessage[];
   get hasPrevious(): boolean;
   get hasNext(): boolean;
-  initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler;
-  loadPrevious(): Promise<BaseMessage[]>;
-  loadNext(): Promise<BaseMessage[]>;
+  protected get viewTop(): number;
+  protected get viewBottom(): number;
+  initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler<Message>;
+  loadPrevious(): Promise<Message[]>;
+  loadNext(): Promise<Message[]>;
   removeFailedMessage(reqId: string): Promise<void>;
   dispose(): void;
 }
 
 declare interface BaseMessageCollectionEventHandler<
   Channel extends BaseChannel,
+  Message extends MessagePrototype,
+  MessageKeyType,
   ChannelEventContext extends BaseChannelEventContext,
   MessageEventContext extends BaseMessageEventContext,
 > {
   onChannelUpdated?: (context: ChannelEventContext, channel: Channel) => void;
   onChannelDeleted?: (context: ChannelEventContext, channelUrl: string) => void;
-  onMessagesAdded?: (context: MessageEventContext, channel: Channel, messages: BaseMessage[]) => void;
-  onMessagesUpdated?: (context: MessageEventContext, channel: Channel, messages: BaseMessage[]) => void;
+  onMessagesAdded?: (context: MessageEventContext, channel: Channel, messages: Message[]) => void;
+  onMessagesUpdated?: (context: MessageEventContext, channel: Channel, messages: Message[]) => void;
   /**
    * @param messageIds Deprecated since v4.3.1. Use messages instead.
    */
   onMessagesDeleted?: (
     context: MessageEventContext,
     channel: Channel,
-    messageIds: number[],
-    messages: BaseMessage[],
+    messageIds: MessageKeyType[],
+    messages: Message[],
   ) => void;
   onHugeGapDetected?: () => void;
 }
@@ -490,6 +478,7 @@ export declare class FeedChannel extends BaseChannel {
   readonly isCategoryFilterEnabled: boolean;
   readonly isTemplateLabelEnabled: boolean;
   readonly notificationCategories: NotificationCategory[];
+  lastMessage: NotificationMessage | null;
   get url(): string;
   get name(): string;
   set name(value: string);
@@ -498,7 +487,6 @@ export declare class FeedChannel extends BaseChannel {
   get memberCount(): number;
   get myMemberState(): MemberState;
   get myLastRead(): number;
-  get lastMessage(): BaseMessage | null;
   get unreadMessageCount(): number;
   serialize(): object;
   refresh(): Promise<FeedChannel>;
@@ -801,7 +789,7 @@ export declare enum MentionType {
 
 export declare interface MessageChangelogs {
   updatedMessages: BaseMessage[];
-  deletedMessageIds: number[];
+  deletedMessageIds: (number | string)[];
   hasMore: boolean;
   token: string;
 }
@@ -814,26 +802,30 @@ export declare interface MessageChangeLogsParams {
   includeParentMessageInfo?: boolean;
 }
 
-export declare class MessageCollection extends BaseMessageCollection<GroupChannel> {
+export declare class MessageCollection extends BaseMessageCollection<GroupChannel, BaseMessage, number> {
+  protected keyOf(message: BaseMessage): number;
+  initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler<BaseMessage>;
   setMessageCollectionHandler(handler: MessageCollectionEventHandler): void;
 }
 
 export declare type MessageCollectionEventHandler = BaseMessageCollectionEventHandler<
   GroupChannel,
+  BaseMessage,
+  number,
   GroupChannelEventContext,
   MessageEventContext
 >;
 
-export declare class MessageCollectionInitHandler {
-  onCacheResult(handler: MessageCollectionInitResultHandler): MessageCollectionInitHandler;
-  onApiResult(handler: MessageCollectionInitResultHandler): MessageCollectionInitHandler;
+export declare class MessageCollectionInitHandler<Message extends MessagePrototype> {
+  onCacheResult(
+    handler: (err: Error | null, messages: Message[] | null) => void,
+  ): MessageCollectionInitHandler<Message>;
+  onApiResult(handler: (err: Error | null, messages: Message[] | null) => void): MessageCollectionInitHandler<Message>;
 }
 
 export declare enum MessageCollectionInitPolicy {
   CACHE_AND_REPLACE_BY_API = 'cache_and_replace_by_api',
 }
-
-export declare type MessageCollectionInitResultHandler = (err: Error | null, messages: BaseMessage[] | null) => void;
 
 export declare interface MessageCollectionParams extends BaseMessageCollectionParams {}
 
@@ -845,7 +837,7 @@ export declare class MessageFilter {
   senderUserIdsFilter: string[] | null;
   replyType: ReplyType;
   clone(): MessageFilter;
-  match(message: BaseMessage): boolean;
+  match(message: BaseMessage | NotificationMessage): boolean;
 }
 
 export declare type MessageHandler<T> = (message: T) => void;
@@ -879,10 +871,36 @@ declare interface MessageMetaArrayPayload {
 
 export declare class MessageModule extends Module {
   name: 'message';
-  buildMessageFromSerializedData(serialized: object): UserMessage | FileMessage | MultipleFilesMessage | AdminMessage;
+  buildMessageFromSerializedData(
+    serialized: object,
+  ): UserMessage | FileMessage | MultipleFilesMessage | AdminMessage | NotificationMessage;
   buildSenderFromSerializedData(serialized: object): Sender;
-  getMessage(params: MessageRetrievalParams): Promise<BaseMessage | null>;
+  getMessage(params: MessageRetrievalParams): Promise<BaseMessage | NotificationMessage | null>;
   getScheduledMessage(params: ScheduledMessageRetrievalParams): Promise<BaseMessage | null>;
+}
+
+declare class MessagePrototype {
+  readonly channelUrl: string;
+  readonly channelType: ChannelType;
+  messageType: MessageType;
+  data: string;
+  customType: string;
+  mentionType: MentionType | null;
+  mentionedUsers: User[] | null;
+  mentionedUserIds: string[] | null;
+  mentionedMessageTemplate: string;
+  metaArrays: MessageMetaArray[];
+  extendedMessage: object;
+  createdAt: number;
+  updatedAt: number;
+  isIdentical(message: MessagePrototype): boolean;
+  isEqual(message: MessagePrototype): boolean;
+  isUserMessage(): this is UserMessage;
+  isFileMessage(): this is FileMessage;
+  isMultipleFilesMessage(): this is MultipleFilesMessage;
+  isAdminMessage(): this is AdminMessage;
+  serialize(): object;
+  getMetaArraysByKeys(keys: string[]): MessageMetaArray[];
 }
 
 export declare class MessageRequestHandler<T extends SendableMessage = SendableMessage> {
@@ -1027,13 +1045,16 @@ export declare class NotificationCategory {
   get customType(): string;
 }
 
-export declare class NotificationCollection extends BaseMessageCollection<FeedChannel> {
+export declare class NotificationCollection extends BaseMessageCollection<FeedChannel, NotificationMessage, string> {
+  protected keyOf(message: NotificationMessage): string;
   dispose(): void;
   setMessageCollectionHandler(handler: NotificationCollectionEventHandler): void;
 }
 
 export declare type NotificationCollectionEventHandler = BaseMessageCollectionEventHandler<
   FeedChannel,
+  NotificationMessage,
+  string,
   FeedChannelEventContext,
   NotificationEventContext
 >;
@@ -1057,6 +1078,12 @@ export declare class NotificationInfo {
   readonly feedChannels: Record<string, string>;
   readonly templateListToken: string | null;
   readonly settingsUpdatedAt: number;
+}
+
+export declare class NotificationMessage extends MessagePrototype {
+  readonly notificationId: string;
+  notificationData: NotificationData | null;
+  isIdentical(message: NotificationMessage): boolean;
 }
 
 export declare class OGImage {
@@ -2141,6 +2168,11 @@ export declare enum MembershipFilter {
   JOINED = 'joined',
 }
 
+export declare type MessageCollectionInitResultHandler = <Message extends MessagePrototype>(
+  err: Error | null,
+  messages: Message[] | null,
+) => void;
+
 export declare type MessageEventSource = CollectionEventSource;
 
 export declare const MessageEventSource: {
@@ -2431,83 +2463,12 @@ export declare class FeedChannelHandler extends FeedChannelHandlerParams {
   constructor(params?: FeedChannelHandlerParams);
 }
 
-declare abstract class FeedChannelHandlerParams extends BaseChannelHandlerParams {
+declare abstract class FeedChannelHandlerParams {
+  onChannelChanged?: (channel: BaseChannel) => void;
+  onChannelDeleted?: (channelUrl: string, channelType: ChannelType) => void;
   onUnreadMemberStatusUpdated?: (channel: FeedChannel) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onUserMuted?: (channel: BaseChannel, user: RestrictedUser) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onUserUnmuted?: (channel: BaseChannel, user: User) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onUserBanned?: (channel: BaseChannel, user: RestrictedUser) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onUserUnbanned?: (channel: BaseChannel, user: User) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onChannelFrozen?: (channel: BaseChannel) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onChannelUnfrozen?: (channel: BaseChannel) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onOperatorUpdated?: (channel: BaseChannel, users: User[]) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onMetaDataCreated?: (channel: BaseChannel, metaData: MetaData) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onMetaDataUpdated?: (channel: BaseChannel, metaData: MetaData) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onMetaDataDeleted?: (channel: BaseChannel, metaDataKeys: string[]) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onMetaCounterCreated?: (channel: BaseChannel, metaCounter: MetaCounter) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onMetaCounterUpdated?: (channel: BaseChannel, metaCounter: MetaCounter) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onMetaCounterDeleted?: (channel: BaseChannel, metaCounterKeys: string[]) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onReactionUpdated?: (channel: BaseChannel, reactionEvent: ReactionEvent) => void;
-  /**
-   * @ignore This is not supported in FeedChannel
-   * @deprecated
-   * */
-  onThreadInfoUpdated?: (channel: BaseChannel, threadInfoUpdateEvent: ThreadInfoUpdateEvent) => void;
+  onMessageReceived?: (channel: BaseChannel, message: NotificationMessage) => void;
+  onMentionReceived?: (channel: BaseChannel, message: NotificationMessage) => void;
 }
 
 declare interface FeedChannelListParams {

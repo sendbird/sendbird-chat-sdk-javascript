@@ -13,6 +13,7 @@ export {
   BlockedUserListQuery,
   BlockedUserListQueryParams,
   CachedChannelInfo,
+  CachedDataClearOrder,
   ChannelType,
   CollectionEventSource,
   ConnectionHandler,

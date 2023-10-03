@@ -1,4 +1,8 @@
 # Changelog
+## v4.9.13 (Sep 27, 2023)
+### **Improvements**
+- Improved stability
+
 ## v4.9.12 (Sep 22, 2023)
 ### **Notifications**
 - Added `NotificationMessage`

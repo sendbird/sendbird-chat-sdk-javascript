@@ -15,6 +15,7 @@ export {
   NotificationData,
   NotificationEventContext,
   NotificationMessage,
+  NotificationMessageStatus,
   NotificationTemplate,
   NotificationTemplateList,
   NotificationTemplateListParams,

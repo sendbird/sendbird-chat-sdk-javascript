@@ -1,4 +1,15 @@
 # Changelog
+## v4.9.14 (Oct 6, 2023)
+### **Notification**
+- Added `messageStatus` in `NotificationMessage`
+- Added `markAsReadBy(notificationIds)` in `FeedChannel`
+- Added `logImpression(notificationIds)` in `FeedChannel`
+
+### **Improvements**
+- Fixed a bug that `MessageCollection` has wrong `hasPrevious` and `hasNext` in a certain condition
+- Fixed a bug that `groupChannel.refresh()` does not trigger `onChannelUpdated` in `MessageCollection`
+- Fixed a bug that `metaArrays` parameter does not work in `updateUserMessage()` and `updateFileMessage()`
+
 ## v4.9.13 (Sep 27, 2023)
 ### **Improvements**
 - Improved stability

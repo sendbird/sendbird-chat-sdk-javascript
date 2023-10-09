@@ -493,6 +493,8 @@ export declare class FeedChannel extends BaseChannel {
   serialize(): object;
   refresh(): Promise<FeedChannel>;
   markAsRead(): Promise<void>;
+  markAsReadBy(notificationIds: string[]): Promise<void>;
+  logImpression(notificationIds: string[]): Promise<boolean>;
   createNotificationCollection(params?: NotificationCollectionParams): NotificationCollection;
 }
 
@@ -1085,7 +1087,13 @@ export declare class NotificationInfo {
 export declare class NotificationMessage extends MessagePrototype {
   readonly notificationId: string;
   notificationData: NotificationData | null;
+  messageStatus: NotificationMessageStatus;
   isIdentical(message: NotificationMessage): boolean;
+}
+
+export declare enum NotificationMessageStatus {
+  SENT = 'SENT',
+  READ = 'READ',
 }
 
 export declare class OGImage {

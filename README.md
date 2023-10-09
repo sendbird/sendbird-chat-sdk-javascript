@@ -11,14 +11,6 @@
 1.  [Getting started](#getting-started)
 1.  [Sending your first message](#sending-your-first-message)
 1.  [Additional information](#additional-information)
-1.  [Hiring](#we-are-hiring)
-
-<br />
-
-<span style="color:red">**IMPORTANT NOTICE**</span><br>
-```
-JS Chat SDK version `4.9.0` and `4.9.1` has a CRTICAL BUG where FileMessage is NOT received when sent from an Android device. Please SKIP version `4.9.0` and `4.9.1`, and update to version `4.9.2` or above instead.
-```
 
 ## Introduction
 
@@ -247,7 +239,3 @@ const channel = await sb.groupChannel.createChannelWithUserIds(
 
 const immutableObject = Immutable.fromJS(channel);
 ```
-
-## We are hiring
-
-At Sendbird, we are a diverse group of humble, friendly, and hardworking individuals united by a shared purpose to build the next generation of mobile & social technologies, across chat, voice, and video, that are changing the way we work and live. We're always looking for great people to join our team. [Check out our careers page](https://sendbird.com/careers) for more information.

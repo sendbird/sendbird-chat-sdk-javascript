@@ -1,7 +1,6 @@
 # Changelog
 ## v4.10.0 (Oct 13, 2023)
 ### **Features**
-### **Features**
 - Added new read-only attribute `messageReviewInfo` on the `UserMessage`
 ```typescript
   export default class UserMessage {

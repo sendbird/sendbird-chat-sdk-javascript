@@ -1,4 +1,42 @@
 # Changelog
+## v4.10.0 (Oct 13, 2023)
+### **Features**
+### **Features**
+- Added new read-only attribute `messageReviewInfo` on the `UserMessage`
+```typescript
+  export default class UserMessage {
+	  ...
+	
+	  // exist only if the message is in review or it has been approved
+	  readonly messageReviewInfo: MessageReviewInfo?
+	  ...
+  }
+
+  export default class MessageReviewInfo {
+	  readonly status: MessageReviewStatus;
+	  readonly originalMessageInfo?: OriginalMessageInfo;  // (exist only if the status is approved)
+	  ...
+  }
+
+  export enum MessageReviewStatus {
+	  INREVIEW = 'InReview',
+	  APPROVED = 'Approved',
+  }
+
+  export interface OriginalMessageInfo {
+	  createdAt: number;
+	  messageId: number;
+  }
+```
+- Added `getDeliveryStatus(includeAllMembers = true)` interface
+
+### **Improvements**
+- Fixed a bug where a session refresh error occurred repeatedly
+- Fixed a bug where `uploadableFileInfo.fileUrl` does not include auth value when auth is required internally
+- (internal) Fixed a bug that channel refresh not triggering `onChannelUpdated` event
+  - Please use changelog instead for improved stability
+- Fixed a bug that `connect()` timed out in a certain case
+
 ## v4.9.14 (Oct 6, 2023)
 ### **Notification**
 - Added `messageStatus` in `NotificationMessage`

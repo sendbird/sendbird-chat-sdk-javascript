@@ -430,6 +430,13 @@ export declare enum CountPreference {
   OFF = 'off',
 }
 
+export declare class DeliveryStatus {
+  readonly channelUrl: string;
+  readonly channelType: string;
+  readonly member: User;
+  readonly deliveryAt: number;
+}
+
 export declare interface DeviceOsInfo {
   platform: DeviceOsPlatform;
   version?: string;
@@ -616,6 +623,9 @@ export declare class GroupChannel extends BaseChannel {
   getUnreadMembers(message: BaseMessage, includeAllMembers?: boolean): Member[];
   getReadStatus(includeAllMembers?: boolean): {
     [key: string]: ReadStatus;
+  } | null;
+  getDeliveryStatus(includeAllMembers?: boolean): {
+    [key: string]: DeliveryStatus;
   } | null;
   getTypingUsers(): Member[];
   invalidateTypingStatus(): boolean;
@@ -923,6 +933,16 @@ export declare interface MessageRetrievalParams {
   includeThreadInfo?: boolean;
 }
 
+export declare class MessageReviewInfo {
+  readonly status: MessageReviewStatus;
+  readonly originalMessageInfo?: OriginalMessageInfo;
+}
+
+export declare enum MessageReviewStatus {
+  INREVIEW = 'InReview',
+  APPROVED = 'Approved',
+}
+
 export declare enum MessageSearchOrder {
   SCORE = 'score',
   TIMESTAMP = 'ts',
@@ -1155,6 +1175,11 @@ export declare class OperatorListQuery extends ChannelDataListQuery {
 }
 
 export declare interface OperatorListQueryParams extends BaseListQueryParams {}
+
+export declare interface OriginalMessageInfo {
+  createdAt: number;
+  messageId: number;
+}
 
 export declare class Participant extends User {
   readonly isMuted: boolean;
@@ -1804,6 +1829,7 @@ export declare class UserMessage extends SendableMessage {
   readonly translationTargetLanguages: string[];
   readonly messageSurvivalSeconds: number;
   readonly plugins: Plugin[];
+  readonly messageReviewInfo?: MessageReviewInfo;
   getThreadedMessagesByTimestamp(
     ts: number,
     params: ThreadedMessageListParams,

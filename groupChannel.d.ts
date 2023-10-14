@@ -1,5 +1,6 @@
 export {
   CountPreference,
+  DeliveryStatus,
   GroupChannel,
   GroupChannelChangelogs,
   GroupChannelChangeLogsParams,

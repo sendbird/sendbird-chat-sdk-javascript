@@ -500,8 +500,9 @@ export declare class FeedChannel extends BaseChannel {
   serialize(): object;
   refresh(): Promise<FeedChannel>;
   markAsRead(): Promise<void>;
-  markAsReadBy(notificationIds: string[]): Promise<void>;
-  logImpression(notificationIds: string[]): Promise<boolean>;
+  markAsReadBy(messages: NotificationMessage[]): Promise<void>;
+  markAsClicked(messages: NotificationMessage[]): Promise<void>;
+  logImpression(messages: NotificationMessage[]): Promise<boolean>;
   createNotificationCollection(params?: NotificationCollectionParams): NotificationCollection;
 }
 
@@ -905,6 +906,7 @@ declare class MessagePrototype {
   mentionedMessageTemplate: string;
   metaArrays: MessageMetaArray[];
   extendedMessage: object;
+  extendedMessagePayload?: Record<string, unknown>;
   createdAt: number;
   updatedAt: number;
   isIdentical(message: MessagePrototype): boolean;

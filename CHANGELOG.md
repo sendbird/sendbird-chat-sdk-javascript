@@ -1,4 +1,18 @@
 # Changelog
+## v4.10.1 (Oct 31, 2023)
+### **Features**
+### Introduced the `extended_message_payload` field to the `messagePrototype`
+It simplifies the process by returning `Record<{ [string]: any }>`, eliminating the need to stringify values like `extended_message`. This improvement enhances the functionality of the AI chat bot, particularly in areas such as `forms`, `suggested_replies`, and `custom_views`.
+
+### **Improvements**
+- Added `markAsClicked()` in FeedChannel
+- Updated interface of `markAsReadBy()` in `FeedChannel` to take `messages` as a parameter
+- Updated interface of `logImpression()` in `FeedChannel` to take `messages` as a parameter
+- Fixed a bug where `groupChannel.upsert`
+- Fixed a bug where `getMessageCommand` parsing error
+- Fixed a bug where an `unhandled exception`
+- (internal) Fixed a bug where `SessionRefreshAPIResponseCommand` parsing
+
 ## v4.10.0 (Oct 13, 2023)
 ### **Features**
 - Added new read-only attribute `messageReviewInfo` on the `UserMessage`

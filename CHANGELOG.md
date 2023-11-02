@@ -1,5 +1,5 @@
 # Changelog
-## v4.10.2 (Sep 02, 2023)
+## v4.10.2 (Nov 02, 2023)
 ### **Improvements**
 - Fixed a bug where an exception wasn't thrown during `connection()`
 

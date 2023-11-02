@@ -1,4 +1,8 @@
 # Changelog
+## v4.10.2 (Sep 02, 2023)
+### **Improvements**
+- Fixed a bug where an exception wasn't thrown during `connection()`
+
 ## v4.10.1 (Oct 31, 2023)
 ### **Features**
 ### Introduced the `extended_message_payload` field to the `messagePrototype`

@@ -503,6 +503,7 @@ export declare class FeedChannel extends BaseChannel {
   markAsReadBy(messages: NotificationMessage[]): Promise<void>;
   markAsClicked(messages: NotificationMessage[]): Promise<void>;
   logImpression(messages: NotificationMessage[]): Promise<boolean>;
+  logCustom(topic: string, messages: NotificationMessage[]): Promise<boolean>;
   createNotificationCollection(params?: NotificationCollectionParams): NotificationCollection;
 }
 
@@ -2504,7 +2505,6 @@ export declare class FeedChannelHandler extends FeedChannelHandlerParams {
 declare abstract class FeedChannelHandlerParams {
   onChannelChanged?: (channel: BaseChannel) => void;
   onChannelDeleted?: (channelUrl: string, channelType: ChannelType) => void;
-  onUnreadMemberStatusUpdated?: (channel: FeedChannel) => void;
   onMessageReceived?: (channel: BaseChannel, message: NotificationMessage) => void;
   onMentionReceived?: (channel: BaseChannel, message: NotificationMessage) => void;
 }

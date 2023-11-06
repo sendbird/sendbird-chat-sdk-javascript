@@ -1,4 +1,8 @@
 # Changelog
+## v4.10.3 (Nov 03, 2023)
+### **Notification**
+- Added `logCustom()` in `FeedChannel` to log custom stat
+
 ## v4.10.2 (Nov 02, 2023)
 ### **Improvements**
 - Fixed a bug where an exception wasn't thrown during `connection()`

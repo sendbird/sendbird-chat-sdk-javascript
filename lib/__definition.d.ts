@@ -171,6 +171,7 @@ declare interface BaseListQueryParams {
 }
 
 export declare class BaseMessage extends MessagePrototype {
+  message: string;
   messageId: number;
   parentMessageId: number;
   parentMessage: BaseMessage | null;
@@ -183,10 +184,15 @@ export declare class BaseMessage extends MessagePrototype {
   scheduledInfo: ScheduledInfo | null;
   suggestedReplies: string[] | null;
   isIdentical(message: BaseMessage): boolean;
-  applyThreadInfoUpdateEvent(threadInfoUpdateEvent: ThreadInfoUpdateEvent): boolean;
+  applyThreadInfoUpdateEvent(
+    threadInfoUpdateEvent: ThreadInfoUpdateEvent
+  ): boolean;
   applyReactionEvent(reactionEvent: ReactionEvent): void;
   applyParentMessage(parentMessage: BaseMessage): boolean;
-  submitForm(data: { formId: string; answers: Record<string, string> }): Promise<void>;
+  submitForm(data: {
+    formId: string;
+    answers: Record<string, string>;
+  }): Promise<void>;
 }
 
 declare abstract class BaseMessageCollection<

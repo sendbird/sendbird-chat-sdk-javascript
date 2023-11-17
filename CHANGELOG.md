@@ -1,4 +1,8 @@
 # Changelog
+## v4.10.4 (Nov 16, 2023)
+### **Improvement**
+- Fixed a bug of flooded cache in React Native
+
 ## v4.10.3 (Nov 03, 2023)
 ### **Notification**
 - Added `logCustom()` in `FeedChannel` to log custom stat

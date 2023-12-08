@@ -1,4 +1,48 @@
 # Changelog
+## v4.10.5 (Dec 8, 2023)
+- Added `prevResultLimit/nextResultLimit` in `BaseMessageCollectionParams`
+```
+  /**
+  * @param limit Deprecated since v4.10.5. Use prevResultLimit/nextResultLimit instead.
+  */
+  groupChannel.createMessagecollection( { limit: 10 } );
+  
+  or 
+  
+  groupChannel.createMessageCollection({ prevResultLimit: 5, nextResultLimit: 5, });
+```
+- Added constructor in `MessageFilter/GroupChannelFilter`
+```
+ const filter: MessageFilter = new MessageFilter();
+ filter.senderUserIdsFilter = [ ... ];
+ 
+       or
+ 
+ const filter:MessageFilter = new MessageFilter({
+   senderUserIdsFilter: [ ... ],
+   ...
+ });
+ 
+ groupChannel.createMessagecollection( { filter } );
+```
+```
+ const filter:GroupChannelFilter = new GroupChannelFilter();
+ filter.includeEmpty = true;
+  
+      or
+  
+ const filter:GroupChannelFilter = new GroupChannelFilter({
+    includeEmpty: true,
+    ...
+ });
+  
+ sb.groupChannel.createGroupChannelCollection({ filter });
+```
+- Added `markAsRead(messages: NotificationMessage[])` in `FeedChannel`
+- (internal) Removed `markAsReadBy(messages: NotificationMessage[])` in `FeedChannel`
+- Fixed bug where `is_reply_to_channel` parsing error in `BaseMessage`
+- Fixed bug where `onMessagesUpdated()` event do not called if `localCacheEnable` is `false`
+- Improvement stability
 ## v4.10.4 (Nov 16, 2023)
 ### **Improvement**
 - Fixed a bug of flooded cache in React Native

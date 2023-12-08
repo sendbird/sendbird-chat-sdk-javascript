@@ -195,7 +195,7 @@ declare abstract class BaseMessageCollection<
   MessageKeyType extends number | string,
 > {
   readonly filter: MessageFilter;
-  protected keyOf(message: Message): MessageKeyType;
+  protected keyOf(_message: Message): MessageKeyType;
   get channel(): Channel;
   get succeededMessages(): Message[];
   get failedMessages(): SendableMessage[];
@@ -234,10 +234,15 @@ declare interface BaseMessageCollectionEventHandler<
   onHugeGapDetected?: () => void;
 }
 
+/**
+ * @param limit Deprecated since v4.10.5. Use prevResultLimit/nextResultLimit instead.
+ */
 declare interface BaseMessageCollectionParams {
   filter?: MessageFilter;
   startingPoint?: number;
   limit?: number;
+  prevResultLimit?: number;
+  nextResultLimit?: number;
 }
 
 export declare interface BaseMessageCreateParams {
@@ -499,8 +504,7 @@ export declare class FeedChannel extends BaseChannel {
   get unreadMessageCount(): number;
   serialize(): object;
   refresh(): Promise<FeedChannel>;
-  markAsRead(): Promise<void>;
-  markAsReadBy(messages: NotificationMessage[]): Promise<void>;
+  markAsRead(messages?: NotificationMessage[]): Promise<void>;
   markAsClicked(messages: NotificationMessage[]): Promise<void>;
   logImpression(messages: NotificationMessage[]): Promise<boolean>;
   logCustom(topic: string, messages: NotificationMessage[]): Promise<boolean>;
@@ -852,8 +856,16 @@ export declare class MessageFilter {
   customTypesFilter: string[] | null;
   senderUserIdsFilter: string[] | null;
   replyType: ReplyType;
+  constructor(params?: MessageFilterParams);
   clone(): MessageFilter;
   match(message: BaseMessage | NotificationMessage): boolean;
+}
+
+export declare interface MessageFilterParams {
+  messageTypeFilter?: MessageTypeFilter;
+  customTypesFilter?: string[];
+  senderUserIdsFilter?: string[];
+  replyType?: ReplyType;
 }
 
 export declare type MessageHandler<T> = (message: T) => void;
@@ -1504,9 +1516,7 @@ export declare class SendbirdChat {
   readonly options: SendbirdChatOptions;
   readonly message: MessageModule;
   readonly poll: PollModule;
-  static init<Modules extends Module[]>(
-    params: SendbirdChatParams<Modules>,
-  ): SendbirdChat & ModuleNamespaces<[...Modules, MessageModule, PollModule]>;
+  static init<Modules extends Module[]>(params: SendbirdChatParams<Modules>): SendbirdChatWith<Modules>;
   static get instance(): SendbirdChat;
   static get version(): string;
   get appId(): string;
@@ -1647,6 +1657,8 @@ export declare interface SendbirdChatParams<Modules extends Module[]> {
   useAsyncStorageStore?: typeof AsyncStorage;
   appStateToggleEnabled?: boolean;
 }
+
+export declare type SendbirdChatWith<Modules extends Module[]> = SendbirdChat & ModuleNamespaces<Modules>;
 
 export declare class SendbirdError extends Error {
   readonly code: number;
@@ -2039,12 +2051,32 @@ export declare class GroupChannelFilter {
   includeFrozen: boolean;
   createdAfter: number;
   createdBefore: number;
+  constructor(params?: GroupChannelFilterParams);
   get searchFilter(): GroupChannelSearchFilter | null;
   setSearchFilter(fields?: GroupChannelSearchField[], query?: string): void;
   get userIdsFilter(): GroupChannelUserIdsFilter | null;
   setUserIdsFilter(userIds: string[], includeMode: boolean, queryType?: QueryType): void;
   clone(): GroupChannelFilter;
   match(channel: GroupChannel, currentUserId: string): boolean;
+}
+
+export declare interface GroupChannelFilterParams {
+  includeEmpty?: boolean;
+  nicknameContainsFilter?: string;
+  nicknameStartsWithFilter?: string;
+  nicknameExactMatchFilter?: string;
+  channelNameContainsFilter?: string;
+  myMemberStateFilter?: MyMemberStateFilter;
+  customTypesFilter?: string[];
+  channelUrlsFilter?: string[];
+  superChannelFilter?: SuperChannelFilter;
+  publicChannelFilter?: PublicChannelFilter;
+  customTypeStartsWithFilter?: string;
+  unreadChannelFilter?: UnreadChannelFilter;
+  hiddenChannelFilter?: HiddenChannelFilter;
+  includeFrozen?: boolean;
+  createdAfter?: number;
+  createdBefore?: number;
 }
 
 export declare class GroupChannelHandler extends GroupChannelHandlerParams {

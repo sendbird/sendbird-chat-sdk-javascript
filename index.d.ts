@@ -59,6 +59,7 @@ export {
   Role,
   SendbirdChatOptions,
   SendbirdChatParams,
+  SendbirdChatWith,
   SendbirdError,
   SendbirdPlatform,
   SendbirdProduct,

@@ -1,5 +1,6 @@
 # Changelog
 ## v4.10.5 (Dec 8, 2023)
+### **Improvement**
 - Added `prevResultLimit/nextResultLimit` in `BaseMessageCollectionParams`
 ```
   /**

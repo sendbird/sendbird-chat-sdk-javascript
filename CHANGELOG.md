@@ -1,4 +1,9 @@
 # Changelog
+## v4.10.6 (Dec 21, 2023)
+### **Improvement**
+- Added uploadFile() in BaseChannel
+- Fixed a bug that lastMessage updates in a condition that it shouldn't
+
 ## v4.10.5 (Dec 8, 2023)
 ### **Improvement**
 - Added `prevResultLimit/nextResultLimit` in `BaseMessageCollectionParams`

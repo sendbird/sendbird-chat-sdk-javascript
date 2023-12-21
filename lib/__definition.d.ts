@@ -126,6 +126,7 @@ export declare class BaseChannel {
   resendMessage(failedMessage: FileMessage, file?: FileCompat): MessageRequestHandler<FileMessage>;
   resendMessage(failedMessage: UserMessage): MessageRequestHandler<UserMessage>;
   updateFileMessage(messageId: number, params: FileMessageUpdateParams): Promise<FileMessage>;
+  uploadFile(params: FileUploadParams): Promise<FileUploadResult>;
   cancelUploadingFileMessage(requestId: string): Promise<boolean>;
   /**
    * @deprecated since v4.9.8. Use copyMessage() instead.
@@ -182,11 +183,21 @@ export declare class BaseMessage extends MessagePrototype {
   appleCriticalAlertOptions: AppleCriticalAlertOptions | null;
   scheduledInfo: ScheduledInfo | null;
   suggestedReplies: string[] | null;
+  myFeedback: Feedback | null;
+  myFeedbackStatus: FeedbackStatus;
+  forms: Form[] | null;
   isIdentical(message: BaseMessage): boolean;
   applyThreadInfoUpdateEvent(threadInfoUpdateEvent: ThreadInfoUpdateEvent): boolean;
   applyReactionEvent(reactionEvent: ReactionEvent): void;
   applyParentMessage(parentMessage: BaseMessage): boolean;
-  submitForm(data: { formId: string; answers: Record<string, string> }): Promise<void>;
+  /**
+   * @deprecated since v4.10.6. Use submitForm({ form: Form }) instead.
+   */
+  submitForm(data: { formId?: string; answers?: Record<string, string> }): Promise<void>;
+  /** Message Feedback */
+  submitFeedback(data: Pick<Feedback, 'rating' | 'comment'>): Promise<void>;
+  updateFeedback(data: Feedback): Promise<void>;
+  deleteFeedback(feedbackId: number): Promise<void>;
 }
 
 declare abstract class BaseMessageCollection<
@@ -196,6 +207,7 @@ declare abstract class BaseMessageCollection<
 > {
   readonly filter: MessageFilter;
   protected keyOf(_message: Message): MessageKeyType;
+  protected get changelogIncludeParams(): MessageChangelogIncludeParams;
   get channel(): Channel;
   get succeededMessages(): Message[];
   get failedMessages(): SendableMessage[];
@@ -381,6 +393,9 @@ export declare enum CollectionEventSource {
   EVENT_MESSAGE_SENT_FAILED = 'EVENT_MESSAGE_SENT_FAILED',
   EVENT_MESSAGE_SENT_PENDING = 'EVENT_MESSAGE_SENT_PENDING',
   EVENT_MESSAGE_DELETED = 'EVENT_MESSAGE_DELETED',
+  EVENT_MESSAGE_FEEDBACK_ADDED = 'EVENT_MESSAGE_FEEDBACK_ADDED',
+  EVENT_MESSAGE_FEEDBACK_UPDATED = 'EVENT_MESSAGE_FEEDBACK_UPDATED',
+  EVENT_MESSAGE_FEEDBACK_DELETED = 'EVENT_MESSAGE_FEEDBACK_DELETED',
   /**
    * @deprecated since v4.3.1
    */
@@ -488,6 +503,33 @@ export declare interface Encryption {
 
 export declare type FailedMessageHandler<T> = (err: Error, message: T | null) => void;
 
+export declare class Feedback {
+  readonly id: number;
+  readonly rating: FeedbackRating;
+  readonly comment?: string;
+  constructor(payload: FeedbackPayload);
+  static parseFeedbackStatusFromPayload(payload?: FeedbackPayload): FeedbackStatus;
+}
+
+declare interface FeedbackPayload {
+  id: number;
+  rating: FeedbackRating;
+  comment?: string;
+}
+
+export declare enum FeedbackRating {
+  GOOD = 'good',
+  BAD = 'bad',
+}
+
+export declare type FeedbackStatus =
+  /** Feedback is unavailable for this message. */
+  | 'NOT_APPLICABLE'
+  /** Feedback can be set for this message, but nothing has been submitted yet. */
+  | 'NO_FEEDBACK'
+  /** Feedback can be set for this message, and something has been submitted. */
+  | 'SUBMITTED';
+
 export declare class FeedChannel extends BaseChannel {
   readonly isCategoryFilterEnabled: boolean;
   readonly isTemplateLabelEnabled: boolean;
@@ -512,6 +554,8 @@ export declare class FeedChannel extends BaseChannel {
 }
 
 export declare class FeedChannelEventContext extends BaseChannelEventContext {}
+
+declare type FieldAnswer = string;
 
 export declare type FileCompat = File | Blob | FileInfo;
 
@@ -559,6 +603,59 @@ export declare type FileUploadHandler = (
   uploadableFileInfo: UploadableFileInfo,
   err?: Error,
 ) => void;
+
+export declare interface FileUploadParams {
+  file: File | Blob;
+  thumbnailSizes?: ThumbnailSize[];
+  uploadStartedHandler?: UploadStartedHandler;
+  progressHandler?: UploadProgressHandler;
+}
+
+export declare interface FileUploadResult {
+  requestId: string;
+  url: string;
+  thumbnails?: Thumbnail[];
+}
+
+declare class Form {
+  /**
+   * The id of the message to which the corresponding form belongs
+   */
+  messageId: number;
+  formKey: FormKey;
+  fields: FormField[];
+  answers?: FormAnswers;
+  constructor(messageId: number, formKey: FormKey, fields: FormField[]);
+  get isSubmitted(): boolean;
+  get isSubmittable(): boolean;
+  getFieldAnswer(key: FormKey): FieldAnswer | undefined;
+}
+
+declare type FormAnswers = Record<FormKey, FieldAnswer>;
+
+declare class FormField {
+  fieldKey: FormKey;
+  title: string;
+  inputType: InputType;
+  required: boolean;
+  regex?: RegExp;
+  placeholder?: string;
+  /**
+   * The temporary answer to this form field to store the input value before submitting.
+   * It becomes null when it is submitted.
+   */
+  temporaryAnswer?: FieldAnswer;
+  constructor(param: ParsedFieldPayload);
+  isValid(value: string): boolean;
+  get isSubmittable(): boolean;
+}
+
+/**
+ * Represents a baseMessage.form
+ *
+ * @see BaseMessage.forms
+ */
+declare type FormKey = string;
 
 export declare interface FriendChangelogs {
   addedUsers: User[];
@@ -709,6 +806,13 @@ export declare enum HiddenState {
   UNHIDDEN = 'unhidden',
   HIDDEN_ALLOW_AUTO_UNHIDE = 'hidden_allow_auto_unhide',
   HIDDEN_PREVENT_AUTO_UNHIDE = 'hidden_prevent_auto_unhide',
+}
+
+declare enum InputType {
+  Text = 'text',
+  Phone = 'phone',
+  Email = 'email',
+  Password = 'password',
 }
 
 export declare interface InvitationPreference {
@@ -928,6 +1032,7 @@ declare class MessagePrototype {
   isFileMessage(): this is FileMessage;
   isMultipleFilesMessage(): this is MultipleFilesMessage;
   isAdminMessage(): this is AdminMessage;
+  hasForm(): this is AdminMessage;
   serialize(): object;
   getMetaArraysByKeys(keys: string[]): MessageMetaArray[];
 }
@@ -1086,6 +1191,7 @@ export declare class NotificationCategory {
 
 export declare class NotificationCollection extends BaseMessageCollection<FeedChannel, NotificationMessage, string> {
   protected keyOf(message: NotificationMessage): string;
+  protected get changelogIncludeParams(): MessageChangelogIncludeParams;
   dispose(): void;
   setMessageCollectionHandler(handler: NotificationCollectionEventHandler): void;
 }
@@ -1806,6 +1912,10 @@ export declare class UploadedFileInfo {
   get url(): string;
 }
 
+export declare type UploadProgressHandler = (requestId: string, progress: number, total: number) => void;
+
+export declare type UploadStartedHandler = (requestId: string) => void;
+
 export declare class User {
   readonly userId: string;
   readonly requireAuth: boolean;
@@ -2013,6 +2123,9 @@ export declare const GroupChannelEventSource: {
   EVENT_MESSAGE_SENT_FAILED: CollectionEventSource.EVENT_MESSAGE_SENT_FAILED;
   EVENT_MESSAGE_SENT_PENDING: CollectionEventSource.EVENT_MESSAGE_SENT_PENDING;
   EVENT_MESSAGE_DELETED: CollectionEventSource.EVENT_MESSAGE_DELETED;
+  EVENT_MESSAGE_FEEDBACK_ADDED: CollectionEventSource.EVENT_MESSAGE_FEEDBACK_ADDED;
+  EVENT_MESSAGE_FEEDBACK_UPDATED: CollectionEventSource.EVENT_MESSAGE_FEEDBACK_UPDATED;
+  EVENT_MESSAGE_FEEDBACK_DELETED: CollectionEventSource.EVENT_MESSAGE_FEEDBACK_DELETED;
   EVENT_MESSAGE_READ: CollectionEventSource.EVENT_MESSAGE_READ;
   EVENT_MESSAGE_DELIVERED: CollectionEventSource.EVENT_MESSAGE_DELIVERED;
   EVENT_MESSAGE_REACTION_UPDATED: CollectionEventSource.EVENT_MESSAGE_REACTION_UPDATED;
@@ -2290,6 +2403,9 @@ export declare const MessageEventSource: {
   EVENT_MESSAGE_SENT_FAILED: CollectionEventSource.EVENT_MESSAGE_SENT_FAILED;
   EVENT_MESSAGE_SENT_PENDING: CollectionEventSource.EVENT_MESSAGE_SENT_PENDING;
   EVENT_MESSAGE_DELETED: CollectionEventSource.EVENT_MESSAGE_DELETED;
+  EVENT_MESSAGE_FEEDBACK_ADDED: CollectionEventSource.EVENT_MESSAGE_FEEDBACK_ADDED;
+  EVENT_MESSAGE_FEEDBACK_UPDATED: CollectionEventSource.EVENT_MESSAGE_FEEDBACK_UPDATED;
+  EVENT_MESSAGE_FEEDBACK_DELETED: CollectionEventSource.EVENT_MESSAGE_FEEDBACK_DELETED;
   EVENT_MESSAGE_READ: CollectionEventSource.EVENT_MESSAGE_READ;
   EVENT_MESSAGE_DELIVERED: CollectionEventSource.EVENT_MESSAGE_DELIVERED;
   EVENT_MESSAGE_REACTION_UPDATED: CollectionEventSource.EVENT_MESSAGE_REACTION_UPDATED;

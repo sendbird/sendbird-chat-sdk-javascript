@@ -1768,6 +1768,7 @@ export declare type SendbirdChatWith<Modules extends Module[]> = SendbirdChat & 
 
 export declare class SendbirdError extends Error {
   readonly code: number;
+  get detail(): string;
 }
 
 export declare enum SendbirdPlatform {

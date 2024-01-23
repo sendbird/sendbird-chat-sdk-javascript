@@ -1,4 +1,9 @@
 # Changelog
+## v4.10.7 (Jan 17, 2023)
+### **Improvement**
+- Fixed a bug that open channel messages are stored in cache
+- Improvement stability
+
 ## v4.10.6 (Dec 21, 2023)
 ### **Improvement**
 - Added uploadFile() in BaseChannel

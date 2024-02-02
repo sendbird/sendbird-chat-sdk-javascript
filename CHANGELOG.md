@@ -1,5 +1,16 @@
 # Changelog
-## v4.10.7 (Jan 17, 2023)
+## v4.10.8 (Feb 2, 2024)
+### **Improvement**
+- Fixed a bug where `onMentionReceived` event is called when a mention is deleted
+- Fixed a bug: `sendbird.min.js` does not set the SDK to global object
+- Fixed bug where `onMessagesUpdated()` event do not called if localCacheEnable is false
+- Fixed bug in LogLevel order
+- Fixed issue where the parent message retrieved from the cache is a multiple files message and is not parsed correctly
+- Added appState check when throwing network exception
+- Added `extendedMessagePayload` to `UserMessageCreateParams`
+- Improvement stability
+
+## v4.10.7 (Jan 17, 2024)
 ### **Improvement**
 - Fixed a bug that open channel messages are stored in cache
 - Improvement stability

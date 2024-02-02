@@ -835,12 +835,12 @@ export declare interface LocalCacheConfigParams {
 }
 
 export declare enum LogLevel {
-  NONE = 0,
-  VERBOSE = 1,
-  DEBUG = 2,
-  INFO = 3,
-  WARN = 4,
-  ERROR = 5,
+  VERBOSE = 0,
+  DEBUG = 1,
+  INFO = 2,
+  WARN = 3,
+  ERROR = 4,
+  NONE = 5,
 }
 
 export declare class Member extends RestrictedUser {
@@ -1971,6 +1971,12 @@ export declare interface UserMessageCreateParams extends BaseMessageCreateParams
   message: string;
   translationTargetLanguages?: string[];
   pollId?: number;
+  /**
+   * Note extendedMessagePayload is a base property so below might be moved to BaseMessageCreateParams in the future.
+   * For now, we keep it here because server only supports MESG at this time.
+   * It is ok to do that because it is not a breaking change.
+   */
+  extendedMessagePayload?: Record<string, unknown>;
 }
 
 export declare interface UserMessageUpdateParams extends BaseMessageUpdateParams {

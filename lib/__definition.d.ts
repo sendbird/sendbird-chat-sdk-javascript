@@ -172,24 +172,43 @@ declare interface BaseListQueryParams {
 }
 
 export declare class BaseMessage extends MessagePrototype {
+  /** The ID of the message. */
   messageId: number;
+  /** The parent message's ID if this is a reply message. */
   parentMessageId: number;
+  /** The parent message of this message. Only NonNull if this message is a reply message. It does not contain all properties of the parent message. */
   parentMessage: BaseMessage | null;
+  /** Checks whether the message is silent or not. */
   silent: boolean;
+  /** Whether the message was sent from an operator. */
   isOperatorMessage: boolean;
+  /** The thread info of the message. */
   threadInfo: ThreadInfo | null;
+  /** The reactions on the message. */
   reactions: Reaction[];
+  /** The {@link OGMetaData} of the message. Might be null if */
   ogMetaData: OGMetaData | null;
+  /** The apple critical alert options of the message. */
   appleCriticalAlertOptions: AppleCriticalAlertOptions | null;
+  /** The scheduled info of the message if this is a scheduled message */
   scheduledInfo: ScheduledInfo | null;
+  /** The suggested replies of the message. */
   suggestedReplies: string[] | null;
+  /**
+   * My feedback of the message. Not null, if its {@link FeedbackStatus} is <b>FeedbackStatus.SUBMITTED</b> Null,
+   * if its FeedbackStatus is <b>FeedbackStatus.NOT_APPLICABLE</b> or <b>FeedbackStatus.NO_FEEDBACK/b>.
+   */
   myFeedback: Feedback | null;
+  /** My feedback status of the message. */
   myFeedbackStatus: FeedbackStatus;
+  /** List of {@link Form} that allow users to input their information or opinions */
   forms: Form[] | null;
   isIdentical(message: BaseMessage): boolean;
   applyThreadInfoUpdateEvent(threadInfoUpdateEvent: ThreadInfoUpdateEvent): boolean;
   applyReactionEvent(reactionEvent: ReactionEvent): void;
   applyParentMessage(parentMessage: BaseMessage): boolean;
+  markThreadAsRead(): Promise<void>;
+  setPushNotificationEnabled(pushEnabled: boolean): Promise<void>;
   /**
    * @deprecated since v4.10.6. Use submitForm({ form: Form }) instead.
    */
@@ -379,6 +398,7 @@ export declare enum CollectionEventSource {
   EVENT_CHANNEL_METACOUNTER_CREATED = 'EVENT_CHANNEL_METACOUNTER_CREATED',
   EVENT_CHANNEL_METACOUNTER_UPDATED = 'EVENT_CHANNEL_METACOUNTER_UPDATED',
   EVENT_CHANNEL_METACOUNTER_DELETED = 'EVENT_CHANNEL_METACOUNTER_DELETED',
+  EVENT_THREAD_INFO_UPDATED = 'EVENT_THREAD_INFO_UPDATED',
   EVENT_MESSAGE_SENT = 'EVENT_MESSAGE_SENT',
   EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
   EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
@@ -566,13 +586,20 @@ export declare interface FileInfo {
 }
 
 export declare class FileMessage extends SendableMessage {
+  /** The messageParams object that used for sending this message For more details. */
   messageParams: FileMessageCreateParams | null;
+  /** The plain file URL, which does not contain <b>SendbirdChat.ekey</b> as a parameter. If the file authentication feature is enabled, accessing this plainUrl will be denied. */
   readonly plainUrl: string;
   readonly requireAuth: boolean;
+  /** Represents the name of the file. */
   readonly name: string;
+  /** Represents the size of the file. */
   readonly size: number;
+  /** Represents the type of the file. <b>MIME preferred</b>. */
   readonly type: string;
+  /** Represents the thumbnail information of image file. */
   readonly thumbnails: Thumbnail[];
+  /** The message's survival seconds. */
   readonly messageSurvivalSeconds: number;
   get url(): string;
   getThreadedMessagesByTimestamp(
@@ -691,6 +718,7 @@ export declare class GroupChannel extends BaseChannel {
   readonly isPushEnabled: boolean;
   unreadMessageCount: number;
   unreadMentionCount: number;
+  totalUnreadReplyCount: number;
   members: Member[];
   memberCount: number;
   joinedMemberCount: number;
@@ -717,6 +745,7 @@ export declare class GroupChannel extends BaseChannel {
   serialize(): object;
   createMessageCollection(params?: MessageCollectionParams): MessageCollection;
   createMemberListQuery(params?: MemberListQueryParams): MemberListQuery;
+  createThreadedParentMessageListQuery(params?: ThreadedParentMessageListQueryParams): ThreadedParentMessageListQuery;
   createPinnedMessageListQuery(params?: PinnedMessageListQueryParams): PinnedMessageListQuery;
   addMember(member: Member, ts?: number): void;
   removeMember(memberOrUserId: Member | string): boolean;
@@ -1012,19 +1041,32 @@ export declare class MessageModule extends Module {
 }
 
 declare class MessagePrototype {
+  /** The channel URL of the channel this message belongs to. */
   readonly channelUrl: string;
+  /** The {@link ChannelType} of the channel this message belongs to. */
   readonly channelType: ChannelType;
   messageType: MessageType;
+  /** The custom type of the message. */
   data: string;
+  /** The custom type of the message. */
   customType: string;
+  /** The mention type. Refer to {@link MentionType}. */
   mentionType: MentionType | null;
+  /** The mentioned users of the message. */
   mentionedUsers: User[] | null;
+  /** The mentioned user ids of the message. */
   mentionedUserIds: string[] | null;
+  /** The mentioned message template of the message. */
   mentionedMessageTemplate: string;
+  /** Gets an array of meta arrays sorted by chronological order. */
   metaArrays: MessageMetaArray[];
+  /** The template for the message. */
   extendedMessage: object;
+  /** The datas for the message. */
   extendedMessagePayload?: Record<string, unknown>;
+  /** The creation time of the message in milliseconds. */
   createdAt: number;
+  /** The updated time of the message in milliseconds. */
   updatedAt: number;
   isIdentical(message: MessagePrototype): boolean;
   isEqual(message: MessagePrototype): boolean;
@@ -1132,6 +1174,7 @@ declare type ModuleNamespaces<T extends Module[], M extends T[number] = T[number
 };
 
 export declare class MultipleFilesMessage extends SendableMessage {
+  /** The messageParams object that used for sending this message For more details. */
   messageParams: MultipleFilesMessageCreateParams | null;
   readonly fileInfoList: UploadedFileInfo[];
   readonly messageSurvivalSeconds: number;
@@ -1229,12 +1272,19 @@ export declare class NotificationMessage extends MessagePrototype {
   readonly notificationId: string;
   notificationData: NotificationData | null;
   messageStatus: NotificationMessageStatus;
+  priority: NotificationPriority;
   isIdentical(message: NotificationMessage): boolean;
 }
 
 export declare enum NotificationMessageStatus {
   SENT = 'SENT',
   READ = 'READ',
+}
+
+declare enum NotificationPriority {
+  HIGH = 'high',
+  NORMAL = 'normal',
+  LOW = 'low',
 }
 
 export declare class OGImage {
@@ -1609,10 +1659,14 @@ export declare interface ScheduledUserMessageUpdateParams extends UserMessageUpd
 }
 
 declare class SendableMessage extends BaseMessage {
+  /** Sender of the message. This is represented by {@link Sender} class. */
   readonly sender: Sender;
   reqId: string;
+  /** Determines whether the current message is a replied message and also a message was replied to the channel. */
   replyToChannel: boolean;
+  /** The sending status of the message. */
   sendingStatus: SendingStatus;
+  /** The error code of them message if the {@link SendingStatus | sendingStatus} is {@link SendingStatus.FAILED}. */
   errorCode: number;
   get isResendable(): boolean;
   isIdentical(message: SendableMessage): boolean;
@@ -1852,11 +1906,20 @@ export declare interface ThreadedMessageListParams {
   includeParentMessageInfo?: boolean;
 }
 
+declare class ThreadedParentMessageListQuery extends ChannelDataListQuery {
+  load(): Promise<BaseMessage[]>;
+}
+
+declare interface ThreadedParentMessageListQueryParams extends BaseListQueryParams {}
+
 export declare class ThreadInfo {
-  readonly replyCount: number;
-  readonly mostRepliedUsers: User[];
-  readonly lastRepliedAt: number;
-  readonly updatedAt: number;
+  replyCount: number;
+  unreadReplyCount: number;
+  memberCount: number;
+  mostRepliedUsers: User[];
+  isPushNotificationEnabled?: boolean;
+  lastRepliedAt: number;
+  updatedAt: number;
 }
 
 export declare class ThreadInfoUpdateEvent {
@@ -1949,7 +2012,9 @@ declare abstract class UserEventHandlerParams {
 }
 
 export declare class UserMessage extends SendableMessage {
+  /** The message text of the message. */
   message: string;
+  /** The messageParams object that used for sending this message For more details. */
   messageParams: UserMessageCreateParams | null;
   readonly translations: object;
   readonly translationTargetLanguages: string[];
@@ -2116,6 +2181,7 @@ export declare const GroupChannelEventSource: {
   EVENT_CHANNEL_METACOUNTER_CREATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
   EVENT_CHANNEL_METACOUNTER_UPDATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
   EVENT_CHANNEL_METACOUNTER_DELETED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
+  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_MESSAGE_SENT: CollectionEventSource.EVENT_MESSAGE_SENT;
   EVENT_MESSAGE_RECEIVED: CollectionEventSource.EVENT_MESSAGE_RECEIVED;
   EVENT_MESSAGE_UPDATED: CollectionEventSource.EVENT_MESSAGE_UPDATED;
@@ -2396,6 +2462,7 @@ export declare const MessageEventSource: {
   EVENT_CHANNEL_METACOUNTER_CREATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
   EVENT_CHANNEL_METACOUNTER_UPDATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
   EVENT_CHANNEL_METACOUNTER_DELETED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
+  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_MESSAGE_SENT: CollectionEventSource.EVENT_MESSAGE_SENT;
   EVENT_MESSAGE_RECEIVED: CollectionEventSource.EVENT_MESSAGE_RECEIVED;
   EVENT_MESSAGE_UPDATED: CollectionEventSource.EVENT_MESSAGE_UPDATED;

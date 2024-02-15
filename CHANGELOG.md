@@ -1,4 +1,22 @@
 # Changelog
+## v4.10.9 (Feb 14, 2024)
+### **Notifications**
+- Added `priority` in `NotificationMessage`
+
+### **Message threading**
+- Added `ThreadedParentMessageListQuery`
+- Added `createThreadedParentMessageListQuery()` in `GroupChannel`
+- Added `markThreadAsRead()` in `BaseMessage`
+- Added `setPushNotificationEnabled()` in `BaseMessage`
+- Added `totalUnreadReplyCount` in `BaseChannel`
+- Added `unreadReplyCount`, `memberCount`, `isPushNotificationEnabled` in `ThreadInfo`
+
+### **Improvement**
+- Fixed a bug that `unreadMessageCount` does not match in a certain condition
+- Fixed a bug with markAsRead() error in a certain condition
+- Improvement stability
+
+
 ## v4.10.8 (Feb 2, 2024)
 ### **Improvement**
 - Fixed a bug where `onMentionReceived` event is called when a mention is deleted

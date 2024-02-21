@@ -1,4 +1,9 @@
 # Changelog
+## v4.10.10 (Feb 21, 2024)
+### **Improvement**
+- Fixed a bug where `thumbnails` are not being set properly
+- Improvement stability
+
 ## v4.10.9 (Feb 14, 2024)
 ### **Notifications**
 - Added `priority` in `NotificationMessage`

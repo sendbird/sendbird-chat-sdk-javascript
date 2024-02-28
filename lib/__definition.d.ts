@@ -24,6 +24,7 @@ declare class AppInfo {
   readonly allowSdkStatsUpload: boolean;
   readonly notificationInfo: NotificationInfo | null;
   readonly uikitConfigInfo: UIKitConfigInfo;
+  readonly messageTemplateInfo: MessageTemplateInfo | null;
 }
 
 export declare class AppleCriticalAlertOptions {
@@ -212,7 +213,8 @@ export declare class BaseMessage extends MessagePrototype {
   /**
    * @deprecated since v4.10.6. Use submitForm({ form: Form }) instead.
    */
-  submitForm(data: { formId?: string; answers?: Record<string, string> }): Promise<void>;
+  submitForm(data: { formId: string; answers: Record<string, string> }): Promise<void>;
+  submitForm(data: { form: Form }): Promise<void>;
   /** Message Feedback */
   submitFeedback(data: Pick<Feedback, 'rating' | 'comment'>): Promise<void>;
   updateFeedback(data: Feedback): Promise<void>;
@@ -225,16 +227,12 @@ declare abstract class BaseMessageCollection<
   MessageKeyType extends number | string,
 > {
   readonly filter: MessageFilter;
-  protected keyOf(_message: Message): MessageKeyType;
-  protected get changelogIncludeParams(): MessageChangelogIncludeParams;
   get channel(): Channel;
   get succeededMessages(): Message[];
   get failedMessages(): SendableMessage[];
   get pendingMessages(): SendableMessage[];
   get hasPrevious(): boolean;
   get hasNext(): boolean;
-  protected get viewTop(): number;
-  protected get viewBottom(): number;
   initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler<Message>;
   loadPrevious(): Promise<Message[]>;
   loadNext(): Promise<Message[]>;
@@ -644,38 +642,53 @@ export declare interface FileUploadResult {
   thumbnails?: Thumbnail[];
 }
 
-declare class Form {
+export declare class Form {
   /**
    * The id of the message to which the corresponding form belongs
    */
-  messageId: number;
-  formKey: FormKey;
-  fields: FormField[];
-  answers?: FormAnswers;
-  constructor(messageId: number, formKey: FormKey, fields: FormField[]);
+  readonly messageId: number;
+  readonly key: FormKey;
+  readonly fields: FormField[];
+  readonly answers?: FormAnswers;
+  /**
+   * @deprecated Use `Form.key` instead.
+   * */
+  readonly formKey: FormKey;
   get isSubmitted(): boolean;
   get isSubmittable(): boolean;
   getFieldAnswer(key: FormKey): FieldAnswer | undefined;
 }
 
-declare type FormAnswers = Record<FormKey, FieldAnswer>;
+declare type FormAnswers = Record<FormFieldKey, FieldAnswer>;
 
-declare class FormField {
-  fieldKey: FormKey;
-  title: string;
-  inputType: InputType;
-  required: boolean;
-  regex?: RegExp;
-  placeholder?: string;
+export declare class FormField {
+  readonly key: FormFieldKey;
+  readonly title: string;
+  readonly inputType: FormFieldInputType;
+  readonly required: boolean;
+  readonly regex?: string;
+  readonly placeholder?: string;
   /**
-   * The temporary answer to this form field to store the input value before submitting.
-   * It becomes null when it is submitted.
+   * @deprecated Use `FormField.key` instead.
+   * */
+  readonly fieldKey: FormFieldKey;
+  /**
+   *  The temporary answer to this form field to store the input value before submitting.
+   *  It becomes null when it is submitted.
    */
   temporaryAnswer?: FieldAnswer;
-  constructor(param: ParsedFieldPayload);
   isValid(value: string): boolean;
   get isSubmittable(): boolean;
 }
+
+export declare enum FormFieldInputType {
+  Text = 'text',
+  Phone = 'phone',
+  Email = 'email',
+  Password = 'password',
+}
+
+declare type FormFieldKey = string;
 
 /**
  * Represents a baseMessage.form
@@ -837,13 +850,6 @@ export declare enum HiddenState {
   HIDDEN_PREVENT_AUTO_UNHIDE = 'hidden_prevent_auto_unhide',
 }
 
-declare enum InputType {
-  Text = 'text',
-  Phone = 'phone',
-  Email = 'email',
-  Password = 'password',
-}
-
 export declare interface InvitationPreference {
   autoAccept: boolean;
 }
@@ -956,7 +962,6 @@ export declare interface MessageChangeLogsParams {
 }
 
 export declare class MessageCollection extends BaseMessageCollection<GroupChannel, BaseMessage, number> {
-  protected keyOf(message: BaseMessage): number;
   initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler<BaseMessage>;
   setMessageCollectionHandler(handler: MessageCollectionEventHandler): void;
 }
@@ -1038,6 +1043,11 @@ export declare class MessageModule extends Module {
   buildSenderFromSerializedData(serialized: object): Sender;
   getMessage(params: MessageRetrievalParams): Promise<BaseMessage | NotificationMessage | null>;
   getScheduledMessage(params: ScheduledMessageRetrievalParams): Promise<BaseMessage | null>;
+  getMessageTemplatesByToken(
+    token: string | null,
+    params?: MessageTemplateListParams,
+  ): Promise<MessageTemplateListResult>;
+  getMessageTemplate(key: string): Promise<MessageTemplate>;
 }
 
 declare class MessagePrototype {
@@ -1138,6 +1148,25 @@ export declare interface MessageSearchQueryParams extends BaseListQueryParams {
   targetFields?: string[];
 }
 
+export declare interface MessageTemplate {
+  template: string;
+}
+
+declare class MessageTemplateInfo {
+  readonly token: string;
+}
+
+export declare interface MessageTemplateListParams {
+  reverse?: boolean;
+  limit?: number;
+}
+
+export declare interface MessageTemplateListResult {
+  hasMore: boolean;
+  token: string;
+  templates: MessageTemplate[];
+}
+
 export declare enum MessageType {
   BASE = 'base',
   USER = 'user',
@@ -1233,8 +1262,6 @@ export declare class NotificationCategory {
 }
 
 export declare class NotificationCollection extends BaseMessageCollection<FeedChannel, NotificationMessage, string> {
-  protected keyOf(message: NotificationMessage): string;
-  protected get changelogIncludeParams(): MessageChangelogIncludeParams;
   dispose(): void;
   setMessageCollectionHandler(handler: NotificationCollectionEventHandler): void;
 }

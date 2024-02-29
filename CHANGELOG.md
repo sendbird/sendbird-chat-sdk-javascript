@@ -1,5 +1,21 @@
 # Changelog
-## v4.10.10 (Feb 21, 2024)
+
+## v4.11.0 (Feb 28, 2024)
+### **Features**
+### MessageTemplate
+Message templates created via platform API can be fetched with `getMessageTemplatesByToken()` and `getMessageTemplate()`
+- Added `MessageTemplate`
+- Added `MessageTemplateList`
+- Added `MessageTemplateListParams`
+- Added `MessageTemplateListResult`
+- Added `MessageTemplateInfo`
+- Added `messageTemplateInfo` in `AppInfo`
+- Added `getMessageTemplatesByToken()`, and `getMessageTemplate()` in `MessageModule`
+
+### **Improvement**
+- Fixed a bug where channel list of `GroupChannelCollection` was not removed when leaving a public group
+- Added get message template feature
+- Improvement stability
 ### **Improvement**
 - Fixed a bug where `thumbnails` are not being set properly
 - Improvement stability

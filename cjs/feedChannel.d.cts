@@ -20,4 +20,4 @@ export {
   NotificationTemplateList,
   NotificationTemplateListParams,
   SendbirdFeedChat,
-} from './lib/__definition.js';
+} from './lib/__definition.cjs';

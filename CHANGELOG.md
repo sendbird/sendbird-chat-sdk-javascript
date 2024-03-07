@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.11.1 (Mar 07, 2024)
+### **Improvement**
+- Fixed a bug that `markAsRead()` with messages wrongly signals updating messages in `NotificationCollection`
+- Improvement stability
 ## v4.11.0 (Feb 28, 2024)
 ### **Features**
 ### MessageTemplate

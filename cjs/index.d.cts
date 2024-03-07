@@ -1,8 +1,8 @@
-import './message.d.ts';
-import './groupChannel.d.ts';
-import './openChannel.d.ts';
-import './poll.d.ts';
-import './feedChannel.d.ts';
+import './message.d.cts';
+import './groupChannel.d.cts';
+import './openChannel.d.cts';
+import './poll.d.cts';
+import './feedChannel.d.cts';
 
 export {
   AppInfo,
@@ -77,7 +77,7 @@ export {
   UserEventHandler,
   UserOnlineState,
   UserUpdateParams,
-} from './lib/__definition.js';
+} from './lib/__definition.cjs';
 
-import { SendbirdChat } from './lib/__definition.js';
+import { SendbirdChat } from './lib/__definition.cjs';
 export default SendbirdChat;

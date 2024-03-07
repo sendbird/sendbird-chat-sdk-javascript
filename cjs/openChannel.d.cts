@@ -9,4 +9,4 @@ export {
   ParticipantListQuery,
   ParticipantListQueryParams,
   SendbirdOpenChat,
-} from './lib/__definition.js';
+} from './lib/__definition.cjs';

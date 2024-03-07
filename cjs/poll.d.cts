@@ -15,4 +15,4 @@ export {
   PollVoteEvent,
   PollVoterListQuery,
   PollVoterListQueryParams,
-} from './lib/__definition.js';
+} from './lib/__definition.cjs';

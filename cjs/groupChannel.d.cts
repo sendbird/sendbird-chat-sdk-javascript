@@ -72,4 +72,4 @@ export {
   UnreadItemCountParams,
   UnreadItemKey,
   UnreadMessageCount,
-} from './lib/__definition.js';
+} from './lib/__definition.cjs';

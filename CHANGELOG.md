@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.11.2 (Mar 08, 2024)
+### **Improvement**
+- Fixed a bug that `markAsRead()` with messages does not trigger any event in `NotificationCollection`
+
 ## v4.11.1 (Mar 07, 2024)
 ### **Improvement**
 - Fixed a bug that `markAsRead()` with messages wrongly signals updating messages in `NotificationCollection`

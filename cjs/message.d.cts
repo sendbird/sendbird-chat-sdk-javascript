@@ -64,4 +64,4 @@ export {
   UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
-} from './lib/__definition.js';
+} from './lib/__definition.cjs';

@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.11.3 (Mar 14, 2024)
+### **Improvement**
+- Added `keys` property to `MessageTemplateListParams`
+- Fixed a bug that database migration fails in a certain condition
+- Improvement stability
 ## v4.11.2 (Mar 08, 2024)
 ### **Improvement**
 - Fixed a bug that `markAsRead()` with messages does not trigger any event in `NotificationCollection`

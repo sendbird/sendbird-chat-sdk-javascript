@@ -1,8 +1,9 @@
 import type AsyncStorage from '@react-native-async-storage/async-storage';
 
-export /**
+/**
  * @description Object representing an admin message.
- */ declare class AdminMessage extends BaseMessage {
+ */
+export declare class AdminMessage extends BaseMessage {
   /** The message text of the message. */
   message: string;
   /** The translated messages (key-value map) for the language codes in key. */
@@ -23,9 +24,10 @@ export /**
   }>;
 }
 
-export /**
+/**
  * @description Represents information obtained from the application settings. The values for this will be set after a connection has been made.
- */ declare class AppInfo {
+ */
+export declare class AppInfo {
   /** The current registered emoji version hash. */
   readonly emojiHash: string;
   /** The maximum limit of file size in bytes for uploading. */
@@ -49,18 +51,20 @@ export /**
   readonly messageTemplateInfo: MessageTemplateInfo | null;
 }
 
-export /**
+/**
  * @description A class that can be used to send apple's critical alert.
- */ declare class AppleCriticalAlertOptions {
+ */
+export declare class AppleCriticalAlertOptions {
   /** The name of the critical alert option. */
   readonly name: string;
   /** The volumne of the critical alert option. */
   readonly volume: number;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve lists related to User.
- */ declare class ApplicationUserListQuery extends BaseListQuery {
+ */
+export declare class ApplicationUserListQuery extends BaseListQuery {
   /**
    * @description User IDs filter. User list containing the passed User IDs will be returned.
    */
@@ -105,9 +109,10 @@ export declare interface ApplicationUserListQueryParams extends BaseListQueryPar
   nicknameStartsWithFilter?: string;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve lists related to banned User.
- */ declare class BannedUserListQuery extends ChannelDataListQuery {
+ */
+export declare class BannedUserListQuery extends ChannelDataListQuery {
   /**
    * @returns
    * @description Gets the list of RestrictedUsers.
@@ -120,9 +125,10 @@ export /**
 
 export declare interface BannedUserListQueryParams extends BaseListQueryParams {}
 
-export /**
+/**
  * @description Objects representing a channel.
- */ declare class BaseChannel {
+ */
+export declare class BaseChannel {
   /** The unique channel URL. */
   get url(): string;
   /** The topic or name of the channel. */
@@ -871,9 +877,10 @@ declare interface BaseMessageCollectionParams {
   nextResultLimit?: number;
 }
 
-export /**
+/**
  * @description Represents a base message params.
- */ declare interface BaseMessageCreateParams {
+ */
+export declare interface BaseMessageCreateParams {
   /** The data of the message. */
   data?: string;
   /** The custom type of the message. */
@@ -908,9 +915,10 @@ declare class BaseMessageEventContext {
   readonly source: CollectionEventSource;
 }
 
-export /**
+/**
  * @description Represents a base message params.
- */ declare interface BaseMessageUpdateParams {
+ */
+export declare interface BaseMessageUpdateParams {
   /** The data of the message. */
   data?: string;
   /** The custom type of the message. */
@@ -956,9 +964,10 @@ declare interface BaseStoreParams {
   metadataBuffer?: number;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve lists related to blocked User.
- */ declare class BlockedUserListQuery extends BaseListQuery {
+ */
+export declare class BlockedUserListQuery extends BaseListQuery {
   /**
    * @description User IDs filter. User list containing the passed User IDs will be returned.
    */
@@ -1012,16 +1021,18 @@ declare interface ChannelDataListQueryParams extends BaseListQueryParams {
   channelType: ChannelType;
 }
 
-export /** Represents channel types. */ declare enum ChannelType {
+/** Represents channel types. */
+export declare enum ChannelType {
   BASE = 'base',
   GROUP = 'group',
   OPEN = 'open',
   FEED = 'feed',
 }
 
-export /**
+/**
  * @description Represents the source of the collection event.
- */ declare enum CollectionEventSource {
+ */
+export declare enum CollectionEventSource {
   UNKNOWN = 'UNKNOWN',
   EVENT_CHANNEL_CREATED = 'EVENT_CHANNEL_CREATED',
   EVENT_CHANNEL_UPDATED = 'EVENT_CHANNEL_UPDATED',
@@ -1098,11 +1109,12 @@ export /**
 
 declare type Comparator<T> = (value: T, other: T) => number;
 
-export /**
+/**
  * @description Connection handler. This handler provides callbacks for automatically managed reconnection events.
  *  SendbirdChat tries reconnection when the connection is lost. This handler can be used to track the reconnection state.
  *  To add or remove this handler, refer to sendbirdChat.addConnectionHandler() and sendbirdChat.removeConnectionHandler().
- */ declare class ConnectionHandler extends ConnectionHandlerParams {
+ */
+export declare class ConnectionHandler extends ConnectionHandlerParams {
   constructor(params?: ConnectionHandlerParams);
 }
 
@@ -1119,24 +1131,27 @@ declare abstract class ConnectionHandlerParams {
   onDisconnected?: (userId: string) => void;
 }
 
-export /**
+/**
  * @description SDK connection state.
- */ declare enum ConnectionState {
+ */
+export declare enum ConnectionState {
   CONNECTING = 'CONNECTING',
   OPEN = 'OPEN',
   CLOSED = 'CLOSED',
 }
 
-export /** The count preference. Refer to {@link GroupChannel.setMyCountPreference}. */ declare enum CountPreference {
+/** The count preference. Refer to {@link GroupChannel.setMyCountPreference}. */
+export declare enum CountPreference {
   ALL = 'all',
   UNREAD_MESSAGE_COUNT_ONLY = 'unread_message_count_only',
   UNREAD_MENTION_COUNT_ONLY = 'unread_mention_count_only',
   OFF = 'off',
 }
 
-export /**
+/**
  * @description Object representing delivery status.
- */ declare class DeliveryStatus {
+ */
+export declare class DeliveryStatus {
   /** The channel URL of the channel that the message is delivered. */
   readonly channelUrl: string;
   /** The channel type of the channel that the message is delivered. */
@@ -1169,18 +1184,20 @@ export declare interface DoNotDisturbPreference {
   timezone?: string;
 }
 
-export /**
+/**
  * @description Represents an emoji.
- */ declare class Emoji {
+ */
+export declare class Emoji {
   /** The key of the emoji. */
   readonly key: string;
   /** The url of the emoji. */
   readonly url: string;
 }
 
-export /**
+/**
  * @description Represents an emoji category.
- */ declare class EmojiCategory {
+ */
+export declare class EmojiCategory {
   /** The ID of the emoji category. */
   readonly id: number;
   /** The name of the emoji category. */
@@ -1191,9 +1208,10 @@ export /**
   readonly emojis: Emoji[];
 }
 
-export /**
+/**
  * @description Represents an emoji container.
- */ declare class EmojiContainer {
+ */
+export declare class EmojiContainer {
   /** The hash value of emoji information. */
   readonly emojiHash: string;
   /** The list of emoji categories. */
@@ -1207,25 +1225,35 @@ export declare interface Encryption {
 
 export declare type FailedMessageHandler<T> = (err: Error, message: T | null) => void;
 
-export /**
+/**
  * @description User's feedback data about the message.
- */ declare class Feedback {
+ */
+export declare class Feedback {
   /** The feedback ID. This is used for deleting the feedback. */
   readonly id: number;
   /** The feedback rating. */
   readonly rating: FeedbackRating;
   /** The feedback comment. */
   readonly comment?: string;
+  constructor(payload: FeedbackPayload);
 }
 
-export /**
+declare interface FeedbackPayload {
+  id: number;
+  rating: FeedbackRating;
+  comment?: string;
+}
+
+/**
  * @description The feedback rating the user gave.
- */ declare enum FeedbackRating {
+ */
+export declare enum FeedbackRating {
   GOOD = 'good',
   BAD = 'bad',
 }
 
-export /** The status of the feedback in the message. */ declare type FeedbackStatus =
+/** The status of the feedback in the message. */
+export declare type FeedbackStatus =
   /** Feedback is unavailable for this message. */
   | 'NOT_APPLICABLE'
   /** Feedback can be set for this message, but nothing has been submitted yet. */
@@ -1233,9 +1261,10 @@ export /** The status of the feedback in the message. */ declare type FeedbackSt
   /** Feedback can be set for this message, and something has been submitted. */
   | 'SUBMITTED';
 
-export /**
+/**
  * @description Represents a feed channel.
- */ declare class FeedChannel extends BaseChannel {
+ */
+export declare class FeedChannel extends BaseChannel {
   /** Weather the category filter is enabled or not. */
   readonly isCategoryFilterEnabled: boolean;
   /** Weather the template label is enabled or not. */
@@ -1307,17 +1336,19 @@ declare type FieldAnswer = string;
 
 export declare type FileCompat = File | Blob | FileInfo;
 
-export /**
+/**
  * @description File information in React Native.
- */ declare interface FileInfo {
+ */
+export declare interface FileInfo {
   name: string;
   uri: string;
   type: string;
 }
 
-export /**
+/**
  * @description Object representing a file message.
- */ declare class FileMessage extends SendableMessage {
+ */
+export declare class FileMessage extends SendableMessage {
   /** The messageParams object that used for sending this message For more details. */
   messageParams: FileMessageCreateParams | null;
   /**
@@ -1357,9 +1388,10 @@ export /**
   }>;
 }
 
-export /**
+/**
  * @description Represents a file message params.
- */ declare interface FileMessageCreateParams extends BaseMessageCreateParams {
+ */
+export declare interface FileMessageCreateParams extends BaseMessageCreateParams {
   /** The file object of the message. */
   file?: FileCompat;
   /** The file's url of the message. */
@@ -1374,9 +1406,10 @@ export /**
   thumbnailSizes?: ThumbnailSize[];
 }
 
-export /**
+/**
  * @description Represents a file message params.
- */ declare interface FileMessageUpdateParams extends BaseMessageUpdateParams {}
+ */
+export declare interface FileMessageUpdateParams extends BaseMessageUpdateParams {}
 
 export declare type FileUploadHandler = (
   requestId: string,
@@ -1385,9 +1418,10 @@ export declare type FileUploadHandler = (
   err?: Error,
 ) => void;
 
-export /**
+/**
  * @description Represents a file upload params.
- */ declare interface FileUploadParams {
+ */
+export declare interface FileUploadParams {
   /** A file binary to upload. */
   file: File | Blob;
   /** The file's thumbnail sizes. */
@@ -1398,15 +1432,17 @@ export /**
   progressHandler?: UploadProgressHandler;
 }
 
-export /** File upload result with URL and thumbnails. */ declare interface FileUploadResult {
+/** File upload result with URL and thumbnails. */
+export declare interface FileUploadResult {
   requestId: string;
   url: string;
   thumbnails?: Thumbnail[];
 }
 
-export /**
+/**
  * @description Represents a form.
- */ declare class Form {
+ */
+export declare class Form {
   /** The ID of the message to which the corresponding form belongs. */
   readonly messageId: number;
   /** The key of the form. */
@@ -1434,9 +1470,10 @@ export /**
 
 declare type FormAnswers = Record<FormFieldKey, FieldAnswer>;
 
-export /**
+/**
  * @description Represents a form field where users can enter values.
- */ declare class FormField {
+ */
+export declare class FormField {
   /** The key of the form field. */
   readonly key: FormFieldKey;
   /** The title of the form field. */
@@ -1468,9 +1505,10 @@ export /**
   get isSubmittable(): boolean;
 }
 
-export /**
+/**
  * @description Represents a input type of a {@link FormField}.
- */ declare enum FormFieldInputType {
+ */
+export declare enum FormFieldInputType {
   Text = 'text',
   Phone = 'phone',
   Email = 'email',
@@ -1499,9 +1537,10 @@ export declare interface FriendDiscovery {
   friendName: string;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve lists related to friend.
- */ declare class FriendListQuery extends BaseListQuery {
+ */
+export declare class FriendListQuery extends BaseListQuery {
   /**
    * @returns
    * @description Gets the list of friends.
@@ -1514,9 +1553,10 @@ export /**
 
 export declare interface FriendListQueryParams extends BaseListQueryParams {}
 
-export /**
+/**
  * @description Represents a group channel.
- */ declare class GroupChannel extends BaseChannel {
+ */
+export declare class GroupChannel extends BaseChannel {
   /**
    * Checks whether this channel is a distinct GroupChannel.
    * For a distinct GroupChannel, later when you create GroupChannel with same User and isDistinct flag being true (refer to {@link GroupChannelModule.createChannel}),
@@ -1864,18 +1904,20 @@ export /**
 
 export declare class GroupChannelEventContext extends BaseChannelEventContext {}
 
-export /**
+/**
  * @description Represents a group channel hide parameters.
- */ declare interface GroupChannelHideParams {
+ */
+export declare interface GroupChannelHideParams {
   /** Whether it resets the history on hide. */
   hidePreviousMessages?: boolean;
   /** Whether it unhides automatically on new message sent or received. */
   allowAutoUnhide?: boolean;
 }
 
-export /**
+/**
  * @description Represents a group channel update params.
- */ declare interface GroupChannelUpdateParams {
+ */
+export declare interface GroupChannelUpdateParams {
   /** The cover image's URL of the channel. */
   coverUrl?: string;
   /** The cover image of the channel. */
@@ -1911,7 +1953,8 @@ export /**
   messageSurvivalSeconds?: number;
 }
 
-export /** The hidden state. Refer to {@link GroupChannel.hide}. */ declare enum HiddenState {
+/** The hidden state. Refer to {@link GroupChannel.hide}. */
+export declare enum HiddenState {
   UNHIDDEN = 'unhidden',
   HIDDEN_ALLOW_AUTO_UNHIDE = 'hidden_allow_auto_unhide',
   HIDDEN_PREVENT_AUTO_UNHIDE = 'hidden_prevent_auto_unhide',
@@ -1945,9 +1988,10 @@ export declare enum LogLevel {
   NONE = 5,
 }
 
-export /**
+/**
  * @description Represents a GroupChannel member.
- */ declare class Member extends RestrictedUser {
+ */
+export declare class Member extends RestrictedUser {
   /** Membership state. */
   state: MemberState | null;
   /** The role of this member in the channel. Refer to {@link Role}. */
@@ -1971,9 +2015,10 @@ export declare enum MemberListOrder {
   OPERATOR_THEN_MEMBER_ALPHABETICAL = 'operator_then_member_alphabetical',
 }
 
-export /**
+/**
  * @description A class representing query to retrieve lists related to group channel member.
- */ declare class MemberListQuery extends ChannelDataListQuery {
+ */
+export declare class MemberListQuery extends ChannelDataListQuery {
   /**
    * @description Muted member filter.
    */
@@ -2027,7 +2072,8 @@ export declare interface MemberListQueryParams extends BaseListQueryParams {
   order?: MemberListOrder;
 }
 
-export /** The member invitation state. */ declare enum MemberState {
+/** The member invitation state. */
+export declare enum MemberState {
   NONE = 'none',
   JOINED = 'joined',
   INVITED = 'invited',
@@ -2075,14 +2121,16 @@ export declare interface MemoryStoreParams extends BaseStoreParams {
   delay?: number;
 }
 
-export /** Mention type. */ declare enum MentionType {
+/** Mention type. */
+export declare enum MentionType {
   USERS = 'users',
   CHANNEL = 'channel',
 }
 
-export /**
+/**
  * @description Represents message changelogs.
- */ declare interface MessageChangelogs {
+ */
+export declare interface MessageChangelogs {
   /** Updated messages. */
   updatedMessages: BaseMessage[];
   /** Deleted message IDs. */
@@ -2093,9 +2141,10 @@ export /**
   token: string;
 }
 
-export /**
+/**
  * @description Represents a message list params.
- */ declare interface MessageChangeLogsParams {
+ */
+export declare interface MessageChangeLogsParams {
   /** Determines the reply types to include in the results. */
   replyType?: ReplyType;
   /** Whether the result message includes {@link Reaction}s. */
@@ -2108,9 +2157,10 @@ export /**
   includeParentMessageInfo?: boolean;
 }
 
-export /**
+/**
  * @description Collection that handles message lists, also supporting local caching.
- */ declare class MessageCollection extends BaseMessageCollection<GroupChannel, BaseMessage, number> {
+ */
+export declare class MessageCollection extends BaseMessageCollection<GroupChannel, BaseMessage, number> {
   initialize(policy: MessageCollectionInitPolicy): MessageCollectionInitHandler<BaseMessage>;
   /**
    * @param handler
@@ -2127,9 +2177,10 @@ export declare type MessageCollectionEventHandler = BaseMessageCollectionEventHa
   MessageEventContext
 >;
 
-export /**
+/**
  * @description An interface used in {@link MessageCollection.initialize}.
- */ declare class MessageCollectionInitHandler<Message extends MessagePrototype> {
+ */
+export declare class MessageCollectionInitHandler<Message extends MessagePrototype> {
   /**
    * @param handler
    * @returns
@@ -2148,7 +2199,8 @@ export /**
   onApiResult(handler: (err: Error | null, messages: Message[] | null) => void): MessageCollectionInitHandler<Message>;
 }
 
-export /** Init policy used in {@link MessageCollection}. */ declare enum MessageCollectionInitPolicy {
+/** Init policy used in {@link MessageCollection}. */
+export declare enum MessageCollectionInitPolicy {
   CACHE_AND_REPLACE_BY_API = 'cache_and_replace_by_api',
 }
 
@@ -2201,9 +2253,10 @@ export declare interface MessageFilterParams {
 
 export declare type MessageHandler<T> = (message: T) => void;
 
-export /**
+/**
  * @description Represents a message list params.
- */ declare interface MessageListParams {
+ */
+export declare interface MessageListParams {
   /** The number of previous messages added either before the timestamp or the message that has a specific message ID. */
   prevResultSize: number;
   /** The number of newer messages added either before the timestamp or the message that has a specific message ID. */
@@ -2238,14 +2291,21 @@ export /**
   showSubchannelMessagesOnly?: boolean;
 }
 
-export /**
+/**
  * @description Represents meta array of {@link BaseMessage}.
  *  A meta array contains key(string), value(List<string>).
- */ declare class MessageMetaArray {
+ */
+export declare class MessageMetaArray {
   /** Meta array key. */
   readonly key: string;
   /** Meta array value. */
   readonly value: string[];
+  constructor(payload: MessageMetaArrayPayload);
+}
+
+declare interface MessageMetaArrayPayload {
+  key: string;
+  value?: string[];
 }
 
 export declare class MessageModule extends Module {
@@ -2363,9 +2423,10 @@ declare class MessagePrototype {
   getMetaArraysByKeys(keys: string[]): MessageMetaArray[];
 }
 
-export /**
+/**
  * @description Represent send message request handler.
- */ declare class MessageRequestHandler<T extends SendableMessage = SendableMessage> {
+ */
+export declare class MessageRequestHandler<T extends SendableMessage = SendableMessage> {
   /**
    * @param handler
    * @returns
@@ -2389,9 +2450,10 @@ export /**
   onSucceeded(handler: MessageHandler<T>): MessageRequestHandler<T>;
 }
 
-export /**
+/**
  * @description Represents a params for retrieving a single message.
- */ declare interface MessageRetrievalParams {
+ */
+export declare interface MessageRetrievalParams {
   /** The channel URL. */
   channelUrl: string;
   /** The channel type. */
@@ -2408,9 +2470,10 @@ export /**
   includeThreadInfo?: boolean;
 }
 
-export /**
+/**
  * @description Represents a message review history.
- */ declare class MessageReviewInfo {
+ */
+export declare class MessageReviewInfo {
   /** The status of the message review. */
   readonly status: MessageReviewStatus;
   /**
@@ -2420,14 +2483,16 @@ export /**
   readonly originalMessageInfo?: OriginalMessageInfo;
 }
 
-export /** Represents the status of a message review. */ declare enum MessageReviewStatus {
+/** Represents the status of a message review. */
+export declare enum MessageReviewStatus {
   INREVIEW = 'InReview',
   APPROVED = 'Approved',
 }
 
-export /**
+/**
  * @description The order in which the query result will be based on.
- */ declare enum MessageSearchOrder {
+ */
+export declare enum MessageSearchOrder {
   /**
    * @description A query returns the result sorted by their matching score.
    */
@@ -2438,10 +2503,11 @@ export /**
   TIMESTAMP = 'ts',
 }
 
-export /**
+/**
  * @description A class representing query to retrieve list of BaseMessages that matches a given query with given filters.
  *  MessageSearchQuery can be generated by using sendbirdChat.createMessageSearchQuery().
- */ declare class MessageSearchQuery extends BaseListQuery {
+ */
+export declare class MessageSearchQuery extends BaseListQuery {
   /**
    * @description The current search keyword.
    */
@@ -2550,6 +2616,7 @@ declare class MessageTemplateInfo {
 export declare interface MessageTemplateListParams {
   reverse?: boolean;
   limit?: number;
+  keys?: string[];
 }
 
 export declare interface MessageTemplateListResult {
@@ -2565,10 +2632,11 @@ export declare enum MessageType {
   ADMIN = 'admin',
 }
 
-export /**
+/**
  * @description Represents messages type filter to be used when messages list are read.
  *  `USER` for {@link UserMessage}, `FILE` for {@link FileMessage} and `ADMIN` for {@link AdminMessage}.
- */ declare enum MessageTypeFilter {
+ */
+export declare enum MessageTypeFilter {
   ALL = '',
   USER = 'MESG',
   FILE = 'FILE',
@@ -2596,9 +2664,10 @@ declare type ModuleNamespaces<T extends Module[], M extends T[number] = T[number
     : never;
 };
 
-export /**
+/**
  * @description File message object that contains multiple {@link UploadedFileInfo}s.
- */ declare class MultipleFilesMessage extends SendableMessage {
+ */
+export declare class MultipleFilesMessage extends SendableMessage {
   /** The messageParams object that used for sending this message For more details. */
   messageParams: MultipleFilesMessageCreateParams | null;
   /** It represents the information of the files stored on the Sendbird server that are included in this file message. */
@@ -2614,16 +2683,18 @@ export /**
   }>;
 }
 
-export /**
+/**
  * @description The set of parameters to create {@link MultipleFilesMessage}.
- */ declare interface MultipleFilesMessageCreateParams extends BaseMessageCreateParams {
+ */
+export declare interface MultipleFilesMessageCreateParams extends BaseMessageCreateParams {
   /** The list of uploadable file information. */
   fileInfoList: UploadableFileInfo[];
 }
 
-export /**
+/**
  * @description Represent send message request handler.
- */ declare class MultipleFilesMessageRequestHandler<
+ */
+export declare class MultipleFilesMessageRequestHandler<
   T extends SendableMessage = SendableMessage,
 > extends MessageRequestHandler<T> {
   /**
@@ -2637,9 +2708,10 @@ export /**
   onSucceeded(handler: MessageHandler<T>): MultipleFilesMessageRequestHandler<T>;
 }
 
-export /**
+/**
  * @description Muted state info.
- */ declare interface MutedInfo {
+ */
+export declare interface MutedInfo {
   /** Whether a user is muted in a channel. */
   isMuted: boolean;
   /** Timestamp at which the muted state started. */
@@ -2672,9 +2744,10 @@ export declare enum MutedState {
   UNMUTED = 'unmuted',
 }
 
-export /**
+/**
  * @description A class representing query to retrieve lists related to muted User.
- */ declare class MutedUserListQuery extends ChannelDataListQuery {
+ */
+export declare class MutedUserListQuery extends ChannelDataListQuery {
   /**
    * @returns
    * @description Gets the list of RestrictedUsers.
@@ -2687,9 +2760,10 @@ export /**
 
 export declare interface MutedUserListQueryParams extends BaseListQueryParams {}
 
-export /**
+/**
  * @description Notification category that can be used to filter notifications.
- */ declare class NotificationCategory {
+ */
+export declare class NotificationCategory {
   /** The ID of notification category. */
   readonly id: number;
   /** Name of this category. */
@@ -2700,9 +2774,10 @@ export /**
   get customType(): string;
 }
 
-export /**
+/**
  * @description Collection that handles message lists, also supporting local caching.
- */ declare class NotificationCollection extends BaseMessageCollection<FeedChannel, NotificationMessage, string> {
+ */
+export declare class NotificationCollection extends BaseMessageCollection<FeedChannel, NotificationMessage, string> {
   dispose(): void;
   /**
    * @param handler
@@ -2721,9 +2796,10 @@ export declare type NotificationCollectionEventHandler = BaseMessageCollectionEv
 
 export declare interface NotificationCollectionParams extends BaseMessageCollectionParams {}
 
-export /**
+/**
  * @description Notification data that can be used to access notification template data.
- */ declare interface NotificationData {
+ */
+export declare interface NotificationData {
   /** Label of this notification. */
   label?: string;
   /** Tags of this notification template. */
@@ -2739,9 +2815,10 @@ export /**
 
 export declare class NotificationEventContext extends BaseMessageEventContext {}
 
-export /**
+/**
  * @description Represents information about Notifications.
- */ declare class NotificationInfo {
+ */
+export declare class NotificationInfo {
   /** Whether notification is enabled. */
   readonly isEnabled: boolean;
   /** List of feed channels for sendbirdChat.currentUser. */
@@ -2752,9 +2829,10 @@ export /**
   readonly settingsUpdatedAt: number;
 }
 
-export /**
+/**
  * @description Object representing a notification message.
- */ declare class NotificationMessage extends MessagePrototype {
+ */
+export declare class NotificationMessage extends MessagePrototype {
   /** The ID of the notification message. */
   readonly notificationId: string;
   /** Notification data. */
@@ -2772,9 +2850,10 @@ export /**
   isIdentical(message: NotificationMessage): boolean;
 }
 
-export /**
+/**
  * @description Notification message status.
- */ declare enum NotificationMessageStatus {
+ */
+export declare enum NotificationMessageStatus {
   SENT = 'SENT',
   READ = 'READ',
 }
@@ -2789,9 +2868,10 @@ declare enum NotificationPriority {
   LOW = 'low',
 }
 
-export /**
+/**
  * @description Represents a OGImage of OGMetaData. For Specifications, see https://ogp.me/.
- */ declare class OGImage {
+ */
+export declare class OGImage {
   /** An image URL which represents the object within the Open Graph. */
   readonly url: string;
   /** An alternate url to use if the webpage requires HTTPS. */
@@ -2806,9 +2886,10 @@ export /**
   readonly alt: string | null;
 }
 
-export /**
+/**
  * @description Represents a OGMetaData of a url. For Specifications, see https://ogp.me/. Currently we only support images.
- */ declare class OGMetaData {
+ */
+export declare class OGMetaData {
   /** The title of the object as it should appear within the graph. (ex: "The Rock"). */
   readonly title: string | null;
   /** The canonical URL of the object that can be used as its permanent ID in the graph. (ex: "http://www.imdb.com/title/tt0117500/") */
@@ -2824,9 +2905,10 @@ export /**
 
 export declare type OnlineDetectorListener = (callback: () => void) => (() => void) | undefined;
 
-export /**
+/**
  * @description Represents an open channel.
- */ declare class OpenChannel extends BaseChannel {
+ */
+export declare class OpenChannel extends BaseChannel {
   /** The total number of participants in this channel. */
   participantCount: number;
   /** The operators of the channel. */
@@ -2894,9 +2976,10 @@ export /**
   sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
 }
 
-export /**
+/**
  * @description Represents a open channel params.
- */ declare interface OpenChannelUpdateParams {
+ */
+export declare interface OpenChannelUpdateParams {
   /** The name of the channel. */
   name?: string;
   /** The cover image or image URL of the channel.  */
@@ -2915,9 +2998,10 @@ export declare enum OperatorFilter {
   NONOPERATOR = 'nonoperator',
 }
 
-export /**
+/**
  * @description A class representing query to retrieve operator lists related to User.
- */ declare class OperatorListQuery extends ChannelDataListQuery {
+ */
+export declare class OperatorListQuery extends ChannelDataListQuery {
   /**
    * @returns
    * @description Gets the list of operators.
@@ -2930,24 +3014,27 @@ export /**
 
 export declare interface OperatorListQueryParams extends BaseListQueryParams {}
 
-export /**
+/**
  * @description When the message has reviewed, then the new message will be created.
  *  And the new message contains the original message's information.
- */ declare interface OriginalMessageInfo {
+ */
+export declare interface OriginalMessageInfo {
   createdAt: number;
   messageId: number;
 }
 
-export /**
+/**
  * @description Represents a participant of an open channel.
- */ declare class Participant extends User {
+ */
+export declare class Participant extends User {
   /** Whether the Participant is muted or not. */
   readonly isMuted: boolean;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve lists related to participant.
- */ declare class ParticipantListQuery extends ChannelDataListQuery {
+ */
+export declare class ParticipantListQuery extends ChannelDataListQuery {
   /**
    * @returns
    * @description Gets the list of Participants.
@@ -2960,16 +3047,18 @@ export /**
 
 export declare interface ParticipantListQueryParams extends BaseListQueryParams {}
 
-export /**
+/**
  * @description Represents a pinned message in a channel.
- */ declare class PinnedMessage {
+ */
+export declare class PinnedMessage {
   /** The message that is pinned. */
   readonly message: BaseMessage | null;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve lists related to pinned messages.
- */ declare class PinnedMessageListQuery extends ChannelDataListQuery {
+ */
+export declare class PinnedMessageListQuery extends ChannelDataListQuery {
   /**
    * @description Whether the meta arrays should be included in the results. If the value is null, it follows the default value.
    */
@@ -3023,19 +3112,21 @@ export declare interface PinnedMessageListQueryParams extends BaseListQueryParam
   includePollDetails?: boolean;
 }
 
-export /**
+/**
  * @description Contains plugin information of a UserMessage.
- */ declare class Plugin {
+ */
+export declare class Plugin {
   readonly type: string;
   readonly vendor: string;
   readonly detail: object;
 }
 
-export /**
+/**
  * @description Class representing a poll.
  *  A poll instance can be created using sendbirdChat.poll.create() with PollCreateParams and updated using groupChannel.updatePoll() with PollUpdateParams class.
  *  A poll can be attached to a message using UserMessageCreateParams.pollId.
- */ declare class Poll {
+ */
+export declare class Poll {
   /** A unique identifier for this poll. */
   id: number;
   /** Title of the poll. */
@@ -3084,9 +3175,10 @@ export /**
   serialize(): object;
 }
 
-export /**
+/**
  * @description Represents poll changelogs.
- */ declare interface PollChangelogs {
+ */
+export declare interface PollChangelogs {
   /** Updated Polls. */
   updatedPolls: Poll[];
   /** Deleted Poll IDs */
@@ -3097,9 +3189,10 @@ export /**
   token: string;
 }
 
-export /**
+/**
  * @description Parameters for creating poll and updating poll operations.
- */ declare interface PollCreateParams {
+ */
+export declare interface PollCreateParams {
   /** Title of the poll. */
   title: string;
   /** Options for this poll. */
@@ -3118,9 +3211,10 @@ export declare interface PollData {
   text: string;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve the list of polls.
- */ declare class PollListQuery extends ChannelDataListQuery {
+ */
+export declare class PollListQuery extends ChannelDataListQuery {
   /**
    * @returns
    * @description List all polls that belong to a channel specified by channelUrl.
@@ -3159,11 +3253,12 @@ export declare class PollModule extends Module {
   buildPollFromSerializedData(serialized: object): Poll;
 }
 
-export /**
+/**
  * @description Class representing a poll option. A poll options can be created by poll.create() and groupChannel.addPollOption().
  *  `text` is the only field set by the client. Other fields can be set by the server and voting.
  *  A latest poll option instance can be fetched using poll.get() and a poll option can be updated using groupChannel.updatePoll().
- */ declare class PollOption {
+ */
+export declare class PollOption {
   /** The ID of the poll which contains this poll option. */
   pollId: number;
   /** The ID of this poll option. */
@@ -3180,11 +3275,12 @@ export /**
   updatedAt: number;
 }
 
-export /**
+/**
  * @description Parameters for retrieving poll option.
  *  A poll option should be specified by the pollId of the poll that the option belongs to and pollOptionId of the option,
  *  and the channelUrl of the channel that the poll specified by pollId belongs to.
- */ declare interface PollOptionRetrievalParams {
+ */
+export declare interface PollOptionRetrievalParams {
   /** The url of the channel this poll belongs to. */
   channelUrl: string;
   /** The channel type of the channel this poll belongs to. */
@@ -3195,9 +3291,10 @@ export /**
   pollOptionId: number;
 }
 
-export /**
+/**
  * @description Parameters for retrieving poll operations.
- */ declare interface PollRetrievalParams {
+ */
+export declare interface PollRetrievalParams {
   /** The url of the channel containing the poll. */
   channelUrl: string;
   /** The channel type of the channel containing the poll. */
@@ -3206,27 +3303,30 @@ export /**
   pollId: number;
 }
 
-export /**
+/**
  * @description Class representing poll status. A Poll can be one of OPEN, CLOSED.
- */ declare enum PollStatus {
+ */
+export declare enum PollStatus {
   OPEN = 'open',
   CLOSED = 'closed',
 }
 
-export /**
+/**
  * @description Class representing an event that a Poll has been updated.
  *  This event will be passed to BaseChannelHandler.onPollUpdated.
  *  Once this event is received, the user must find cached messages that contain this poll and apply changes using poll.applyPollUpdateEvent().
- */ declare class PollUpdateEvent {
+ */
+export declare class PollUpdateEvent {
   /** The ID of the Poll. */
   readonly pollId: number;
   /** The ID of the message that contains the Poll. */
   readonly messageId: number;
 }
 
-export /**
+/**
  * Parameters for updating poll operations.
- */ declare interface PollUpdateParams {
+ */
+export declare interface PollUpdateParams {
   /**  Title of the poll. */
   title?: string;
   /** An additional json data to accompany the poll. */
@@ -3239,20 +3339,22 @@ export /**
   closeAt?: number;
 }
 
-export /**
+/**
  * @description Class representing an event that one or more vote has been casted on a poll option.
  *  The affected poll may be in multiple channels. This event will be passed to BaseChannelHandler.onPollVoted.
  *  Once this event is received, the user must find cached messages that contain this poll and apply changes using poll.applyPollVoteEvent().
- */ declare class PollVoteEvent {
+ */
+export declare class PollVoteEvent {
   /** The ID of the Poll. */
   readonly pollId: number;
   /** The ID of the message that contains the Poll. */
   readonly messageId: number;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve the list of voters for each poll options.
- */ declare class PollVoterListQuery extends ChannelDataListQuery {
+ */
+export declare class PollVoterListQuery extends ChannelDataListQuery {
   /**
    * @description A unique identifier for the poll which contains this poll option.
    */
@@ -3279,10 +3381,11 @@ export declare interface PollVoterListQueryParams extends ChannelDataListQueryPa
   pollOptionId: number;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve previous message list for a channel.
  *  The query can be get by calling sendbirdChat.openChannel.createPreviousMessageListQuery() or sendbirdChat.openChannel.createPreviousMessageListQuery().
- */ declare class PreviousMessageListQuery extends ChannelDataListQuery {
+ */
+export declare class PreviousMessageListQuery extends ChannelDataListQuery {
   /**
    * @description Indicates whether the queried result will be reversed. If `true`, the result will be returned by creation time descending order.
    */
@@ -3379,11 +3482,12 @@ export declare interface PreviousMessageListQueryParams extends BaseListQueryPar
   showSubchannelMessagesOnly?: boolean;
 }
 
-export /**
+/**
  * @description Push options for messages.
  *  If the option is {@link PushNotificationDeliveryOption.DEFAULT}, push message will work with the receiver's push settings.
  *  {@link SendbirdChat.setDoNotDisturb} If the option is {@link PushNotificationDeliveryOption.SUPPRESS}, push message will not be sent.
- */ declare enum PushNotificationDeliveryOption {
+ */
+export declare enum PushNotificationDeliveryOption {
   DEFAULT = 'default',
   SUPPRESS = 'suppress',
 }
@@ -3419,9 +3523,10 @@ export declare enum PushTriggerOption {
   OFF = 'off',
 }
 
-export /**
+/**
  * @description Objects representing a reaction.
- */ declare class Reaction {
+ */
+export declare class Reaction {
   /** The key of the reaction. */
   readonly key: string;
   /** User IDs. */
@@ -3437,9 +3542,10 @@ export /**
   applyEvent(reactionEvent: ReactionEvent): void;
 }
 
-export /**
+/**
  * @description Represents a reaction event.
- */ declare class ReactionEvent {
+ */
+export declare class ReactionEvent {
   /** The message ID which contains the Reaction of this event. */
   readonly messageId: number;
   /** The user ID of the User who have triggered this reaction event. */
@@ -3452,16 +3558,18 @@ export /**
   readonly updatedAt: number;
 }
 
-export /**
+/**
  * @description The ReactionEvent action state.
- */ declare enum ReactionEventOperation {
+ */
+export declare enum ReactionEventOperation {
   ADD = 'add',
   DELETE = 'delete',
 }
 
-export /**
+/**
  * @description Object representing read status.
- */ declare class ReadStatus {
+ */
+export declare class ReadStatus {
   /** The channel URL of the channel that the message is read. */
   readonly channelUrl: string;
   /** The channel type of the channel that the message is read. */
@@ -3472,31 +3580,35 @@ export /**
   readonly readAt: number;
 }
 
-export /** ReplyType to be used in loading messages. */ declare enum ReplyType {
+/** ReplyType to be used in loading messages. */
+export declare enum ReplyType {
   ALL = 'all',
   NONE = 'none',
   ONLY_REPLY_TO_CHANNEL = 'only_reply_to_channel',
 }
 
-export /**
+/**
  * @description Report category.
- */ declare enum ReportCategory {
+ */
+export declare enum ReportCategory {
   SPAM = 'spam',
   HARASSING = 'harassing',
   SUSPICIOUS = 'suspicious',
   INAPPROPRIATE = 'inappropriate',
 }
 
-export /**
+/**
  * @description Represents a restricted User.
- */ declare class RestrictedUser extends User {
+ */
+export declare class RestrictedUser extends User {
   /** RestrictionInfo of the current user. */
   readonly restrictionInfo: RestrictionInfo;
 }
 
-export /**
+/**
  * @description Represents a restricted User.
- */ declare class RestrictionInfo {
+ */
+export declare class RestrictionInfo {
   /** RestrictionType of the current user. */
   readonly restrictionType: RestrictionType | null;
   /** Description of restriction. */
@@ -3505,21 +3617,24 @@ export /**
   readonly endAt: number;
 }
 
-export /**
+/**
  * @description The restricted status for RestrictedUser.
- */ declare enum RestrictionType {
+ */
+export declare enum RestrictionType {
   MUTED = 'muted',
   BANNED = 'banned',
 }
 
-export /** The role of a {@link Member} or a {@link Sender}. */ declare enum Role {
+/** The role of a {@link Member} or a {@link Sender}. */
+export declare enum Role {
   OPERATOR = 'operator',
   NONE = 'none',
 }
 
-export /**
+/**
  * @description Represents a scheduled file message params.
- */ declare interface ScheduledFileMessageCreateParams extends FileMessageCreateParams {
+ */
+export declare interface ScheduledFileMessageCreateParams extends FileMessageCreateParams {
   /**
    * The schedule time to send the message, in Unix milliseconds format.
    * The messages are scheduled in minutes, and values less than minutes are discarded.
@@ -3529,9 +3644,10 @@ export /**
   scheduledAt: number;
 }
 
-export /**
+/**
  * @description Represents a scheduled file message update params.
- */ declare interface ScheduledFileMessageUpdateParams extends BaseMessageUpdateParams {
+ */
+export declare interface ScheduledFileMessageUpdateParams extends BaseMessageUpdateParams {
   /**
    * The schedule time to send the message, in Unix milliseconds format.
    * The messages are scheduled in minutes, and values less than minutes are discarded.
@@ -3553,26 +3669,29 @@ export /**
   thumbnailSizes?: ThumbnailSize[];
 }
 
-export /**
+/**
  * @description Information about the scheduled messages.
- */ declare interface ScheduledInfo {
+ */
+export declare interface ScheduledInfo {
   scheduledMessageId: number;
   scheduledAt: number;
   scheduledMessageParams?: ScheduledUserMessageCreateParams | ScheduledFileMessageCreateParams;
 }
 
-export /**
+/**
  * @description Represents a params for retrieving a single scheduled message.
- */ declare interface ScheduledMessageRetrievalParams {
+ */
+export declare interface ScheduledMessageRetrievalParams {
   /** The channel URL. */
   channelUrl: string;
   /** The scheduled message ID. */
   scheduledMessageId: number;
 }
 
-export /**
+/**
  * @description Represents a scheduled user message params.
- */ declare interface ScheduledUserMessageCreateParams extends UserMessageCreateParams {
+ */
+export declare interface ScheduledUserMessageCreateParams extends UserMessageCreateParams {
   /**
    * The schedule time to send the message, in Unix milliseconds format.
    * The messages are scheduled in minutes, and values less than minutes are discarded.
@@ -3582,9 +3701,10 @@ export /**
   scheduledAt?: number;
 }
 
-export /**
+/**
  * @description Represents a scheduled user message update params.
- */ declare interface ScheduledUserMessageUpdateParams extends UserMessageUpdateParams {
+ */
+export declare interface ScheduledUserMessageUpdateParams extends UserMessageUpdateParams {
   /**
    * The schedule time to send the message, in Unix milliseconds format.
    * The messages are scheduled in minutes, and values less than minutes are discarded.
@@ -4084,9 +4204,10 @@ export declare class SendbirdChat {
   getEmoji(emojiKey: string): Promise<Emoji>;
 }
 
-export /**
+/**
  * Represents operation options.
- */ declare class SendbirdChatOptions {
+ */
+export declare class SendbirdChatOptions {
   websocketPayloadDecompression: boolean;
   constructor({
     useMemberInfoInMessage,
@@ -4151,9 +4272,10 @@ export declare interface SendbirdChatParams<Modules extends Module[]> {
 
 export declare type SendbirdChatWith<Modules extends Module[]> = SendbirdChat & ModuleNamespaces<Modules>;
 
-export /**
+/**
  * @description Sendbird SDK error with error code and message.
- */ declare class SendbirdError extends Error {
+ */
+export declare class SendbirdError extends Error {
   readonly code: number;
   get detail(): string;
 }
@@ -4183,9 +4305,10 @@ export declare interface SendbirdSdkInfo {
   version: string;
 }
 
-export /**
+/**
  * @description Represents a sender of a message.
- */ declare class Sender extends User {
+ */
+export declare class Sender extends User {
   /**
    *  The {@link Role} of this sender in the current channel.
    *  If the sender's role status changes after the field value allocation,
@@ -4196,7 +4319,8 @@ export /**
   isBlockedByMe: boolean;
 }
 
-export /** Represents message sending status. */ declare enum SendingStatus {
+/** Represents message sending status. */
+export declare enum SendingStatus {
   PENDING = 'pending',
   SCHEDULED = 'scheduled',
   SUCCEEDED = 'succeeded',
@@ -4238,9 +4362,10 @@ export declare interface StoreItem {
   value: object;
 }
 
-export /**
+/**
  * @description Represents a message list params.
- */ declare interface ThreadedMessageListParams {
+ */
+export declare interface ThreadedMessageListParams {
   /** The number of previous messages added either before the timestamp or the message that has a specific message ID. */
   prevResultSize: number;
   /** The number of newer messages added either before the timestamp or the message that has a specific message ID. */
@@ -4263,10 +4388,11 @@ export /**
   includeParentMessageInfo?: boolean;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve threaded parent message list for a channel.
  *  The query can be get by calling groupChannel.createThreadedParentMessageListQuery().
- */ declare class ThreadedParentMessageListQuery extends ChannelDataListQuery {
+ */
+export declare class ThreadedParentMessageListQuery extends ChannelDataListQuery {
   /**
    * @returns
    * @description Requests query result for the threaded parent messages order by threadInfo.lastRepliedAt.
@@ -4276,9 +4402,10 @@ export /**
 
 export declare interface ThreadedParentMessageListQueryParams extends BaseListQueryParams {}
 
-export /**
+/**
  * @description Represents a thread info of a message.
- */ declare class ThreadInfo {
+ */
+export declare class ThreadInfo {
   /** The total number of replies in a specific thread. A value of 0 indicates there is no reply in the thread. */
   replyCount: number;
   /** The number of members of the thread. The members would get notified when new reply has added. */
@@ -4298,9 +4425,10 @@ export /**
   updatedAt: number;
 }
 
-export /**
+/**
  * @description Represents a thread info update event.
- */ declare class ThreadInfoUpdateEvent {
+ */
+export declare class ThreadInfoUpdateEvent {
   /** The ThreadInfo that has information about threaded messages. */
   readonly threadInfo: ThreadInfo;
   /** The unique ID of the message that has threaded replies and holds thread information. */
@@ -4311,11 +4439,12 @@ export /**
   readonly channelType: ChannelType;
 }
 
-export /**
+/**
  * @description Represents image thumbnail.
  *  Currently this is valid only for image files.
  *  Thumbnails can be generated when you send a file message.
- */ declare class Thumbnail {
+ */
+export declare class Thumbnail {
   /**
    * The URL of the generated thumbnail, which does not contain sendbirdChat.eKey as a parameter.
    * If the file encryption feature is enabled, accessing this plainUrl will be denied.
@@ -4336,11 +4465,12 @@ export /**
   get url(): string;
 }
 
-export /**
+/**
  * @description Represents image thumbnail size.
  *  Currently this is valid only for image files.
  *  Thumbnails can be generated when you send file through {@link BaseChannel.sendFileMessage} by passing the list of this instance.
- */ declare interface ThumbnailSize {
+ */
+export declare interface ThumbnailSize {
   /** The maximum width of thumbnail to be generated. */
   maxWidth: number;
   /** The maximum height of thumbnail to be generated. */
@@ -4356,9 +4486,10 @@ declare interface UIKitConfiguration {
   json: object;
 }
 
-export /**
+/**
  * @description Total unread message count by category.
- */ declare interface UnreadMessageCount {
+ */
+export declare interface UnreadMessageCount {
   /** Total unread message count of all group channels. */
   groupChannelCount: number;
   /** Total unread message count of all feed channels. */
@@ -4367,9 +4498,10 @@ export /**
   customTypeUnreadCount: Record<string, number>;
 }
 
-export /**
+/**
  * @description It represents the information of the file you want to upload through {@link GroupChannel.sendMultipleFilesMessage}.
- */ declare interface UploadableFileInfo {
+ */
+export declare interface UploadableFileInfo {
   /** Returns the File object of the input file. The uploaded file URL would be set in `fileUrl`. */
   file?: FileCompat;
   /** Returns the URL of the input file. */
@@ -4390,11 +4522,12 @@ export /**
   thumbnailSizes?: ThumbnailSize[];
 }
 
-export /**
+/**
  * @description Represents a file to be shipped in a {@link MultipleFilesMessage}.
  *  If you pass url to {@link UploadableFileInfo}, the file is not upload to sendbird server.
  *  The url keeps as it is, and it will be set as {@link UploadedFileInfo.url}.
- */ declare class UploadedFileInfo {
+ */
+export declare class UploadedFileInfo {
   /**
    * The plain file URL, which does not contain sendbirdChat.eKey as a parameter.
    * If the file encryption feature is enabled, accessing this plainUrl will be denied.
@@ -4418,9 +4551,10 @@ export declare type UploadProgressHandler = (requestId: string, progress: number
 
 export declare type UploadStartedHandler = (requestId: string) => void;
 
-export /**
+/**
  * @description Represents a user.
- */ declare class User {
+ */
+export declare class User {
   /** The ID of the user. */
   readonly userId: string;
   readonly requireAuth: boolean;
@@ -4494,9 +4628,10 @@ declare abstract class UserEventHandlerParams {
   onTotalUnreadMessageCountUpdated?: (totalCount: number, countByCustomType: object) => void;
 }
 
-export /**
+/**
  * @description Object representing a user message.
- */ declare class UserMessage extends SendableMessage {
+ */
+export declare class UserMessage extends SendableMessage {
   /** The message text of the message. */
   message: string;
   /** The messageParams object that used for sending this message For more details. */
@@ -4540,9 +4675,10 @@ export /**
   get poll(): Poll | null;
 }
 
-export /**
+/**
  * Represents a user message params.
- */ declare interface UserMessageCreateParams extends BaseMessageCreateParams {
+ */
+export declare interface UserMessageCreateParams extends BaseMessageCreateParams {
   /** The message text of the message. */
   message: string;
   /** The translation target languages. */
@@ -4551,9 +4687,10 @@ export /**
   pollId?: number;
 }
 
-export /**
+/**
  * @description Represents a user message update params.
- */ declare interface UserMessageUpdateParams extends BaseMessageUpdateParams {
+ */
+export declare interface UserMessageUpdateParams extends BaseMessageUpdateParams {
   /** The message text of the message. */
   message?: string;
   /** The translation target languages. */
@@ -4562,17 +4699,19 @@ export /**
   pollId?: number;
 }
 
-export /**
+/**
  * @description The user connection status type.
- */ declare enum UserOnlineState {
+ */
+export declare enum UserOnlineState {
   ONLINE = 'online',
   OFFLINE = 'offline',
   NON_AVAILABLE = 'nonavailable',
 }
 
-export /**
+/**
  * @description Params for update current users.
- */ declare interface UserUpdateParams {
+ */
+export declare interface UserUpdateParams {
   /** The profile image's file object of the channel. */
   profileImage?: FileCompat;
   /** The profile image's url. */
@@ -4627,9 +4766,10 @@ declare abstract class BaseChannelHandlerParams {
   onThreadInfoUpdated?: (channel: BaseChannel, threadInfoUpdateEvent: ThreadInfoUpdateEvent) => void;
 }
 
-export /**
+/**
  * @description Represents {@link GroupChannel} changelogs.
- */ declare interface GroupChannelChangelogs {
+ */
+export declare interface GroupChannelChangelogs {
   /** Updated channels. */
   updatedChannels: GroupChannel[];
   /** Deleted channel URLs. */
@@ -4641,9 +4781,10 @@ export /**
   ts?: number;
 }
 
-export /**
+/**
  * @description Represents a group channel change logs params.
- */ declare interface GroupChannelChangeLogsParams {
+ */
+export declare interface GroupChannelChangeLogsParams {
   /** {@link GroupChannel} custom types filter. If not set, the changelogs of all channels will be returned. */
   customTypes?: string[];
   /** Whether to include the channels with no message. (default: true) */
@@ -4654,9 +4795,10 @@ export /**
   includeChatNotification?: boolean;
 }
 
-export /**
+/**
  * @description Collection that handles channel lists, also supporting local caching.
- */ declare class GroupChannelCollection {
+ */
+export declare class GroupChannelCollection {
   /** The list of {@link GroupChannel}s managed by collection. */
   readonly channels: GroupChannel[];
   /** The filter to show matched {@link GroupChannel}s only. */
@@ -4682,9 +4824,10 @@ export /**
   dispose(): void;
 }
 
-export /**
+/**
  * @description Represents an interface to receive `GroupChannelCollection` events.
- */ declare interface GroupChannelCollectionEventHandler {
+ */
+export declare interface GroupChannelCollectionEventHandler {
   /** Called when there are newly added {@link GroupChannel}s. */
   onChannelsAdded?: (context: GroupChannelEventContext, channels: BaseChannel[]) => void;
   /** Called when there's an update in one or more of the {@link GroupChannel}s that `GroupChannelCollection` holds. */
@@ -4699,16 +4842,18 @@ export declare interface GroupChannelCollectionParams {
   limit?: number;
 }
 
-export /**
+/**
  * @description Represents a group channel count parameters.
- */ declare interface GroupChannelCountParams {
+ */
+export declare interface GroupChannelCountParams {
   /** Filters by my membership state. (default: {@link MyMemberStateFilter.ALL}) */
   myMemberStateFilter?: MyMemberStateFilter;
 }
 
-export /**
+/**
  * @description Represents a group channel create params.
- */ declare interface GroupChannelCreateParams {
+ */
+export declare interface GroupChannelCreateParams {
   /** The user ids of the users of the channel. (default: []) */
   invitedUserIds?: string[];
   /** The channel URL of the channel. */
@@ -5054,7 +5199,8 @@ declare abstract class GroupChannelHandlerParams extends BaseChannelHandlerParam
   onPinnedMessageUpdated?: (channel: GroupChannel) => void;
 }
 
-export /** The {@link GroupChannel} list order. */ declare enum GroupChannelListOrder {
+/** The {@link GroupChannel} list order. */
+export declare enum GroupChannelListOrder {
   LATEST_LAST_MESSAGE = 'latest_last_message',
   CHRONOLOGICAL = 'chronological',
   CHANNEL_NAME_ALPHABETICAL = 'channel_name_alphabetical',
@@ -5145,10 +5291,11 @@ declare interface GroupChannelListParams {
   createdBefore?: number;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve GroupChannel list for the current User.
  *  The query can be get by calling sendbirdChat.groupChannel.createMyGroupChannelListQuery().
- */ declare class GroupChannelListQuery extends BaseListQuery {
+ */
+export declare class GroupChannelListQuery extends BaseListQuery {
   /**
    * @description Checks whether query result includes empty channels (channels without messages). (default: false)
    */
@@ -5587,15 +5734,17 @@ export declare enum PublicChannelFilter {
   PRIVATE = 'private',
 }
 
-export /** The public {@link GroupChannel} list order. */ declare enum PublicGroupChannelListOrder {
+/** The public {@link GroupChannel} list order. */
+export declare enum PublicGroupChannelListOrder {
   CHRONOLOGICAL = 'chronological',
   CHANNEL_NAME_ALPHABETICAL = 'channel_name_alphabetical',
   METADATA_VALUE_ALPHABETICAL = 'metadata_value_alphabetical',
 }
 
-export /**
+/**
  * @description A class representing query to retrieve public GroupChannel list.
- */ declare class PublicGroupChannelListQuery extends BaseListQuery {
+ */
+export declare class PublicGroupChannelListQuery extends BaseListQuery {
   /**
    * @description Checks whether query result includes empty channels (channels without messages). (default: false)
    */
@@ -5746,14 +5895,16 @@ export declare enum QueryType {
   OR = 'OR',
 }
 
-export /** The scheduled message list order. */ declare enum ScheduledMessageListOrder {
+/** The scheduled message list order. */
+export declare enum ScheduledMessageListOrder {
   CREATED_AT = 'created_at',
   SCHEDULED_AT = 'scheduled_at',
 }
 
-export /**
+/**
  * @description Represents a query for retrieving a list of scheduled messages.
- */ declare class ScheduledMessageListQuery extends BaseListQuery {
+ */
+export declare class ScheduledMessageListQuery extends BaseListQuery {
   /**
    * @description The scheduled messages in specified channel will be retrieved.
    */
@@ -5804,7 +5955,8 @@ export declare interface ScheduledMessageListQueryParams extends BaseListQueryPa
   messageTypeFilter?: MessageTypeFilter;
 }
 
-export /** Represents a scheduled status of scheduled messages. */ declare enum ScheduledStatus {
+/** Represents a scheduled status of scheduled messages. */
+export declare enum ScheduledStatus {
   PENDING = 'pending',
   SENT = 'sent',
   FAILED = 'failed',
@@ -5815,7 +5967,8 @@ export declare type SendbirdGroupChat = SendbirdChat & {
   groupChannel: GroupChannelModule;
 };
 
-export /** The super channel filter. */ declare enum SuperChannelFilter {
+/** The super channel filter. */
+export declare enum SuperChannelFilter {
   ALL = 'all',
   SUPER = 'super',
   NON_SUPER = 'nonsuper',
@@ -5823,9 +5976,10 @@ export /** The super channel filter. */ declare enum SuperChannelFilter {
   EXCLUSIVE_ONLY = 'exclusive_only',
 }
 
-export /**
+/**
  * @description Represents a params for retrieving total scheduled message.
- */ declare interface TotalScheduledMessageCountParams {
+ */
+export declare interface TotalScheduledMessageCountParams {
   /** The channel url. */
   channelUrl?: string;
   /** The scheduled status. Refer to {@link ScheduledStatus}. */
@@ -5834,9 +5988,10 @@ export /**
   messageTypeFilter?: MessageTypeFilter;
 }
 
-export /**
+/**
  * @description Represents a total unread message count parameters.
- */ declare interface TotalUnreadMessageCountParams {
+ */
+export declare interface TotalUnreadMessageCountParams {
   /** Filter by channel custom types. */
   channelCustomTypesFilter?: string[];
   /** Filter by super channel status. */
@@ -5860,13 +6015,15 @@ export declare interface UnreadItemCount {
   nonSuperGroupChannelInvitationCount?: number;
 }
 
-export /**
+/**
  * @description Represents an unread item count parameters.
- */ declare interface UnreadItemCountParams {
+ */
+export declare interface UnreadItemCountParams {
   keys?: UnreadItemKey[];
 }
 
-export /** The unread item key. */ declare enum UnreadItemKey {
+/** The unread item key. */
+export declare enum UnreadItemKey {
   GROUP_CHANNEL_UNREAD_MENTION_COUNT = 'group_channel_unread_mention_count',
   NONSUPER_UNREAD_MENTION_COUNT = 'non_super_group_channel_unread_mention_count',
   SUPER_UNREAD_MENTION_COUNT = 'super_group_channel_unread_mention_count',
@@ -5878,9 +6035,10 @@ export /** The unread item key. */ declare enum UnreadItemKey {
   SUPER_INVITATION_COUNT = 'super_group_channel_invitation_count',
 }
 
-export /**
+/**
  * @description Represents a open channel params.
- */ declare interface OpenChannelCreateParams {
+ */
+export declare interface OpenChannelCreateParams {
   /** The channel url of the channel. */
   channelUrl?: string;
   /** The name of the channel. */
@@ -5920,10 +6078,11 @@ declare abstract class OpenChannelHandlerParams extends BaseChannelHandlerParams
   onPollDeleted?: (channel: OpenChannel, id: number) => void;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve OpenChannel list.
  *  The query can be get by calling sendbirdChat.openChannel.createOpenChannelListQuery().
- */ declare class OpenChannelListQuery extends BaseListQuery {
+ */
+export declare class OpenChannelListQuery extends BaseListQuery {
   /**
    * @description Indicate whether to include frozen channels or not. (default: true)
    */
@@ -6042,9 +6201,10 @@ export declare type SendbirdOpenChat = SendbirdChat & {
   openChannel: OpenChannelModule;
 };
 
-export /**
+/**
  * @description Represents {@link FeedChannel} changelogs.
- */ declare interface FeedChannelChangelogs {
+ */
+export declare interface FeedChannelChangelogs {
   /** Updated channels. */
   updatedChannels: FeedChannel[];
   /** Deleted channel URLs. */
@@ -6055,16 +6215,18 @@ export /**
   token: string;
 }
 
-export /**
+/**
  * @description Represents a feed channel change logs params.
- */ declare interface FeedChannelChangeLogsParams {
+ */
+export declare interface FeedChannelChangeLogsParams {
   /** Whether to include the channels with no message. (default: true) */
   includeEmpty?: boolean;
 }
 
-export /**
+/**
  * @description
- */ declare class FeedChannelHandler extends FeedChannelHandlerParams {
+ */
+export declare class FeedChannelHandler extends FeedChannelHandlerParams {
   constructor(params?: FeedChannelHandlerParams);
 }
 
@@ -6087,10 +6249,11 @@ declare interface FeedChannelListParams {
   includeEmpty?: boolean;
 }
 
-export /**
+/**
  * @description A class representing query to retrieve FeedChannel list for the current User.
  *  The query can be get by calling sendbirdChat.feedChannel.createMyFeedChannelListQuery().
- */ declare class FeedChannelListQuery extends BaseListQuery {
+ */
+export declare class FeedChannelListQuery extends BaseListQuery {
   readonly includeEmpty: boolean;
   /**
    * @returns
@@ -6193,27 +6356,31 @@ export declare class FeedChannelModule extends Module {
   refreshNotificationCollections(): void;
 }
 
-export /**
+/**
  * @description Class to obtain the Notification template list.
- */ declare interface GlobalNotificationChannelSetting {
+ */
+export declare interface GlobalNotificationChannelSetting {
   jsonString: string;
 }
 
-export /**
+/**
  * @description Class to obtain the Notification template.
- */ declare interface NotificationTemplate {
+ */
+export declare interface NotificationTemplate {
   jsonString: string;
 }
 
-export /**
+/**
  * @description Class to obtain the Notification template list.
- */ declare interface NotificationTemplateList {
+ */
+export declare interface NotificationTemplateList {
   jsonString: string;
 }
 
-export /**
+/**
  * @description Params for retrieving Notification template list.
- */ declare interface NotificationTemplateListParams {
+ */
+export declare interface NotificationTemplateListParams {
   /** Whether the result is set to be reversed or not. (default: false) */
   reverse?: boolean;
   /** The key filter to retrieve only selected templates with given keys. */

@@ -1,5 +1,16 @@
 # Changelog
 
+## vv4.12.0 (Mar 25, 2024)
+### **Improvement**
+- Added `markPushNotificationAsDelivered`
+- Added `markPushNotificationAsClicked`
+- Added token registration with device info
+- Added `logViewed`/`logClicked` in FeedChannel
+- Deprecated `markAsClicked`/`logImpression` in FeedChannel
+- (internal)Refactoring statCollector
+- Fixed a bug that `onMessagesUpdated` event not firing on ThreadInfo updated event
+- Exported `SendbirdErrorCode`
+- Improvement stability
 ## v4.11.3 (Mar 14, 2024)
 ### **Improvement**
 - Added `keys` property to `MessageTemplateListParams`

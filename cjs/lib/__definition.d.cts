@@ -1062,7 +1062,6 @@ export declare enum CollectionEventSource {
   EVENT_CHANNEL_METACOUNTER_CREATED = 'EVENT_CHANNEL_METACOUNTER_CREATED',
   EVENT_CHANNEL_METACOUNTER_UPDATED = 'EVENT_CHANNEL_METACOUNTER_UPDATED',
   EVENT_CHANNEL_METACOUNTER_DELETED = 'EVENT_CHANNEL_METACOUNTER_DELETED',
-  EVENT_THREAD_INFO_UPDATED = 'EVENT_THREAD_INFO_UPDATED',
   EVENT_MESSAGE_SENT = 'EVENT_MESSAGE_SENT',
   EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
   EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
@@ -1092,6 +1091,10 @@ export declare enum CollectionEventSource {
   EVENT_MESSAGE_THREADINFO_UPDATED = 'EVENT_MESSAGE_THREADINFO_UPDATED',
   EVENT_MESSAGE_OFFSET_UPDATED = 'EVENT_MESSAGE_OFFSET_UPDATED',
   REQUEST_MESSAGE = 'REQUEST_MESSAGE',
+  /**
+   * @deprecated since v4.12.0
+   */
+  EVENT_THREAD_INFO_UPDATED = 'EVENT_THREADINFO_UPDATED',
   EVENT_POLL_UPDATED = 'EVENT_POLL_UPDATED',
   EVENT_POLL_VOTED = 'EVENT_POLL_VOTED',
   SYNC_POLL_CHANGELOGS = 'SYNC_POLL_CHANGELOGS',
@@ -1306,15 +1309,26 @@ export declare class FeedChannel extends BaseChannel {
   markAsRead(messages?: NotificationMessage[]): Promise<void>;
   /**
    * @param messages
-   * @description Sends mark as clicked for given messages.
+   * @deprecated since v4.12.0. Use logClicked instead.
    */
   markAsClicked(messages: NotificationMessage[]): Promise<void>;
   /**
+   * @params messages
+   * @description Logging clicked for statisics.
+   */
+  logClicked(messages: NotificationMessage[]): Promise<void>;
+  /**
    * @param messages
    * @returns
-   * @description Logging impression for statistics. Limitation: IMPRESSION_LOG_LIMIT messages at once.
+   * @deprecated since v4.12.0. Use logViewed instead.
    */
   logImpression(messages: NotificationMessage[]): Promise<boolean>;
+  /**
+   * @param messages
+   * @returns
+   * @description Logging viewed for statistics. Limitation: IMPRESSION_LOG_LIMIT messages at once.
+   */
+  logViewed(messages: NotificationMessage[]): Promise<boolean>;
   /**
    * @param topic
    * @param messages
@@ -3497,6 +3511,24 @@ export declare enum PushTemplate {
   DEFAULT = 'default',
 }
 
+/**
+ * When registering a push token, this is information to track details about the device.
+ * */
+declare interface PushTokenRegistrationDetails {
+  /**
+   * The OS(platform) and version of the device. (e.g. 'android-11')
+   * */
+  deviceOS?: DeviceOsInfo;
+  /**
+   * The manufacturer of the device. (e.g. 'SM-S911x-Samsung')
+   * */
+  deviceManufacturer?: string;
+  /**
+   * Whether system push is enabled.
+   * */
+  systemPushEnabled?: boolean;
+}
+
 export declare enum PushTokenRegistrationState {
   SUCCESS = 'success',
   PENDING = 'pending',
@@ -3988,10 +4020,14 @@ export declare class SendbirdChat {
   updateCurrentUserInfoWithPreferredLanguages(preferredLanguages: string[]): Promise<User>;
   /**
    * @param token
+   * @param details
    * @returns
    * @description Registers an FCM push token to the server.
    */
-  registerFCMPushTokenForCurrentUser(token: string): Promise<PushTokenRegistrationState>;
+  registerFCMPushTokenForCurrentUser(
+    token: string,
+    details?: PushTokenRegistrationDetails,
+  ): Promise<PushTokenRegistrationState>;
   /**
    * @param token
    * @returns
@@ -4004,10 +4040,14 @@ export declare class SendbirdChat {
   unregisterFCMPushTokenAllForCurrentUser(): Promise<void>;
   /**
    * @param token
+   * @param details
    * @returns
    * @description Registers an APNS push token to the server.
    */
-  registerAPNSPushTokenForCurrentUser(token: string): Promise<PushTokenRegistrationState>;
+  registerAPNSPushTokenForCurrentUser(
+    token: string,
+    details?: PushTokenRegistrationDetails,
+  ): Promise<PushTokenRegistrationState>;
   /**
    * @param token
    * @returns
@@ -4018,6 +4058,21 @@ export declare class SendbirdChat {
    * @description Deregister all APNS push tokens for the user.
    */
   unregisterAPNSPushTokenAllForCurrentUser(): Promise<void>;
+  /**
+   * Mark push notification as delivered for push delivery tracking purpose only.<br/>
+   * This does <b>not</b> mark the message as delivered.<br/>
+   * Marking the message as delivered can be done by [GroupChannelModule.markAsDelivered].
+   *
+   * @param pushData The payload data from the push notification.
+   * @param allowedPushNotification Only for Android, the POST_NOTIFICATIONS permission.
+   */
+  markPushNotificationAsDelivered(pushData: Record<string, unknown>, allowedPushNotification?: boolean): Promise<void>;
+  /**
+   * Mark push notification as clicked for push delivery tracking purpose only.
+   *
+   * @param pushData The payload data from the push notification.
+   */
+  markPushNotificationAsClicked(pushData: Record<string, unknown>): Promise<void>;
   /**
    * @returns
    * @description Gets the current User's preference for GroupChannel join.
@@ -4278,6 +4333,64 @@ export declare type SendbirdChatWith<Modules extends Module[]> = SendbirdChat & 
 export declare class SendbirdError extends Error {
   readonly code: number;
   get detail(): string;
+}
+
+/**
+ * @description Represents error codes.
+ */
+export declare enum SendbirdErrorCode {
+  NON_AUTHORIZED = 400108,
+  INVALID_TOKEN = 400111,
+  NOT_FOUND_IN_DATABASE = 400201,
+  USER_AUTH_DEACTIVATED = 400300,
+  USER_AUTH_DELETED_OR_NOT_FOUND = 400301,
+  SESSION_TOKEN_EXPIRED = 400302,
+  APPLICATION_NOT_FOUND = 400304,
+  SESSION_KEY_EXPIRED = 400309,
+  SESSION_REVOKED = 400310,
+  INVALID_SESSION_TYPE = 400312,
+  STAT_UPLOAD_NOT_ALLOWED = 403200,
+  NOT_SUPPORTED_PINNED_MESSAGE_IN_REVIEW_MESSAGE = 400940,
+  INTERNAL_SERVER_ERROR = 500901,
+  RATE_LIMIT_EXCEEDED = 500910,
+  INVALID_REQUIRED_FORM_VALUE = 400105,
+  UNKNOWN_SERVER_ERROR = 900200,
+  NOT_SUPPORTED_FEATURE_IN_IN_REVIEW_MESSAGE = 901500,
+  ERR_DUPLICATED_DATA = 400202,
+  DEBUG_MODE_REQUIRED = 700000,
+  LOST_INSTANCE = 700100,
+  CONNECTION_RENEW = 700102,
+  INVALID_CONNECTION_STATE_TRANSITION = 700200,
+  INVALID_COMMAND = 700700,
+  XMLHTTPREQUEST_NOT_SUPPORTED = 700800,
+  UNKNOWN_ERROR = 770000,
+  INVALID_INITIALIZATION = 800100,
+  CONNECTION_REQUIRED = 800101,
+  CONNECTION_CANCELED = 800102,
+  INVALID_PARAMETER = 800110,
+  NOT_SUPPORTED_ERROR = 800111,
+  NETWORK_ERROR = 800120,
+  NETWORK_ROUTING_ERROR = 800121,
+  MALFORMED_DATA = 800130,
+  MALFORMED_ERROR_DATA = 800140,
+  WRONG_CHANNEL_TYPE = 800150,
+  MARK_AS_READ_RATE_LIMIT_EXCEEDED = 800160,
+  QUERY_IN_PROGRESS = 800170,
+  ACK_TIMEOUT = 800180,
+  LOGIN_TIMEOUT = 800190,
+  WEBSOCKET_CONNECTION_CLOSED = 800200,
+  WEBSOCKET_CONNECTION_FAILED = 800210,
+  REQUEST_FAILED = 800220,
+  FILE_UPLOAD_CANCEL_FAILED = 800230,
+  REQUEST_CANCELED = 800240,
+  REQUEST_DUPLICATED = 800250,
+  FILE_SIZE_LIMIT_EXCEEDED = 800260,
+  ERR_UPLOAD_STAT_RETRY_COUNT_EXCEEDED = 800270,
+  SESSION_TOKEN_REQUEST_FAILED = 800500,
+  SESSION_TOKEN_REFRESHED = 800501,
+  SESSION_TOKEN_REFRESH_FAILED = 800502,
+  COLLECTION_DISPOSED = 800600,
+  DATABASE_ERROR = 800700,
 }
 
 export declare enum SendbirdPlatform {
@@ -4939,7 +5052,6 @@ export declare const GroupChannelEventSource: {
   EVENT_CHANNEL_METACOUNTER_CREATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
   EVENT_CHANNEL_METACOUNTER_UPDATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
   EVENT_CHANNEL_METACOUNTER_DELETED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
-  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_MESSAGE_SENT: CollectionEventSource.EVENT_MESSAGE_SENT;
   EVENT_MESSAGE_RECEIVED: CollectionEventSource.EVENT_MESSAGE_RECEIVED;
   EVENT_MESSAGE_UPDATED: CollectionEventSource.EVENT_MESSAGE_UPDATED;
@@ -4963,6 +5075,7 @@ export declare const GroupChannelEventSource: {
   EVENT_MESSAGE_THREADINFO_UPDATED: CollectionEventSource.EVENT_MESSAGE_THREADINFO_UPDATED;
   EVENT_MESSAGE_OFFSET_UPDATED: CollectionEventSource.EVENT_MESSAGE_OFFSET_UPDATED;
   REQUEST_MESSAGE: CollectionEventSource.REQUEST_MESSAGE;
+  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_POLL_UPDATED: CollectionEventSource.EVENT_POLL_UPDATED;
   EVENT_POLL_VOTED: CollectionEventSource.EVENT_POLL_VOTED;
   SYNC_POLL_CHANGELOGS: CollectionEventSource.SYNC_POLL_CHANGELOGS;
@@ -5681,7 +5794,6 @@ export declare const MessageEventSource: {
   EVENT_CHANNEL_METACOUNTER_CREATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
   EVENT_CHANNEL_METACOUNTER_UPDATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
   EVENT_CHANNEL_METACOUNTER_DELETED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
-  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_MESSAGE_SENT: CollectionEventSource.EVENT_MESSAGE_SENT;
   EVENT_MESSAGE_RECEIVED: CollectionEventSource.EVENT_MESSAGE_RECEIVED;
   EVENT_MESSAGE_UPDATED: CollectionEventSource.EVENT_MESSAGE_UPDATED;
@@ -5705,6 +5817,7 @@ export declare const MessageEventSource: {
   EVENT_MESSAGE_THREADINFO_UPDATED: CollectionEventSource.EVENT_MESSAGE_THREADINFO_UPDATED;
   EVENT_MESSAGE_OFFSET_UPDATED: CollectionEventSource.EVENT_MESSAGE_OFFSET_UPDATED;
   REQUEST_MESSAGE: CollectionEventSource.REQUEST_MESSAGE;
+  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_POLL_UPDATED: CollectionEventSource.EVENT_POLL_UPDATED;
   EVENT_POLL_VOTED: CollectionEventSource.EVENT_POLL_VOTED;
   SYNC_POLL_CHANGELOGS: CollectionEventSource.SYNC_POLL_CHANGELOGS;

@@ -64,6 +64,7 @@ export {
   SendbirdChatParams,
   SendbirdChatWith,
   SendbirdError,
+  SendbirdErrorCode,
   SendbirdPlatform,
   SendbirdProduct,
   SendbirdSdkInfo,

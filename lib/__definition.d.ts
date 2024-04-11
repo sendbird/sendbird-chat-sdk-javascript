@@ -643,10 +643,123 @@ export declare class BaseChannel {
 /**
  * @description The context of channel-related events in colletions.
  */
-declare class BaseChannelEventContext {
-  /** The {@link CollectionEventSource} of the current context. */
-  readonly source: CollectionEventSource;
-}
+declare type BaseChannelEventContext =
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METADATA_CREATED;
+      metaData: MetaData;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METADATA_UPDATED;
+      metaData: MetaData;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METADATA_DELETED;
+      metaDataKeys: string[];
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
+      metaCounters: MetaCounter;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
+      metaCounters: MetaCounter;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
+      metaCounterKeys: string[];
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_MUTED;
+      user: RestrictedUser;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_UNMUTED;
+      user: User;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_BANNED;
+      user: RestrictedUser;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_UNBANNED;
+      user: User;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_INVITED;
+      inviter: User | null;
+      invitees: User[];
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_JOINED;
+      users: User[];
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_LEFT;
+      user: User;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_DECLINED_INVITE;
+      inviter: User;
+      invitee: User;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_OPERATOR_UPDATED;
+      operators: User[];
+    }
+  | {
+      source:
+        | CollectionEventSource.UNKNOWN
+        | CollectionEventSource.EVENT_CHANNEL_CREATED
+        | CollectionEventSource.EVENT_CHANNEL_UPDATED
+        | CollectionEventSource.EVENT_CHANNEL_DELETED
+        | CollectionEventSource.EVENT_CHANNEL_READ
+        | CollectionEventSource.EVENT_CHANNEL_DELIVERED
+        | CollectionEventSource.EVENT_CHANNEL_ACCEPTED_INVITE
+        | CollectionEventSource.EVENT_CHANNEL_FROZEN
+        | CollectionEventSource.EVENT_CHANNEL_UNFROZEN
+        | CollectionEventSource.EVENT_CHANNEL_HIDDEN
+        | CollectionEventSource.EVENT_CHANNEL_UNHIDDEN
+        | CollectionEventSource.EVENT_CHANNEL_RESET_HISTORY
+        | CollectionEventSource.EVENT_CHANNEL_TYPING_STATUS_UPDATE
+        | CollectionEventSource.EVENT_CHANNEL_MEMBER_COUNT_UPDATED
+        | CollectionEventSource.EVENT_MESSAGE_SENT
+        | CollectionEventSource.EVENT_MESSAGE_RECEIVED
+        | CollectionEventSource.EVENT_MESSAGE_UPDATED
+        | CollectionEventSource.EVENT_PINNED_MESSAGE_UPDATED
+        | CollectionEventSource.REQUEST_CHANNEL
+        | CollectionEventSource.REQUEST_CHANNEL_CHANGELOGS
+        | CollectionEventSource.REFRESH_CHANNEL
+        | CollectionEventSource.CHANNEL_LASTACCESSEDAT_UPDATED
+        | CollectionEventSource.SYNC_CHANNEL_BACKGROUND
+        | CollectionEventSource.SYNC_CHANNEL_CHANGELOGS
+        | CollectionEventSource.EVENT_MESSAGE_SENT_SUCCESS
+        | CollectionEventSource.EVENT_MESSAGE_SENT_FAILED
+        | CollectionEventSource.EVENT_MESSAGE_SENT_PENDING
+        | CollectionEventSource.EVENT_MESSAGE_DELETED
+        | CollectionEventSource.EVENT_MESSAGE_FEEDBACK_ADDED
+        | CollectionEventSource.EVENT_MESSAGE_FEEDBACK_UPDATED
+        | CollectionEventSource.EVENT_MESSAGE_FEEDBACK_DELETED
+        | CollectionEventSource.EVENT_MESSAGE_REACTION_UPDATED
+        | CollectionEventSource.EVENT_MESSAGE_THREADINFO_UPDATED
+        | CollectionEventSource.EVENT_MESSAGE_OFFSET_UPDATED
+        | CollectionEventSource.REQUEST_MESSAGE
+        | CollectionEventSource.EVENT_POLL_UPDATED
+        | CollectionEventSource.EVENT_POLL_VOTED
+        | CollectionEventSource.SYNC_POLL_CHANGELOGS
+        | CollectionEventSource.REQUEST_RESEND_MESSAGE
+        | CollectionEventSource.REQUEST_THREADED_MESSAGE
+        | CollectionEventSource.REQUEST_MESSAGE_CHANGELOGS
+        | CollectionEventSource.SYNC_MESSAGE_FILL
+        | CollectionEventSource.SYNC_MESSAGE_BACKGROUND
+        | CollectionEventSource.SYNC_MESSAGE_CHANGELOGS
+        | CollectionEventSource.LOCAL_MESSAGE_PENDING_CREATED
+        | CollectionEventSource.LOCAL_MESSAGE_FAILED
+        | CollectionEventSource.LOCAL_MESSAGE_CANCELED
+        | CollectionEventSource.LOCAL_MESSAGE_RESEND_STARTED
+        | CollectionEventSource.EVENT_MESSAGE_READ
+        | CollectionEventSource.EVENT_MESSAGE_DELIVERED
+        | CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
+    };
 
 declare abstract class BaseListQuery {
   /**
@@ -910,10 +1023,9 @@ export declare interface BaseMessageCreateParams {
 /**
  * @description The context of message-related events in colletions.
  */
-declare class BaseMessageEventContext {
-  /** The {@link CollectionEventSource} of the current context. */
-  readonly source: CollectionEventSource;
-}
+declare type BaseMessageEventContext = {
+  source: CollectionEventSource;
+};
 
 /**
  * @description Represents a base message params.
@@ -1344,7 +1456,7 @@ export declare class FeedChannel extends BaseChannel {
   createNotificationCollection(params?: NotificationCollectionParams): NotificationCollection;
 }
 
-export declare class FeedChannelEventContext extends BaseChannelEventContext {}
+export declare type FeedChannelEventContext = BaseChannelEventContext;
 
 declare type FieldAnswer = string;
 
@@ -1379,7 +1491,7 @@ export declare class FileMessage extends SendableMessage {
   readonly type: string;
   /** Represents the thumbnail information of image file. */
   readonly thumbnails: Thumbnail[];
-  /** The message's survival seconds. */
+  /** @ignore The message's survival seconds. */
   readonly messageSurvivalSeconds: number;
   /**
    * The file URL. If the file encryption feature is enabled, this will have sendbirdChat.eKey combined with the plainUrl so the file can be accessed.
@@ -1618,7 +1730,7 @@ export declare class GroupChannel extends BaseChannel {
   lastMessage: BaseMessage | null;
   /** This property is set when {@link GroupChannel.resetMyHistory} or {@link GroupChannel.hide} is called. */
   messageOffsetTimestamp: number;
-  /** The message survival seconds in this channel. */
+  /** @ignore The message survival seconds in this channel. */
   messageSurvivalSeconds: number;
   /** My member state. */
   myMemberState: MemberState;
@@ -1916,7 +2028,7 @@ export declare class GroupChannel extends BaseChannel {
   copyMessage(channel: BaseChannel, message: MultipleFilesMessage): MessageRequestHandler<MultipleFilesMessage>;
 }
 
-export declare class GroupChannelEventContext extends BaseChannelEventContext {}
+export declare type GroupChannelEventContext = BaseChannelEventContext;
 
 /**
  * @description Represents a group channel hide parameters.
@@ -1963,7 +2075,7 @@ export declare interface GroupChannelUpdateParams {
   customType?: string;
   /** The operator user IDs of the channel. */
   operatorUserIds?: string[];
-  /** The message survival seconds of the channel. */
+  /** @ignore The message survival seconds of the channel. */
   messageSurvivalSeconds?: number;
 }
 
@@ -2220,7 +2332,7 @@ export declare enum MessageCollectionInitPolicy {
 
 export declare interface MessageCollectionParams extends BaseMessageCollectionParams {}
 
-export declare class MessageEventContext extends BaseMessageEventContext {}
+export declare type MessageEventContext = BaseMessageEventContext;
 
 export declare class MessageFilter {
   /**
@@ -2686,7 +2798,7 @@ export declare class MultipleFilesMessage extends SendableMessage {
   messageParams: MultipleFilesMessageCreateParams | null;
   /** It represents the information of the files stored on the Sendbird server that are included in this file message. */
   readonly fileInfoList: UploadedFileInfo[];
-  /** The message's survival seconds. */
+  /** @ignore The message's survival seconds. */
   readonly messageSurvivalSeconds: number;
   getThreadedMessagesByTimestamp(
     ts: number,
@@ -2827,7 +2939,7 @@ export declare interface NotificationData {
   };
 }
 
-export declare class NotificationEventContext extends BaseMessageEventContext {}
+export declare type NotificationEventContext = BaseMessageEventContext;
 
 /**
  * @description Represents information about Notifications.
@@ -4756,7 +4868,7 @@ export declare class UserMessage extends SendableMessage {
    * The messages that have been sent or scheduled with translation option (refer to BaseChannel.sendUserMessage) will have this list.
    */
   readonly translationTargetLanguages: string[];
-  /** The message's survival seconds. */
+  /** @ignore The message's survival seconds. */
   readonly messageSurvivalSeconds: number;
   /** The plugin lists for this message. */
   readonly plugins: Plugin[];
@@ -4953,6 +5065,12 @@ export declare interface GroupChannelCollectionParams {
   filter?: GroupChannelFilter;
   order?: GroupChannelListOrder;
   limit?: number;
+  /**
+   * temporary option for Dream11. (default: false) will be deprecated later.
+   * if the option turns to `true`, the first call of `loadMore()` waits for changelog sync to progress.
+   * once the changelog sync advances (a single page), it applies the changelogs to the result of `loadMore()` and return.
+   */
+  includeChangesOnInitialLoad?: boolean;
 }
 
 /**
@@ -5016,7 +5134,7 @@ export declare interface GroupChannelCreateParams {
   customType?: string;
   /** The operator user IDs of the channel. */
   operatorUserIds?: string[];
-  /** The message survival seconds of the channel. */
+  /** @ignore The message survival seconds of the channel. */
   messageSurvivalSeconds?: number;
 }
 

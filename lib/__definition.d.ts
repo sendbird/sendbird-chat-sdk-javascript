@@ -643,10 +643,123 @@ export declare class BaseChannel {
 /**
  * @description The context of channel-related events in colletions.
  */
-declare class BaseChannelEventContext {
-  /** The {@link CollectionEventSource} of the current context. */
-  readonly source: CollectionEventSource;
-}
+declare type BaseChannelEventContext =
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METADATA_CREATED;
+      metaData: MetaData;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METADATA_UPDATED;
+      metaData: MetaData;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METADATA_DELETED;
+      metaDataKeys: string[];
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
+      metaCounters: MetaCounter;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
+      metaCounters: MetaCounter;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
+      metaCounterKeys: string[];
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_MUTED;
+      user: RestrictedUser;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_UNMUTED;
+      user: User;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_BANNED;
+      user: RestrictedUser;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_UNBANNED;
+      user: User;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_INVITED;
+      inviter: User | null;
+      invitees: User[];
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_JOINED;
+      users: User[];
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_LEFT;
+      user: User;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_DECLINED_INVITE;
+      inviter: User;
+      invitee: User;
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_OPERATOR_UPDATED;
+      operators: User[];
+    }
+  | {
+      source:
+        | CollectionEventSource.UNKNOWN
+        | CollectionEventSource.EVENT_CHANNEL_CREATED
+        | CollectionEventSource.EVENT_CHANNEL_UPDATED
+        | CollectionEventSource.EVENT_CHANNEL_DELETED
+        | CollectionEventSource.EVENT_CHANNEL_READ
+        | CollectionEventSource.EVENT_CHANNEL_DELIVERED
+        | CollectionEventSource.EVENT_CHANNEL_ACCEPTED_INVITE
+        | CollectionEventSource.EVENT_CHANNEL_FROZEN
+        | CollectionEventSource.EVENT_CHANNEL_UNFROZEN
+        | CollectionEventSource.EVENT_CHANNEL_HIDDEN
+        | CollectionEventSource.EVENT_CHANNEL_UNHIDDEN
+        | CollectionEventSource.EVENT_CHANNEL_RESET_HISTORY
+        | CollectionEventSource.EVENT_CHANNEL_TYPING_STATUS_UPDATE
+        | CollectionEventSource.EVENT_CHANNEL_MEMBER_COUNT_UPDATED
+        | CollectionEventSource.EVENT_MESSAGE_SENT
+        | CollectionEventSource.EVENT_MESSAGE_RECEIVED
+        | CollectionEventSource.EVENT_MESSAGE_UPDATED
+        | CollectionEventSource.EVENT_PINNED_MESSAGE_UPDATED
+        | CollectionEventSource.REQUEST_CHANNEL
+        | CollectionEventSource.REQUEST_CHANNEL_CHANGELOGS
+        | CollectionEventSource.REFRESH_CHANNEL
+        | CollectionEventSource.CHANNEL_LASTACCESSEDAT_UPDATED
+        | CollectionEventSource.SYNC_CHANNEL_BACKGROUND
+        | CollectionEventSource.SYNC_CHANNEL_CHANGELOGS
+        | CollectionEventSource.EVENT_MESSAGE_SENT_SUCCESS
+        | CollectionEventSource.EVENT_MESSAGE_SENT_FAILED
+        | CollectionEventSource.EVENT_MESSAGE_SENT_PENDING
+        | CollectionEventSource.EVENT_MESSAGE_DELETED
+        | CollectionEventSource.EVENT_MESSAGE_FEEDBACK_ADDED
+        | CollectionEventSource.EVENT_MESSAGE_FEEDBACK_UPDATED
+        | CollectionEventSource.EVENT_MESSAGE_FEEDBACK_DELETED
+        | CollectionEventSource.EVENT_MESSAGE_REACTION_UPDATED
+        | CollectionEventSource.EVENT_MESSAGE_THREADINFO_UPDATED
+        | CollectionEventSource.EVENT_MESSAGE_OFFSET_UPDATED
+        | CollectionEventSource.REQUEST_MESSAGE
+        | CollectionEventSource.EVENT_POLL_UPDATED
+        | CollectionEventSource.EVENT_POLL_VOTED
+        | CollectionEventSource.SYNC_POLL_CHANGELOGS
+        | CollectionEventSource.REQUEST_RESEND_MESSAGE
+        | CollectionEventSource.REQUEST_THREADED_MESSAGE
+        | CollectionEventSource.REQUEST_MESSAGE_CHANGELOGS
+        | CollectionEventSource.SYNC_MESSAGE_FILL
+        | CollectionEventSource.SYNC_MESSAGE_BACKGROUND
+        | CollectionEventSource.SYNC_MESSAGE_CHANGELOGS
+        | CollectionEventSource.LOCAL_MESSAGE_PENDING_CREATED
+        | CollectionEventSource.LOCAL_MESSAGE_FAILED
+        | CollectionEventSource.LOCAL_MESSAGE_CANCELED
+        | CollectionEventSource.LOCAL_MESSAGE_RESEND_STARTED
+        | CollectionEventSource.EVENT_MESSAGE_READ
+        | CollectionEventSource.EVENT_MESSAGE_DELIVERED
+        | CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
+    };
 
 declare abstract class BaseListQuery {
   /**
@@ -910,10 +1023,9 @@ export declare interface BaseMessageCreateParams {
 /**
  * @description The context of message-related events in colletions.
  */
-declare class BaseMessageEventContext {
-  /** The {@link CollectionEventSource} of the current context. */
-  readonly source: CollectionEventSource;
-}
+declare type BaseMessageEventContext = {
+  source: CollectionEventSource;
+};
 
 /**
  * @description Represents a base message params.
@@ -1062,7 +1174,6 @@ export declare enum CollectionEventSource {
   EVENT_CHANNEL_METACOUNTER_CREATED = 'EVENT_CHANNEL_METACOUNTER_CREATED',
   EVENT_CHANNEL_METACOUNTER_UPDATED = 'EVENT_CHANNEL_METACOUNTER_UPDATED',
   EVENT_CHANNEL_METACOUNTER_DELETED = 'EVENT_CHANNEL_METACOUNTER_DELETED',
-  EVENT_THREAD_INFO_UPDATED = 'EVENT_THREAD_INFO_UPDATED',
   EVENT_MESSAGE_SENT = 'EVENT_MESSAGE_SENT',
   EVENT_MESSAGE_RECEIVED = 'EVENT_MESSAGE_RECEIVED',
   EVENT_MESSAGE_UPDATED = 'EVENT_MESSAGE_UPDATED',
@@ -1092,6 +1203,10 @@ export declare enum CollectionEventSource {
   EVENT_MESSAGE_THREADINFO_UPDATED = 'EVENT_MESSAGE_THREADINFO_UPDATED',
   EVENT_MESSAGE_OFFSET_UPDATED = 'EVENT_MESSAGE_OFFSET_UPDATED',
   REQUEST_MESSAGE = 'REQUEST_MESSAGE',
+  /**
+   * @deprecated since v4.12.0
+   */
+  EVENT_THREAD_INFO_UPDATED = 'EVENT_THREADINFO_UPDATED',
   EVENT_POLL_UPDATED = 'EVENT_POLL_UPDATED',
   EVENT_POLL_VOTED = 'EVENT_POLL_VOTED',
   SYNC_POLL_CHANGELOGS = 'SYNC_POLL_CHANGELOGS',
@@ -1306,15 +1421,26 @@ export declare class FeedChannel extends BaseChannel {
   markAsRead(messages?: NotificationMessage[]): Promise<void>;
   /**
    * @param messages
-   * @description Sends mark as clicked for given messages.
+   * @deprecated since v4.12.0. Use logClicked instead.
    */
   markAsClicked(messages: NotificationMessage[]): Promise<void>;
   /**
+   * @params messages
+   * @description Logging clicked for statisics.
+   */
+  logClicked(messages: NotificationMessage[]): Promise<void>;
+  /**
    * @param messages
    * @returns
-   * @description Logging impression for statistics. Limitation: IMPRESSION_LOG_LIMIT messages at once.
+   * @deprecated since v4.12.0. Use logViewed instead.
    */
   logImpression(messages: NotificationMessage[]): Promise<boolean>;
+  /**
+   * @param messages
+   * @returns
+   * @description Logging viewed for statistics. Limitation: IMPRESSION_LOG_LIMIT messages at once.
+   */
+  logViewed(messages: NotificationMessage[]): Promise<boolean>;
   /**
    * @param topic
    * @param messages
@@ -1330,7 +1456,7 @@ export declare class FeedChannel extends BaseChannel {
   createNotificationCollection(params?: NotificationCollectionParams): NotificationCollection;
 }
 
-export declare class FeedChannelEventContext extends BaseChannelEventContext {}
+export declare type FeedChannelEventContext = BaseChannelEventContext;
 
 declare type FieldAnswer = string;
 
@@ -1365,7 +1491,7 @@ export declare class FileMessage extends SendableMessage {
   readonly type: string;
   /** Represents the thumbnail information of image file. */
   readonly thumbnails: Thumbnail[];
-  /** The message's survival seconds. */
+  /** @ignore The message's survival seconds. */
   readonly messageSurvivalSeconds: number;
   /**
    * The file URL. If the file encryption feature is enabled, this will have sendbirdChat.eKey combined with the plainUrl so the file can be accessed.
@@ -1604,7 +1730,7 @@ export declare class GroupChannel extends BaseChannel {
   lastMessage: BaseMessage | null;
   /** This property is set when {@link GroupChannel.resetMyHistory} or {@link GroupChannel.hide} is called. */
   messageOffsetTimestamp: number;
-  /** The message survival seconds in this channel. */
+  /** @ignore The message survival seconds in this channel. */
   messageSurvivalSeconds: number;
   /** My member state. */
   myMemberState: MemberState;
@@ -1902,7 +2028,7 @@ export declare class GroupChannel extends BaseChannel {
   copyMessage(channel: BaseChannel, message: MultipleFilesMessage): MessageRequestHandler<MultipleFilesMessage>;
 }
 
-export declare class GroupChannelEventContext extends BaseChannelEventContext {}
+export declare type GroupChannelEventContext = BaseChannelEventContext;
 
 /**
  * @description Represents a group channel hide parameters.
@@ -1949,7 +2075,7 @@ export declare interface GroupChannelUpdateParams {
   customType?: string;
   /** The operator user IDs of the channel. */
   operatorUserIds?: string[];
-  /** The message survival seconds of the channel. */
+  /** @ignore The message survival seconds of the channel. */
   messageSurvivalSeconds?: number;
 }
 
@@ -2206,7 +2332,7 @@ export declare enum MessageCollectionInitPolicy {
 
 export declare interface MessageCollectionParams extends BaseMessageCollectionParams {}
 
-export declare class MessageEventContext extends BaseMessageEventContext {}
+export declare type MessageEventContext = BaseMessageEventContext;
 
 export declare class MessageFilter {
   /**
@@ -2672,7 +2798,7 @@ export declare class MultipleFilesMessage extends SendableMessage {
   messageParams: MultipleFilesMessageCreateParams | null;
   /** It represents the information of the files stored on the Sendbird server that are included in this file message. */
   readonly fileInfoList: UploadedFileInfo[];
-  /** The message's survival seconds. */
+  /** @ignore The message's survival seconds. */
   readonly messageSurvivalSeconds: number;
   getThreadedMessagesByTimestamp(
     ts: number,
@@ -2813,7 +2939,7 @@ export declare interface NotificationData {
   };
 }
 
-export declare class NotificationEventContext extends BaseMessageEventContext {}
+export declare type NotificationEventContext = BaseMessageEventContext;
 
 /**
  * @description Represents information about Notifications.
@@ -3497,6 +3623,24 @@ export declare enum PushTemplate {
   DEFAULT = 'default',
 }
 
+/**
+ * When registering a push token, this is information to track details about the device.
+ * */
+declare interface PushTokenRegistrationDetails {
+  /**
+   * The OS(platform) and version of the device. (e.g. 'android-11')
+   * */
+  deviceOS?: DeviceOsInfo;
+  /**
+   * The manufacturer of the device. (e.g. 'SM-S911x-Samsung')
+   * */
+  deviceManufacturer?: string;
+  /**
+   * Whether system push is enabled.
+   * */
+  systemPushEnabled?: boolean;
+}
+
 export declare enum PushTokenRegistrationState {
   SUCCESS = 'success',
   PENDING = 'pending',
@@ -3988,10 +4132,14 @@ export declare class SendbirdChat {
   updateCurrentUserInfoWithPreferredLanguages(preferredLanguages: string[]): Promise<User>;
   /**
    * @param token
+   * @param details
    * @returns
    * @description Registers an FCM push token to the server.
    */
-  registerFCMPushTokenForCurrentUser(token: string): Promise<PushTokenRegistrationState>;
+  registerFCMPushTokenForCurrentUser(
+    token: string,
+    details?: PushTokenRegistrationDetails,
+  ): Promise<PushTokenRegistrationState>;
   /**
    * @param token
    * @returns
@@ -4004,10 +4152,14 @@ export declare class SendbirdChat {
   unregisterFCMPushTokenAllForCurrentUser(): Promise<void>;
   /**
    * @param token
+   * @param details
    * @returns
    * @description Registers an APNS push token to the server.
    */
-  registerAPNSPushTokenForCurrentUser(token: string): Promise<PushTokenRegistrationState>;
+  registerAPNSPushTokenForCurrentUser(
+    token: string,
+    details?: PushTokenRegistrationDetails,
+  ): Promise<PushTokenRegistrationState>;
   /**
    * @param token
    * @returns
@@ -4018,6 +4170,21 @@ export declare class SendbirdChat {
    * @description Deregister all APNS push tokens for the user.
    */
   unregisterAPNSPushTokenAllForCurrentUser(): Promise<void>;
+  /**
+   * Mark push notification as delivered for push delivery tracking purpose only.<br/>
+   * This does <b>not</b> mark the message as delivered.<br/>
+   * Marking the message as delivered can be done by [GroupChannelModule.markAsDelivered].
+   *
+   * @param pushData The payload data from the push notification.
+   * @param allowedPushNotification Only for Android, the POST_NOTIFICATIONS permission.
+   */
+  markPushNotificationAsDelivered(pushData: Record<string, unknown>, allowedPushNotification?: boolean): Promise<void>;
+  /**
+   * Mark push notification as clicked for push delivery tracking purpose only.
+   *
+   * @param pushData The payload data from the push notification.
+   */
+  markPushNotificationAsClicked(pushData: Record<string, unknown>): Promise<void>;
   /**
    * @returns
    * @description Gets the current User's preference for GroupChannel join.
@@ -4278,6 +4445,64 @@ export declare type SendbirdChatWith<Modules extends Module[]> = SendbirdChat & 
 export declare class SendbirdError extends Error {
   readonly code: number;
   get detail(): string;
+}
+
+/**
+ * @description Represents error codes.
+ */
+export declare enum SendbirdErrorCode {
+  NON_AUTHORIZED = 400108,
+  INVALID_TOKEN = 400111,
+  NOT_FOUND_IN_DATABASE = 400201,
+  USER_AUTH_DEACTIVATED = 400300,
+  USER_AUTH_DELETED_OR_NOT_FOUND = 400301,
+  SESSION_TOKEN_EXPIRED = 400302,
+  APPLICATION_NOT_FOUND = 400304,
+  SESSION_KEY_EXPIRED = 400309,
+  SESSION_REVOKED = 400310,
+  INVALID_SESSION_TYPE = 400312,
+  STAT_UPLOAD_NOT_ALLOWED = 403200,
+  NOT_SUPPORTED_PINNED_MESSAGE_IN_REVIEW_MESSAGE = 400940,
+  INTERNAL_SERVER_ERROR = 500901,
+  RATE_LIMIT_EXCEEDED = 500910,
+  INVALID_REQUIRED_FORM_VALUE = 400105,
+  UNKNOWN_SERVER_ERROR = 900200,
+  NOT_SUPPORTED_FEATURE_IN_IN_REVIEW_MESSAGE = 901500,
+  ERR_DUPLICATED_DATA = 400202,
+  DEBUG_MODE_REQUIRED = 700000,
+  LOST_INSTANCE = 700100,
+  CONNECTION_RENEW = 700102,
+  INVALID_CONNECTION_STATE_TRANSITION = 700200,
+  INVALID_COMMAND = 700700,
+  XMLHTTPREQUEST_NOT_SUPPORTED = 700800,
+  UNKNOWN_ERROR = 770000,
+  INVALID_INITIALIZATION = 800100,
+  CONNECTION_REQUIRED = 800101,
+  CONNECTION_CANCELED = 800102,
+  INVALID_PARAMETER = 800110,
+  NOT_SUPPORTED_ERROR = 800111,
+  NETWORK_ERROR = 800120,
+  NETWORK_ROUTING_ERROR = 800121,
+  MALFORMED_DATA = 800130,
+  MALFORMED_ERROR_DATA = 800140,
+  WRONG_CHANNEL_TYPE = 800150,
+  MARK_AS_READ_RATE_LIMIT_EXCEEDED = 800160,
+  QUERY_IN_PROGRESS = 800170,
+  ACK_TIMEOUT = 800180,
+  LOGIN_TIMEOUT = 800190,
+  WEBSOCKET_CONNECTION_CLOSED = 800200,
+  WEBSOCKET_CONNECTION_FAILED = 800210,
+  REQUEST_FAILED = 800220,
+  FILE_UPLOAD_CANCEL_FAILED = 800230,
+  REQUEST_CANCELED = 800240,
+  REQUEST_DUPLICATED = 800250,
+  FILE_SIZE_LIMIT_EXCEEDED = 800260,
+  ERR_UPLOAD_STAT_RETRY_COUNT_EXCEEDED = 800270,
+  SESSION_TOKEN_REQUEST_FAILED = 800500,
+  SESSION_TOKEN_REFRESHED = 800501,
+  SESSION_TOKEN_REFRESH_FAILED = 800502,
+  COLLECTION_DISPOSED = 800600,
+  DATABASE_ERROR = 800700,
 }
 
 export declare enum SendbirdPlatform {
@@ -4643,7 +4868,7 @@ export declare class UserMessage extends SendableMessage {
    * The messages that have been sent or scheduled with translation option (refer to BaseChannel.sendUserMessage) will have this list.
    */
   readonly translationTargetLanguages: string[];
-  /** The message's survival seconds. */
+  /** @ignore The message's survival seconds. */
   readonly messageSurvivalSeconds: number;
   /** The plugin lists for this message. */
   readonly plugins: Plugin[];
@@ -4840,6 +5065,12 @@ export declare interface GroupChannelCollectionParams {
   filter?: GroupChannelFilter;
   order?: GroupChannelListOrder;
   limit?: number;
+  /**
+   * temporary option for Dream11. (default: false) will be deprecated later.
+   * if the option turns to `true`, the first call of `loadMore()` waits for changelog sync to progress.
+   * once the changelog sync advances (a single page), it applies the changelogs to the result of `loadMore()` and return.
+   */
+  includeChangesOnInitialLoad?: boolean;
 }
 
 /**
@@ -4903,7 +5134,7 @@ export declare interface GroupChannelCreateParams {
   customType?: string;
   /** The operator user IDs of the channel. */
   operatorUserIds?: string[];
-  /** The message survival seconds of the channel. */
+  /** @ignore The message survival seconds of the channel. */
   messageSurvivalSeconds?: number;
 }
 
@@ -4939,7 +5170,6 @@ export declare const GroupChannelEventSource: {
   EVENT_CHANNEL_METACOUNTER_CREATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
   EVENT_CHANNEL_METACOUNTER_UPDATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
   EVENT_CHANNEL_METACOUNTER_DELETED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
-  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_MESSAGE_SENT: CollectionEventSource.EVENT_MESSAGE_SENT;
   EVENT_MESSAGE_RECEIVED: CollectionEventSource.EVENT_MESSAGE_RECEIVED;
   EVENT_MESSAGE_UPDATED: CollectionEventSource.EVENT_MESSAGE_UPDATED;
@@ -4963,6 +5193,7 @@ export declare const GroupChannelEventSource: {
   EVENT_MESSAGE_THREADINFO_UPDATED: CollectionEventSource.EVENT_MESSAGE_THREADINFO_UPDATED;
   EVENT_MESSAGE_OFFSET_UPDATED: CollectionEventSource.EVENT_MESSAGE_OFFSET_UPDATED;
   REQUEST_MESSAGE: CollectionEventSource.REQUEST_MESSAGE;
+  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_POLL_UPDATED: CollectionEventSource.EVENT_POLL_UPDATED;
   EVENT_POLL_VOTED: CollectionEventSource.EVENT_POLL_VOTED;
   SYNC_POLL_CHANGELOGS: CollectionEventSource.SYNC_POLL_CHANGELOGS;
@@ -5681,7 +5912,6 @@ export declare const MessageEventSource: {
   EVENT_CHANNEL_METACOUNTER_CREATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_CREATED;
   EVENT_CHANNEL_METACOUNTER_UPDATED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_UPDATED;
   EVENT_CHANNEL_METACOUNTER_DELETED: CollectionEventSource.EVENT_CHANNEL_METACOUNTER_DELETED;
-  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_MESSAGE_SENT: CollectionEventSource.EVENT_MESSAGE_SENT;
   EVENT_MESSAGE_RECEIVED: CollectionEventSource.EVENT_MESSAGE_RECEIVED;
   EVENT_MESSAGE_UPDATED: CollectionEventSource.EVENT_MESSAGE_UPDATED;
@@ -5705,6 +5935,7 @@ export declare const MessageEventSource: {
   EVENT_MESSAGE_THREADINFO_UPDATED: CollectionEventSource.EVENT_MESSAGE_THREADINFO_UPDATED;
   EVENT_MESSAGE_OFFSET_UPDATED: CollectionEventSource.EVENT_MESSAGE_OFFSET_UPDATED;
   REQUEST_MESSAGE: CollectionEventSource.REQUEST_MESSAGE;
+  EVENT_THREAD_INFO_UPDATED: CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
   EVENT_POLL_UPDATED: CollectionEventSource.EVENT_POLL_UPDATED;
   EVENT_POLL_VOTED: CollectionEventSource.EVENT_POLL_VOTED;
   SYNC_POLL_CHANGELOGS: CollectionEventSource.SYNC_POLL_CHANGELOGS;

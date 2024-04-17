@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.12.2 (Apr 17, 2024)
+### **Improvement**
+- Added ErrorCode(`USER_DEACTIVATED`) in Message Resendable Condition
 ## v4.12.1 (Apr 11, 2024)
 ### **Features**
 - Added additional parameters in `GroupChannelEventContext`

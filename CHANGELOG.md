@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.12.3 (Apr 19, 2024)
+### **Improvement**
+- Fixed a bug when called `resetMyHistory()`, messages in the cache aren't deleted
 ## v4.12.2 (Apr 17, 2024)
 ### **Improvement**
 - Added ErrorCode(`USER_DEACTIVATED`) in Message Resendable Condition

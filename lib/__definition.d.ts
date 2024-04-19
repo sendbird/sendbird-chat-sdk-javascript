@@ -4503,6 +4503,7 @@ export declare enum SendbirdErrorCode {
   SESSION_TOKEN_REFRESH_FAILED = 800502,
   COLLECTION_DISPOSED = 800600,
   DATABASE_ERROR = 800700,
+  USER_DEACTIVATED = 900021,
 }
 
 export declare enum SendbirdPlatform {

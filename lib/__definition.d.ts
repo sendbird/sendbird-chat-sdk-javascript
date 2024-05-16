@@ -1,5 +1,7 @@
 import type AsyncStorage from '@react-native-async-storage/async-storage';
 
+import type { MMKV } from 'react-native-mmkv';
+
 /**
  * @description Object representing an admin message.
  */
@@ -45,6 +47,10 @@ export declare class AppInfo {
   readonly multipleFilesMessageFileCountLimit: number;
   /** Whether the SDK stat would be uploaded. */
   readonly allowSdkStatsUpload: boolean;
+  /** Whether to increase or decrease on thread messages. */
+  readonly unreadCountThreadingPolicy: UnreadCountThreadingPolicy;
+  /** Whether to set a thread message as a last message. */
+  readonly lastMessageThreadingPolicy: LastMessageThreadingPolicy;
   /** Notification info. */
   readonly notificationInfo: NotificationInfo | null;
   readonly uikitConfigInfo: UIKitConfigInfo;
@@ -847,6 +853,12 @@ export declare class BaseMessage extends MessagePrototype {
    * @deprecated since v4.10.6. Use submitForm({ form: Form }) instead.
    */
   submitForm(data: { formId?: string; answers?: Record<string, string> }): Promise<void>;
+  /**
+   * @param data
+   * @returns
+   * @description Submits the form message received from the bot.
+   */
+  submitForm(data: { form: Form }): Promise<void>;
   /**
    * @param data
    * @description Submits the feedback for the message.
@@ -2090,6 +2102,13 @@ export declare interface InvitationPreference {
   autoAccept: boolean;
 }
 
+export declare enum LastMessageThreadingPolicy {
+  NONE = 0,
+  INCLUDE_REPLY = 1,
+  EXCLUDE_REPLY = 2,
+  INCLUDE_REPLY_TO_CHANNEL = 3,
+}
+
 export declare class LocalCacheConfig {
   constructor({ maxSize, clearOrder, customClearOrderComparator, enableAutoResend }?: LocalCacheConfigParams);
   get maxSize(): number;
@@ -2728,7 +2747,7 @@ export declare interface MessageSearchQueryParams extends BaseListQueryParams {
   /**
    * @description The target fields of the current query as the search scope.
    */
-  targetFields?: string[];
+  targetFields?: string[] | null;
 }
 
 export declare interface MessageTemplate {
@@ -4433,7 +4452,9 @@ export declare interface SendbirdChatParams<Modules extends Module[]> {
   localCacheEnabled?: boolean;
   localCacheConfig?: LocalCacheConfig;
   localCacheEncryption?: Encryption;
+  /** @deprecated */
   useAsyncStorageStore?: typeof AsyncStorage;
+  useMMKVStorageStore?: MMKV;
   appStateToggleEnabled?: boolean;
 }
 
@@ -4504,6 +4525,7 @@ export declare enum SendbirdErrorCode {
   COLLECTION_DISPOSED = 800600,
   DATABASE_ERROR = 800700,
   USER_DEACTIVATED = 900021,
+  RECEIVER_USER_DEACTIVATED = 900081,
 }
 
 export declare enum SendbirdPlatform {
@@ -4710,6 +4732,13 @@ export declare class UIKitConfigInfo {
 declare interface UIKitConfiguration {
   string: string;
   json: object;
+}
+
+export declare enum UnreadCountThreadingPolicy {
+  NONE = 0,
+  INCLUDE_REPLY = 1,
+  EXCLUDE_REPLY = 2,
+  INCLUDE_REPLY_TO_CHANNEL = 3,
 }
 
 /**

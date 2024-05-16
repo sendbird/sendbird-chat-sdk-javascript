@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.12.4 (May 16, 2024)
+### **Improvement**
+- Added `useMMKVStorageStore` to `SendbirdChatParams`
+- Deprecated `useAsyncStorageStore` in `SendbirdChatParams`
+- Fixed a bug that `connect()` call may crash in a certain condition
+- Fixed a bug that `MultipleFilesMessage` has wrong `data` value
+- Improved stability
 ## v4.12.3 (Apr 19, 2024)
 ### **Improvement**
 - Fixed a bug when called `resetMyHistory()`, messages in the cache aren't deleted

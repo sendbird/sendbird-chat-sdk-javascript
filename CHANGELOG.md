@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.12.5 (May 22, 2024)
+### **Improvement**
+- Fixed a bug that pending `MultipleFilesMessage` has empty `data`
+- Fixed a bug that `loadMore()` in `GroupChannelCollection` gives less channels in a certain condition
+- Improved stability
 ## v4.12.4 (May 16, 2024)
 ### **Improvement**
 - Added `useMMKVStorageStore` to `SendbirdChatParams`

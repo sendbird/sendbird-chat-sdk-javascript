@@ -1,5 +1,12 @@
 # Changelog
 
+## vv4.12.6 (May 28, 2024)
+### **Improvement**
+- Fixed a bug that always throws a `Connection is canceled` error when `connect()` is failed
+- Fixed a bug where `SessionRefreshed()` was called twice
+- Fixed a bug where SessionHandler callback is called when `connect()` is failed
+- Fixed a bug inconsistent count of joined channels
+- Improved stability
 ## v4.12.5 (May 22, 2024)
 ### **Improvement**
 - Fixed a bug that pending `MultipleFilesMessage` has empty `data`

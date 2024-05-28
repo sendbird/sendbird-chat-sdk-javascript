@@ -1,6 +1,6 @@
 # Changelog
 
-## vv4.12.6 (May 28, 2024)
+## v4.12.6 (May 28, 2024)
 ### **Improvement**
 - Fixed a bug that always throws a `Connection is canceled` error when `connect()` is failed
 - Fixed a bug where `SessionRefreshed()` was called twice

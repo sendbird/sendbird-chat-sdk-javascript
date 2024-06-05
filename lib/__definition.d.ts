@@ -813,8 +813,8 @@ export declare class BaseMessage extends MessagePrototype {
   /** The suggested replies of the message. */
   suggestedReplies: string[] | null;
   /**
-   * My feedback of the message. Not null, if its {@link FeedbackStatus} is <b>FeedbackStatus.SUBMITTED</b> Null,
-   * if its FeedbackStatus is <b>FeedbackStatus.NOT_APPLICABLE</b> or <b>FeedbackStatus.NO_FEEDBACK/b>.
+   * My feedback of the message. Not null, if its {@link FeedbackStatus} is <b>FeedbackStatus.SUBMITTED</b>
+   * Null, if its FeedbackStatus is <b>FeedbackStatus.NOT_APPLICABLE</b> or <b>FeedbackStatus.NO_FEEDBACK/b>.
    */
   myFeedback: Feedback | null;
   /** My feedback status of the message. */

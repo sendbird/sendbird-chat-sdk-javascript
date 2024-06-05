@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.12.7 (Jun 05, 2024)
+### **Improvement**
+- Fixed the Feedback feature to function correctly
+- Fixed a bug where `groupChannel.cachedMetadata` was returned as `undefined` in the result value of `ChangeLogs`
 ## v4.12.6 (May 28, 2024)
 ### **Improvement**
 - Fixed a bug that always throws a `Connection is canceled` error when `connect()` is failed

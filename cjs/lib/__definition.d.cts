@@ -813,8 +813,8 @@ export declare class BaseMessage extends MessagePrototype {
   /** The suggested replies of the message. */
   suggestedReplies: string[] | null;
   /**
-   * My feedback of the message. Not null, if its {@link FeedbackStatus} is <b>FeedbackStatus.SUBMITTED</b> Null,
-   * if its FeedbackStatus is <b>FeedbackStatus.NOT_APPLICABLE</b> or <b>FeedbackStatus.NO_FEEDBACK/b>.
+   * My feedback of the message. Not null, if its {@link FeedbackStatus} is <b>FeedbackStatus.SUBMITTED</b>
+   * Null, if its FeedbackStatus is <b>FeedbackStatus.NOT_APPLICABLE</b> or <b>FeedbackStatus.NO_FEEDBACK/b>.
    */
   myFeedback: Feedback | null;
   /** My feedback status of the message. */
@@ -5046,6 +5046,8 @@ export declare interface GroupChannelChangeLogsParams {
   includeEmpty?: boolean;
   /** Whether to include frozen channels or not. (default: true) */
   includeFrozen?: boolean;
+  /** Whether to include channel metadata. (default: true) */
+  includeMetaData?: boolean;
   /** Whether to include chat notification channels in changelogs. */
   includeChatNotification?: boolean;
 }
@@ -5248,6 +5250,8 @@ export declare class GroupChannelFilter {
    * @description Checks whether query result includes frozen channels. (default: true)
    */
   includeFrozen: boolean;
+  /** Whether to include channel metadata. (default: true) */
+  includeMetaData: boolean;
   /**
    * @description List of channel URL filter.
    *  It will return null if channel URL filter hasn't been set before.
@@ -5341,6 +5345,8 @@ export declare interface GroupChannelFilterParams {
    * @description Checks whether query result includes frozen channels. (default: true)
    */
   includeFrozen?: boolean;
+  /** Whether to include channel metadata. (default: true) */
+  includeMetaData?: boolean;
   /**
    * @description List of channel URL filter.
    *  It will return null if channel URL filter hasn't been set before.

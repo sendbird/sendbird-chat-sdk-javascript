@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.12.8 (Jun 20, 2024)
+### **Improvement**
+- Added `includeMetaData` to `GroupChannelFilter`
 ## v4.12.7 (Jun 05, 2024)
 ### **Improvement**
 - Fixed the Feedback feature to function correctly

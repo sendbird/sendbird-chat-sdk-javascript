@@ -849,6 +849,7 @@ export declare class BaseMessage extends MessagePrototype {
    * @description Sets push notification enabled for the thread.
    */
   setPushNotificationEnabled(pushEnabled: boolean): Promise<void>;
+  submitMessageForm(data: { formId: number; answers: Record<string, string> }): Promise<void>;
   /**
    * @deprecated since v4.10.6. Use submitForm({ form: Form }) instead.
    */

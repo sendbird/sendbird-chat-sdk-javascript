@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.12.9 (Jun 24, 2024)
+### **Features**
+- Added `submitMessageForm()` to `BaseMessage`
+
+### **Improvements**
+- Lower the version of `react-native-mmkv` in `peerDependencies` from `^2.12.2` to `^2.0.0`.
+
 ## v4.12.8 (Jun 20, 2024)
 ### **Improvement**
 - Added `includeMetaData` to `GroupChannelFilter`

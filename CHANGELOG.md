@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.12.10 (Jun 28, 2024)
+
+### **Improvements**
+- Fixed a bug that `connect()` fails if a session key is expired
+
 ## v4.12.9 (Jun 24, 2024)
 ### **Features**
 - Added `submitMessageForm()` to `BaseMessage`

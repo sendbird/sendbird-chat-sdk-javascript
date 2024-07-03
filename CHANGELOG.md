@@ -1,6 +1,25 @@
 # Changelog
 
-## v4.12.10 (Jun 28, 2024)
+## v4.13.0 (Jul 03, 2024)
+
+### **Feature**
+SDK now supports `MessageForm`! Form message can only be sent through AI Chatbot in Sendbird dashboard.
+ - Added `MessageForm`
+ - Added `MessageFormItem`
+ - Added `MessageFormItemStyle`,
+ - Added `MessageFormItemLayout`,
+ - Added `MessageFormItemResultCount`,
+ - Added `submitMessageForm()` in `BaseMessage`
+ - Deprecated `submitMessageForm(data)` in `BaseMessage`
+
+### **Improvements**
+- Added `sb.authenticate()`
+- Added `sb.feedChannel.getTotalUnreadNotificationCount()`
+- Deprecated `sb.authenticateFeed()`
+- Deprecated `sb.feedChannel.getTotalUnreadMessageCount()`
+- Fixed timing issue with `BackGroundSync` completion confirmation
+- Fixed a bug that `userIdsFilter` and `searchFilter` don't work in MessageCollection
+- (internal) Added `ThrottleController` in `MessageCollection`## v4.12.10 (Jun 28, 2024)
 
 ### **Improvements**
 - Fixed a bug that `connect()` fails if a session key is expired

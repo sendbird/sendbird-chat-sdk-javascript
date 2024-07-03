@@ -819,8 +819,8 @@ export declare class BaseMessage extends MessagePrototype {
   myFeedback: Feedback | null;
   /** My feedback status of the message. */
   myFeedbackStatus: FeedbackStatus;
-  /** List of {@link Form} that allow users to input their information or opinions */
-  forms: Form[] | null;
+  /** The form of the message. */
+  messageForm: MessageForm | null;
   isIdentical(message: BaseMessage): boolean;
   /**
    * @param threadInfoUpdateEvent
@@ -849,17 +849,16 @@ export declare class BaseMessage extends MessagePrototype {
    * @description Sets push notification enabled for the thread.
    */
   setPushNotificationEnabled(pushEnabled: boolean): Promise<void>;
-  submitMessageForm(data: { formId: number; answers: Record<string, string> }): Promise<void>;
-  /**
-   * @deprecated since v4.10.6. Use submitForm({ form: Form }) instead.
-   */
-  submitForm(data: { formId?: string; answers?: Record<string, string> }): Promise<void>;
   /**
    * @param data
    * @returns
-   * @description Submits the form message received from the bot.
+   * @description Submits the message form of this message.
    */
-  submitForm(data: { form: Form }): Promise<void>;
+  submitMessageForm(): Promise<void>;
+  /**
+   * @deprecated since v4.13.0. Use submitMessageForm() instead.
+   */
+  submitMessageForm(data: { formId: number; answers: Record<string, string> }): Promise<void>;
   /**
    * @param data
    * @description Submits the feedback for the message.
@@ -1471,8 +1470,6 @@ export declare class FeedChannel extends BaseChannel {
 
 export declare type FeedChannelEventContext = BaseChannelEventContext;
 
-declare type FieldAnswer = string;
-
 export declare type FileCompat = File | Blob | FileInfo;
 
 /**
@@ -1577,91 +1574,6 @@ export declare interface FileUploadResult {
   url: string;
   thumbnails?: Thumbnail[];
 }
-
-/**
- * @description Represents a form.
- */
-export declare class Form {
-  /** The ID of the message to which the corresponding form belongs. */
-  readonly messageId: number;
-  /** The key of the form. */
-  readonly key: FormKey;
-  /**
-   * @deprecated
-   * The key of the form. Use `key` instead.
-   */
-  formKey: FormKey;
-  /** A set of fields representing a single question and its corresponding response. */
-  fields: FormField[];
-  /** The submitted answer to this form field. `null` if it is not submitted yet. */
-  answers?: FormAnswers;
-  /** Whether this form is submitted or not. */
-  get isSubmitted(): boolean;
-  /** Whether this form is submittable or not. */
-  get isSubmittable(): boolean;
-  /**
-   * @param key
-   * @returns
-   * @description Gets a field answer for the key.
-   */
-  getFieldAnswer(key: FormKey): FieldAnswer | undefined;
-}
-
-declare type FormAnswers = Record<FormFieldKey, FieldAnswer>;
-
-/**
- * @description Represents a form field where users can enter values.
- */
-export declare class FormField {
-  /** The key of the form field. */
-  readonly key: FormFieldKey;
-  /** The title of the form field. */
-  readonly title: string;
-  /** The input type of the form field. */
-  readonly inputType: FormFieldInputType;
-  /** Whether this form field is required or not. */
-  readonly required: boolean;
-  /** The regular expression of this form field to validate the input value. */
-  readonly regex?: string;
-  /** The placeholder of this form field when the input value is empty. */
-  readonly placeholder?: string;
-  /**
-   * @deprecated Use `FormField.key` instead.
-   * */
-  readonly fieldKey: FormFieldKey;
-  /** The temporary answer to this form field to store the input value before submitting.
-   *  It becomes `null` when it is submitted.
-   */
-  temporaryAnswer?: FieldAnswer;
-  /**
-   * @param value
-   * @returns
-   * @description Whether the given string is valid or not.
-   *  If the regex is `null` or not a regular expression, it always returns `true`.
-   */
-  isValid(value: string): boolean;
-  /** Whether this form field is submittable or not. */
-  get isSubmittable(): boolean;
-}
-
-/**
- * @description Represents a input type of a {@link FormField}.
- */
-export declare enum FormFieldInputType {
-  Text = 'text',
-  Phone = 'phone',
-  Email = 'email',
-  Password = 'password',
-}
-
-declare type FormFieldKey = string;
-
-/**
- * Represents a baseMessage.form
- *
- * @see BaseMessage.forms
- */
-declare type FormKey = string;
 
 export declare interface FriendChangelogs {
   addedUsers: User[];
@@ -2397,6 +2309,74 @@ export declare interface MessageFilterParams {
   replyType?: ReplyType;
 }
 
+/**
+ * @description Represents a form.
+ */
+export declare class MessageForm {
+  /** The id of this form. */
+  readonly id: number;
+  /** The name of this form. */
+  readonly name: string;
+  /** The id of the message to which this form is attached. */
+  readonly messageId: number;
+  /** A form items of this form. */
+  items: MessageFormItem[];
+  /** Submitted state of this form. */
+  get isSubmitted(): boolean;
+  /** Submittable state of this form. */
+  get isSubmittable(): boolean;
+}
+
+/**
+ * @description Represents a messageForm item where users can enter values.
+ */
+export declare class MessageFormItem {
+  /** The id of this messageForm item. */
+  readonly id: number;
+  /** The name of this messageForm item. */
+  readonly name: string;
+  /** Whether this messageForm item is required or not. */
+  readonly required: boolean;
+  /** The sort order of this messageForm item. */
+  readonly sortOrder: number;
+  /** The placeholder of this messageForm item. */
+  readonly placeholder: string;
+  /** The style of this messageForm item. */
+  readonly style: MessageFormItemStyle;
+  /** The submitted values of  */
+  readonly submittedValues?: string[];
+  draftValues?: string[];
+  /**
+   * @returns
+   * @description Checks whether the given values are valid or not.
+   */
+  isValid(values: string[]): boolean;
+}
+
+export declare enum MessageFormItemLayout {
+  TEXT = 'text',
+  TEXTAREA = 'textarea',
+  NUMBER = 'number',
+  PHONE = 'phone',
+  EMAIL = 'email',
+  CHIP = 'chip',
+}
+
+/**
+ * Represents range of possible number of options to be submitted for MessageFormItemLayout.CHIP layout.
+ */
+export declare interface MessageFormItemResultCount {
+  min: number;
+  max: number;
+}
+
+export declare interface MessageFormItemStyle {
+  layout: MessageFormItemLayout;
+  options?: string[];
+  defaultOptions?: string[];
+  resultCount?: MessageFormItemResultCount;
+}
+
 export declare type MessageHandler<T> = (message: T) => void;
 
 /**
@@ -2550,11 +2530,6 @@ declare class MessagePrototype {
    * @description Whether this message is {@link AdminMessage}.
    */
   isAdminMessage(): this is AdminMessage;
-  /**
-   * @returns
-   * @description Whether the message has form.
-   */
-  hasForm(): this is AdminMessage;
   /**
    * @returns
    * @description Serializes a {@link UserMessage}, {@link FileMessage} or {@link AdminMessage} instance.
@@ -4015,13 +3990,17 @@ export declare class SendbirdChat {
    */
   clearCachedMessages(channelUrls: string[]): Promise<void>;
   /**
+   * @deprecated since version v4.13.0
+   */
+  authenticateFeed(userId: string, authToken?: string): Promise<User>;
+  /**
    * @param userId
    * @param authToken
    * @returns
-   * @description If you want to use the interface provided by the FeedChannel only,
+   * @description If you want to use the interface without websocket connection,
    *  we'd recommend to authenticate using this function instead of SendbirdChat.connect.
    */
-  authenticateFeed(userId: string, authToken?: string): Promise<User>;
+  authenticate(userId: string, authToken?: string): Promise<User>;
   /**
    * @param userId
    * @param authToken
@@ -4483,6 +4462,7 @@ export declare enum SendbirdErrorCode {
   SESSION_KEY_EXPIRED = 400309,
   SESSION_REVOKED = 400310,
   INVALID_SESSION_TYPE = 400312,
+  INVALID_AUTH_FOR_SERVICE = 400313,
   STAT_UPLOAD_NOT_ALLOWED = 403200,
   NOT_SUPPORTED_PINNED_MESSAGE_IN_REVIEW_MESSAGE = 400940,
   INTERNAL_SERVER_ERROR = 500901,
@@ -6592,11 +6572,14 @@ export declare class FeedChannelModule extends Module {
     params?: FeedChannelChangeLogsParams,
   ): Promise<FeedChannelChangelogs>;
   /**
-   * @param params
-   * @returns
-   * @description Gets total unread message count.
+   * @deprecated since version 4.13.0
    */
   getTotalUnreadMessageCount(params?: TotalUnreadMessageCountParams): Promise<number>;
+  /**
+   * @returns Promise<number>
+   * @description Gets total unread notification message count.
+   */
+  getTotalUnreadNotificationCount(): Promise<number>;
   /**
    * @returns
    * @description Gets GlobalNotificationChannelSetting.

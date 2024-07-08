@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.13.1 (Jul 08, 2024)
+
+### **Improvements**
+- Fixed a bug in `MessageForm` to support backward compatibility
 ## v4.13.0 (Jul 03, 2024)
 
 ### **Feature**

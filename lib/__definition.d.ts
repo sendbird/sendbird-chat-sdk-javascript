@@ -1687,6 +1687,10 @@ export declare class GroupChannel extends BaseChannel {
   get cachedUnreadMemberState(): object;
   /** Snapshot of member delivery state map. */
   get cachedUndeliveredMemberState(): object;
+  /** Indicates whether this channel includes any bots */
+  get hasBot(): boolean;
+  /** Indicates whether this channel includes any AI bots. */
+  get hasAiBot(): boolean;
   /**
    * @param message
    * @returns
@@ -2319,6 +2323,8 @@ export declare class MessageForm {
   readonly name: string;
   /** The id of the message to which this form is attached. */
   readonly messageId: number;
+  /** The version of this form. */
+  readonly version: number;
   /** A form items of this form. */
   items: MessageFormItem[];
   /** Submitted state of this form. */
@@ -4368,6 +4374,10 @@ export declare class SendbirdChat {
    * @description Requests the emoji.
    */
   getEmoji(emojiKey: string): Promise<Emoji>;
+  /**
+   * @returns
+   */
+  getUIKitConfiguration(): Promise<UIKitConfiguration>;
 }
 
 /**
@@ -6211,9 +6221,7 @@ export declare enum ScheduledStatus {
   CANCELED = 'canceled',
 }
 
-export declare type SendbirdGroupChat = SendbirdChat & {
-  groupChannel: GroupChannelModule;
-};
+export declare type SendbirdGroupChat = SendbirdChatWith<[GroupChannelModule]>;
 
 /** The super channel filter. */
 export declare enum SuperChannelFilter {
@@ -6445,9 +6453,7 @@ export declare class OpenChannelModule extends Module {
   ): Promise<OpenChannel>;
 }
 
-export declare type SendbirdOpenChat = SendbirdChat & {
-  openChannel: OpenChannelModule;
-};
+export declare type SendbirdOpenChat = SendbirdChatWith<[OpenChannelModule]>;
 
 /**
  * @description Represents {@link FeedChannel} changelogs.
@@ -6646,6 +6652,4 @@ declare interface NotificationTemplateListResult {
   notificationTemplateList: NotificationTemplateList;
 }
 
-export declare type SendbirdFeedChat = SendbirdChat & {
-  feedChannel: FeedChannelModule;
-};
+export declare type SendbirdFeedChat = SendbirdChatWith<[FeedChannelModule]>;

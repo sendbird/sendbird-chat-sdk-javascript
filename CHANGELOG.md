@@ -9,7 +9,7 @@
 - Fixed bug where too many request API in `messageCollection`
 - Fixed an issue where the SDK instance was not being correctly type-inferred
 - Improved Message delivery speed in MessageCollection Initialize
-- (internal) Added Node.js support( >= 18.0.0 )
+
 ## v4.13.1 (Jul 08, 2024)
 
 ### **Improvements**

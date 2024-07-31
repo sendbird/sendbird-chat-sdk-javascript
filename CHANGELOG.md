@@ -1,5 +1,19 @@
 # Changelog
 
+## v4.13.2 (Jul 31, 2024)
+
+### **Improvements**
+- Added `hasBot` and `hasAiBot` in `GroupChannel`
+- Added `version` to `MessageForm`
+- Fixed a bug where `MessageForm.isSubmitted` is evaluated as true for a `MessageForm` of which every `MessageFormItem.required` is false and the message form is not yet submitted
+- Fixed bug where too many request API in `messageCollection`
+- Fixed an issue where the SDK instance was not being correctly type-inferred
+- Improved Message delivery speed in MessageCollection Initialize
+
+## v4.13.1 (Jul 08, 2024)
+
+### **Improvements**
+- Fixed a bug in `MessageForm` to support backward compatibility
 ## v4.13.0 (Jul 03, 2024)
 
 ### **Feature**

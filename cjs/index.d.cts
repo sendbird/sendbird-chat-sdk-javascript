@@ -3,6 +3,7 @@ import './groupChannel.d.cts';
 import './openChannel.d.cts';
 import './poll.d.cts';
 import './feedChannel.d.cts';
+import './node.d.cts';
 
 export {
   AppInfo,

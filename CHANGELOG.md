@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.13.3 (Aug 01, 2024)
+
+### **Improvements**
+- Fixed a build error related to Node.js package inclusion
 ## v4.13.2 (Jul 31, 2024)
 
 ### **Improvements**

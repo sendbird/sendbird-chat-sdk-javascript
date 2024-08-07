@@ -1,5 +1,23 @@
 # Changelog
 
+## v4.14.0 (Aug 07, 2024)
+
+### **Feature**
+Support `pinned message` in `OpenChannel`
+- Added `pinnedMessageIds` property in `BaseChannel`
+- Added `createPinnedMessageListQuery` method in `BaseChannel`
+- Added `pinMessage` method in `BaseChannel`
+- Added `unpinMessage` method in `BaseChannel`
+- Added `lastPinnedMessage` property in `OpenChannel`
+- Added `onPinnedMessageUpdated` in `OpenChannelHandler`
+
+
+### **Improvements**
+- Added `customTypeFilters` in `UnreadItemCountParams`
+## v4.13.3 (Aug 01, 2024)
+
+### **Improvements**
+- Fixed a build error related to Node.js package inclusion
 ## v4.13.2 (Jul 31, 2024)
 
 ### **Improvements**

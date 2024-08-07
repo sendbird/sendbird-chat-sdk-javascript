@@ -1,5 +1,5 @@
 {
-  "version": "4.13.2",
+  "version": "4.14.0",
   "description": "Sendbird SDK for JavaScript",
   "sideEffects": false,
   "name": "@sendbird/chat",
@@ -95,6 +95,16 @@
         "types": "./cjs/feedChannel.d.cts",
         "default": "./cjs/feedChannel.cjs"
       }
+    },
+    "./node": {
+      "import": {
+        "types": "./node.d.ts",
+        "default": "./node.js"
+      },
+      "require": {
+        "types": "./cjs/node.d.cts",
+        "default": "./cjs/node.cjs"
+      }
     }
   },
   "typesVersions": {
@@ -113,6 +123,9 @@
       ],
       "feedChannel": [
         "./feedChannel.d.ts"
+      ],
+      "node": [
+        "./node.d.ts"
       ]
     }
   }

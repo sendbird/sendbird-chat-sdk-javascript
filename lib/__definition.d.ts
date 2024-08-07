@@ -135,6 +135,8 @@ export declare interface BannedUserListQueryParams extends BaseListQueryParams {
  * @description Objects representing a channel.
  */
 export declare class BaseChannel {
+  /** The pinned message IDs of the channel. */
+  pinnedMessageIds: number[];
   /** The unique channel URL. */
   get url(): string;
   /** The topic or name of the channel. */
@@ -210,6 +212,12 @@ export declare class BaseChannel {
    * @description Creates previous message list query for this channel.
    */
   createPreviousMessageListQuery(params?: PreviousMessageListQueryParams): PreviousMessageListQuery;
+  /**
+   * @param params
+   * @returns
+   * @description Creates a query instance to get pinned messages.
+   */
+  createPinnedMessageListQuery(params?: PinnedMessageListQueryParams): PinnedMessageListQuery;
   /**
    * @param userIds
    * @description Add operators to the channel.
@@ -644,6 +652,16 @@ export declare class BaseChannel {
    * @description Creates a query instance to get the voters of a poll option.
    */
   createPollVoterListQuery(pollId: number, pollOptionId: number, limit?: number): PollVoterListQuery;
+  /**
+   * @param messageId
+   * @description Pins a message to the channel.
+   */
+  pinMessage(messageId: number): Promise<void>;
+  /**
+   * @param messageId
+   * @description Removes the message from the channel's pinned messages.
+   */
+  unpinMessage(messageId: number): Promise<void>;
 }
 
 /**
@@ -1675,8 +1693,6 @@ export declare class GroupChannel extends BaseChannel {
   invitedAt: number;
   /** The timestamp when the current user joined. */
   joinedAt: number;
-  /** The pinned message IDs of the channel. */
-  pinnedMessageIds: number[];
   /** The last message among channel's pinned messages. */
   lastPinnedMessage: BaseMessage | null;
   /** Checks whether this channel is hidden. */
@@ -1721,12 +1737,6 @@ export declare class GroupChannel extends BaseChannel {
    * @description Creates a query instance to get threaded parent messages.
    */
   createThreadedParentMessageListQuery(params?: ThreadedParentMessageListQueryParams): ThreadedParentMessageListQuery;
-  /**
-   * @param params
-   * @returns
-   * @description Creates a query instance to get pinned messages.
-   */
-  createPinnedMessageListQuery(params?: PinnedMessageListQueryParams): PinnedMessageListQuery;
   /**
    * @param message
    * @returns
@@ -1934,16 +1944,6 @@ export declare class GroupChannel extends BaseChannel {
    *  After this call, the messages created before the call will not be loaded.
    */
   resetMyHistory(): Promise<GroupChannel>;
-  /**
-   * @param messageId
-   * @description Pins a message to the channel.
-   */
-  pinMessage(messageId: number): Promise<void>;
-  /**
-   * @param messageId
-   * @description Removes the message from the channel's pinned messages.
-   */
-  unpinMessage(messageId: number): Promise<void>;
   resendMessage(failedMessage: MultipleFilesMessage): MultipleFilesMessageRequestHandler<MultipleFilesMessage>;
   resendMessage(failedMessage: FileMessage, file?: FileCompat): MessageRequestHandler<FileMessage>;
   resendMessage(failedMessage: UserMessage): MessageRequestHandler<UserMessage>;
@@ -3040,6 +3040,8 @@ export declare class OpenChannel extends BaseChannel {
   participantCount: number;
   /** The operators of the channel. */
   operators: User[];
+  /** The last message among channel's pinned messages. */
+  lastPinnedMessage: BaseMessage | null;
   /**
    * @returns
    * @description Serializes the OpenChannel instance.
@@ -3099,8 +3101,8 @@ export declare class OpenChannel extends BaseChannel {
    *  Note that only operators of a channel are able to delete it or else, an error will be returned to the handler.
    */
   delete(): Promise<void>;
-  sendUserMessage(params: UserMessageCreateParams): MessageRequestHandler;
-  sendFileMessage(params: FileMessageCreateParams): MessageRequestHandler;
+  updateUserMessage(messageId: number, params: UserMessageUpdateParams): Promise<UserMessage>;
+  updateFileMessage(messageId: number, params: FileMessageUpdateParams): Promise<FileMessage>;
 }
 
 /**
@@ -6276,6 +6278,7 @@ export declare interface UnreadItemCount {
  */
 export declare interface UnreadItemCountParams {
   keys?: UnreadItemKey[];
+  customTypeFilters?: string[];
 }
 
 /** The unread item key. */
@@ -6332,6 +6335,8 @@ declare abstract class OpenChannelHandlerParams extends BaseChannelHandlerParams
   onPollVoted?: (channel: OpenChannel, event: PollVoteEvent) => void;
   /** Called when a poll is deleted. */
   onPollDeleted?: (channel: OpenChannel, id: number) => void;
+  /** A callback for when pinned message is changed. */
+  onPinnedMessageUpdated?: (channel: OpenChannel) => void;
 }
 
 /**

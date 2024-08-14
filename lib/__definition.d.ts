@@ -3979,6 +3979,11 @@ export declare class SendbirdChat {
    */
   setOfflineListener(listener: OnlineDetectorListener): void;
   /**
+   * @param locale
+   * @description DO NOT USE, Sets the locale for the chatbot.
+   * */
+  setLocaleForChatbot(locale: string): void;
+  /**
    * @param userId
    * @description Initializes local cache database.
    */
@@ -6278,7 +6283,9 @@ export declare interface UnreadItemCount {
  */
 export declare interface UnreadItemCountParams {
   keys?: UnreadItemKey[];
+  /** @deprecated since v4.14.1 Use messages customTypesFilter */
   customTypeFilters?: string[];
+  customTypesFilter?: string[];
 }
 
 /** The unread item key. */

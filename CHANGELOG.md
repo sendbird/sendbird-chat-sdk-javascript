@@ -1,7 +1,11 @@
 # Changelog
 
-## v4.14.0 (Aug 07, 2024)
+## v4.14.1 (Aug 14, 2024)
+### **Improvements**
+- Deprecated `customTypeFilters` in `UnreadItemCountParams`
+- Added `customTypesFilter` in `UnreadItemCountParams`
 
+## v4.14.0 (Aug 07, 2024)
 ### **Feature**
 Support `pinned message` in `OpenChannel`
 - Added `pinnedMessageIds` property in `BaseChannel`

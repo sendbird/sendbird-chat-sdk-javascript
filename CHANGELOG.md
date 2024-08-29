@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.14.2 (Aug 29, 2024)
+### **Improvements**
+- Improvement stability
 ## v4.14.1 (Aug 14, 2024)
 ### **Improvements**
 - Deprecated `customTypeFilters` in `UnreadItemCountParams`

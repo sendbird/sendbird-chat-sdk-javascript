@@ -2493,7 +2493,7 @@ declare class MessagePrototype {
   /** The mentioned user ids of the message. */
   mentionedUserIds: string[] | null;
   /** The mentioned message template of the message. */
-  mentionedMessageTemplate: string;
+  mentionedMessageTemplate: string | undefined;
   /** Gets an array of meta arrays sorted by chronological order. */
   metaArrays: MessageMetaArray[];
   /** The template for the message. */

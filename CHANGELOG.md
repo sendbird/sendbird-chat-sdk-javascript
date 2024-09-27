@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.14.3 (Sep 13, 2024)
+### **Improvements**
+- Fixed a bug where there was no mentionedUser when sending a message with mentionedUserId as CopyMessage
+## v4.14.2 (Aug 29, 2024)
+### **Improvements**
+- Improvement stability
 ## v4.14.1 (Aug 14, 2024)
 ### **Improvements**
 - Deprecated `customTypeFilters` in `UnreadItemCountParams`

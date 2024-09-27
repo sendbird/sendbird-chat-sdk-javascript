@@ -1089,7 +1089,6 @@ declare abstract class BaseStore {
   constructor(props: BaseStoreParams);
   abstract checkAvailability(): Promise<void>;
   abstract init(dbname: string): Promise<void>;
-  abstract clear(): Promise<void>;
   get adjustedItemSizeLimit(): number;
   usage(): Promise<number>;
   getAllKeys(): Promise<string[]>;
@@ -1098,6 +1097,7 @@ declare abstract class BaseStore {
   setMany(items: StoreItem[]): Promise<object[]>;
   remove(key: string): Promise<boolean>;
   removeMany(keys: string[]): Promise<string[]>;
+  clear(): Promise<void>;
 }
 
 declare interface BaseStoreParams {

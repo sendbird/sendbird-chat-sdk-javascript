@@ -6,8 +6,6 @@ import type { MMKV } from 'react-native-mmkv';
  * @description Object representing an admin message.
  */
 export declare class AdminMessage extends BaseMessage {
-  /** The message text of the message. */
-  message: string;
   /** The translated messages (key-value map) for the language codes in key. */
   translations: object;
   /**
@@ -839,6 +837,8 @@ export declare class BaseMessage extends MessagePrototype {
   myFeedbackStatus: FeedbackStatus;
   /** The form of the message. */
   messageForm: MessageForm | null;
+  /** The message text of the message. */
+  message: string;
   isIdentical(message: BaseMessage): boolean;
   /**
    * @param threadInfoUpdateEvent
@@ -1558,6 +1558,8 @@ export declare interface FileMessageCreateParams extends BaseMessageCreateParams
   mimeType?: string;
   /** The file's thumbnail sizes of the message. */
   thumbnailSizes?: ThumbnailSize[];
+  /** The message text of the message. */
+  message?: string;
 }
 
 /**
@@ -2816,6 +2818,7 @@ export declare class MultipleFilesMessage extends SendableMessage {
 export declare interface MultipleFilesMessageCreateParams extends BaseMessageCreateParams {
   /** The list of uploadable file information. */
   fileInfoList: UploadableFileInfo[];
+  message?: string;
 }
 
 /**
@@ -4523,6 +4526,7 @@ export declare enum SendbirdErrorCode {
   COLLECTION_DISPOSED = 800600,
   DATABASE_ERROR = 800700,
   USER_DEACTIVATED = 900021,
+  CHANNEL_IS_FROZEN = 900050,
   RECEIVER_USER_DEACTIVATED = 900081,
 }
 
@@ -4885,8 +4889,6 @@ declare abstract class UserEventHandlerParams {
  * @description Object representing a user message.
  */
 export declare class UserMessage extends SendableMessage {
-  /** The message text of the message. */
-  message: string;
   /** The messageParams object that used for sending this message For more details. */
   messageParams: UserMessageCreateParams | null;
   /** The translated messages (key-value map) for the language codes in key. */

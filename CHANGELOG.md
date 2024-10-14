@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.14.5 (Oct 14, 2024)
+### **Improvements**
+- Added `message` property in `FileMessageCreateParams`
+- Added `message` property in `FileMessage`
 ## v4.14.4 (Sep 27, 2024)
 ### **Improvements**
 - Fixed a bug that local cache data is broken in a certain condition

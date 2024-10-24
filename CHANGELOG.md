@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.14.6 (Oct 24, 2024)
+### **Improvements**
+- Fixed a bug where `expiring_session=true` regardless of whether `SessionHandler` is registered when `authToken` exists
+- Fixed typo in `markPushNotificationAsClicked` logs
 ## v4.14.5 (Oct 14, 2024)
 ### **Improvements**
 - Added `message` property in `FileMessageCreateParams`

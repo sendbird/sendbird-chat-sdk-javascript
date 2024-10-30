@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.14.6 (Oct 24, 2024)
+### **Improvements**
+- Fixed a bug where `expiring_session=true` regardless of whether `SessionHandler` is registered when `authToken` exists
+- Fixed typo in `markPushNotificationAsClicked` logs
+## v4.14.5 (Oct 14, 2024)
+### **Improvements**
+- Added `message` property in `FileMessageCreateParams`
+- Added `message` property in `FileMessage`
+## v4.14.4 (Sep 27, 2024)
+### **Improvements**
+- Fixed a bug that local cache data is broken in a certain condition
 ## v4.14.3 (Sep 13, 2024)
 ### **Improvements**
 - Fixed a bug where there was no mentionedUser when sending a message with mentionedUserId as CopyMessage

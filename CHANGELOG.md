@@ -1,5 +1,30 @@
 # Changelog
 
+## v4.15.0 (Nov 07, 2024)
+### **Features**
+Added new properties in `Reaction` to support more users
+``` typescript
+    export default class Reaction {
+        
+        ... 
+
+        // A list of sampled userIds that have reacted to this Reaction.
+        get sampledUserIds: string[]
+        
+        // A count of the number of users who have reacted to this.
+        get count: number
+        
+        // A flag indicating whether the current user has reacted to this.
+        get hasCurrentUserReacted: boolean
+
+        ...
+    }
+```
+- Deprecated `userIds` in `Reaction`
+
+### **Improvements**
+- Fixed a bug where GET muted API is called every time
+- Fixed a bug when autoresend started, did not update channel info
 ## v4.14.6 (Oct 24, 2024)
 ### **Improvements**
 - Fixed a bug where `expiring_session=true` regardless of whether `SessionHandler` is registered when `authToken` exists

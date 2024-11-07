@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.15.0 (Nov 07, 2024)
+### **Improvements**
+- Fixed a bug where `expiring_session=true` regardless of whether `SessionHandler` is registered when `authToken` exists
+- Fixed typo in `markPushNotificationAsClicked` logs
 ## v4.14.6 (Oct 24, 2024)
 ### **Improvements**
 - Fixed a bug where `expiring_session=true` regardless of whether `SessionHandler` is registered when `authToken` exists

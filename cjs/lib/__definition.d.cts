@@ -3679,12 +3679,18 @@ export declare enum PushTriggerOption {
 export declare class Reaction {
   /** The key of the reaction. */
   readonly key: string;
-  /** User IDs. */
-  readonly userIds: string[];
-  /** The updated time of the reaction in milliseconds. */
-  updatedAt: number;
   /** Whether the reaction is empty (no user reacted). */
   get isEmpty(): boolean;
+  /** @deprecated Since v4.15.0 Use sampledUserIds instead */
+  get userIds(): string[];
+  /** Sampled user IDs. */
+  get sampledUserIds(): string[];
+  /** Count of reactions */
+  get count(): number;
+  /** The updated time of the reaction in milliseconds. */
+  get updatedAt(): number;
+  /** Whether current user has re-actioned. */
+  get hasCurrentUserReacted(): boolean;
   /**
    * @param reactionEvent
    * @description Applies a reaction event to the reaction instance.

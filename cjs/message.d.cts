@@ -46,6 +46,7 @@ export {
   PreviousMessageListQuery,
   PreviousMessageListQueryParams,
   PushNotificationDeliveryOption,
+  ReactedUserInfo,
   Reaction,
   ReactionEvent,
   ReactionEventOperation,

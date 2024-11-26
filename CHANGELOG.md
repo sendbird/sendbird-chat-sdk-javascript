@@ -174,7 +174,7 @@ SDK now supports `MessageForm`! Form message can only be sent through AI Chatbot
 - Fixed a bug that `lastMessage` not updating on reply
 - Fixed a bug that database upgrade fails in certain environment
 - Improvement stability
-## vv4.12.0 (Mar 25, 2024)
+## v4.12.0 (Mar 25, 2024)
 ### **Improvement**
 - Added `markPushNotificationAsDelivered`
 - Added `markPushNotificationAsClicked`

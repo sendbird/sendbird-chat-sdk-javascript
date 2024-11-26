@@ -53,6 +53,7 @@ export declare class AppInfo {
   readonly notificationInfo: NotificationInfo | null;
   readonly uikitConfigInfo: UIKitConfigInfo;
   readonly messageTemplateInfo: MessageTemplateInfo | null;
+  readonly disableSuperGroupMack: boolean;
 }
 
 /**
@@ -556,14 +557,14 @@ export declare class BaseChannel {
    * @param description
    * @description Reports this channel of inappropriate activities.
    */
-  report(category: ReportCategory, description: string): Promise<void>;
+  report(category: ReportCategory | ReportCategoryInfo, description: string): Promise<void>;
   /**
    * @param user
    * @param category
    * @param description
    * @description Reports a user of suspicious activities.
    */
-  reportUser(user: User, category: ReportCategory, description: string): Promise<void>;
+  reportUser(user: User, category: ReportCategory | ReportCategoryInfo, description: string): Promise<void>;
   /**
    * @param message  [UserMessage], [FileMessage] or [MultipleMessage]
    * @param category
@@ -572,7 +573,7 @@ export declare class BaseChannel {
    */
   reportMessage(
     message: UserMessage | FileMessage | MultipleFilesMessage,
-    category: ReportCategory,
+    category: ReportCategory | ReportCategoryInfo,
     description: string,
   ): Promise<void>;
   /**
@@ -3673,6 +3674,17 @@ export declare enum PushTriggerOption {
   OFF = 'off',
 }
 
+export declare class ReactedUserInfo {
+  /** The ID of the user. */
+  readonly userId: string;
+  /** The nickname of the user. */
+  readonly nickname: string;
+  /** Whether the user is required to authenticate to view the profile image. */
+  readonly requireAuth: boolean;
+  readonly plainProfileUrl: string;
+  get profileUrl(): string;
+}
+
 /**
  * @description Objects representing a reaction.
  */
@@ -3683,8 +3695,10 @@ export declare class Reaction {
   get isEmpty(): boolean;
   /** @deprecated Since v4.15.0 Use sampledUserIds instead */
   get userIds(): string[];
-  /** Sampled user IDs. */
+  /** The sampled userIds of the reacted user. */
   get sampledUserIds(): string[];
+  /** The sampled user info of the reacted user. */
+  get sampledUserInfoList(): ReactedUserInfo[];
   /** Count of reactions */
   get count(): number;
   /** The updated time of the reaction in milliseconds. */
@@ -3744,13 +3758,18 @@ export declare enum ReplyType {
 }
 
 /**
- * @description Report category.
+ * @deprecated since v4.16.0 Use `ReportCategoryInfo` instead.
  */
 export declare enum ReportCategory {
   SPAM = 'spam',
   HARASSING = 'harassing',
   SUSPICIOUS = 'suspicious',
   INAPPROPRIATE = 'inappropriate',
+}
+
+export declare class ReportCategoryInfo {
+  /** The name of the category. */
+  readonly name: string;
 }
 
 /**
@@ -4394,6 +4413,11 @@ export declare class SendbirdChat {
    * @returns
    */
   getUIKitConfiguration(): Promise<UIKitConfiguration>;
+  /**
+   * @returns Promise<ReportCategoryInfo[]>
+   * @description Get the list of report categories.
+   */
+  getReportCategoryInfoList(): Promise<ReportCategoryInfo[]>;
 }
 
 /**

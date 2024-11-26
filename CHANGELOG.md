@@ -1,5 +1,29 @@
 # Changelog
 
+## v4.16.0 (Nov 20, 2024)
+### **Features**
+SDK now supports `Custom Report Categories` configured through Sendbird Dashboard, which takes effect after restarting the app.
+Previous report categories will remain until app restart.
+
+- Added `getReportCategoryInfoList()`
+- Added `ReportCategoryInfo`
+- Deprecated `ReportCategory`
+
+``` typescript
+ const reportCategoryInfoList: ReportCategoryInfo[] = await sb.getReportCategoryInfoList();
+
+ ...
+
+ reportCategoryInfoList.forEach((reportCategoryInfo) => {
+    // make Report Category list
+    // use reportCategoryInfo.name
+ });
+
+```
+
+### **Improvements**
+- Added `sampledUserInfoList` in `Reaction`
+- Fixed a bug where called API with deprecated param in `markAsDelivered`
 ## v4.15.0 (Nov 07, 2024)
 ### **Features**
 Added new properties in `Reaction` to support more users

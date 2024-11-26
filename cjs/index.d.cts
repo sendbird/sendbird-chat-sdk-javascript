@@ -58,6 +58,7 @@ export {
   PushTokenType,
   PushTriggerOption,
   ReportCategory,
+  ReportCategoryInfo,
   RestrictedUser,
   RestrictionInfo,
   RestrictionType,

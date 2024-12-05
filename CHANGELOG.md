@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.16.1 (Dec 05, 2024)
+### **Improvements**
+- Fixed a bug where excessive API calls in `MessageCollection`
 ## v4.16.0 (Nov 20, 2024)
 ### **Features**
 SDK now supports `Custom Report Categories` configured through Sendbird Dashboard, which takes effect after restarting the app.

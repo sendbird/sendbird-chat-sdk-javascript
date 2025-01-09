@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.16.2 (Jan 09, 2025)
+### **Features**
+- Supports for `Poll` feature is added for all message types.
+    - Added `poll` and `applyPoll(poll: Poll)` method in `BaseMessage`.
+    - Added `pollId` in `FileMessageCreateParams` and `MultipleFilesMessageCreateParams`.
+
+### **Improvements**
+- Fixed a bug that the API fails while refreshing session
 ## v4.16.1 (Dec 05, 2024)
 ### **Improvements**
 - Fixed a bug where excessive API calls in `MessageCollection`

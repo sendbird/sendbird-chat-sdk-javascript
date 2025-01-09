@@ -860,6 +860,16 @@ export declare class BaseMessage extends MessagePrototype {
    */
   applyParentMessage(parentMessage: BaseMessage): boolean;
   /**
+   * @param poll
+   * @returns
+   * @description When you get updated polls from groupChannel.getPollChangeLogsSinceToken() or groupChannel.getPollChangeLogsSinceTimestamp(),
+   *  you can update the user message's poll through this function.
+   *  If you use MessageCollection, messages in the collection are automatically updated, so don't need to call it.
+   */
+  applyPoll(poll: Poll): boolean;
+  /** The poll that belongs to this message object. */
+  get poll(): Poll | null;
+  /**
    * @description Marks the message thread as read.
    */
   markThreadAsRead(): Promise<void>;
@@ -1049,6 +1059,8 @@ export declare interface BaseMessageCreateParams {
   appleCriticalAlertOptions?: AppleCriticalAlertOptions;
   /** Whether the message should be pinned to the channel. (default: false) */
   isPinnedMessage?: boolean;
+  /** The poll id of the message. */
+  pollId?: number;
 }
 
 /**
@@ -4948,16 +4960,6 @@ export declare class UserMessage extends SendableMessage {
     parentMessage: BaseMessage;
     threadedMessages: BaseMessage[];
   }>;
-  /**
-   * @param poll
-   * @returns
-   * @description When you get updated polls from groupChannel.getPollChangeLogsSinceToken() or groupChannel.getPollChangeLogsSinceTimestamp(),
-   *  you can update the user message's poll through this function.
-   *  If you use MessageCollection, messages in the collection are automatically updated, so don't need to call it.
-   */
-  applyPoll(poll: Poll): boolean;
-  /** The poll that belongs to this message object. */
-  get poll(): Poll | null;
 }
 
 /**
@@ -4968,8 +4970,6 @@ export declare interface UserMessageCreateParams extends BaseMessageCreateParams
   message: string;
   /** The translation target languages. */
   translationTargetLanguages?: string[];
-  /** The poll id of the message. */
-  pollId?: number;
 }
 
 /**

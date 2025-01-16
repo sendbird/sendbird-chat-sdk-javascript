@@ -114,6 +114,11 @@ export declare interface ApplicationUserListQueryParams extends BaseListQueryPar
   nicknameStartsWithFilter?: string;
 }
 
+declare enum AuthTokenType {
+  SESSION_TOKEN = 'session_token',
+  ACCESS_TOKEN = 'access_token',
+}
+
 /**
  * @description A class representing query to retrieve lists related to banned User.
  */
@@ -1045,8 +1050,6 @@ export declare interface BaseMessageCreateParams {
   mentionedUserIds?: string[];
   /** The mentioned users of the message. */
   mentionedUsers?: User[];
-  /** The mentioned message template. */
-  mentionedMessageTemplate?: string;
   /** The meta arrays of the message. */
   metaArrays?: MessageMetaArray[];
   /** The parent message ID of the message. */
@@ -1084,8 +1087,6 @@ export declare interface BaseMessageUpdateParams {
   mentionedUserIds?: string[];
   /** The mentioned users of the message. */
   mentionedUsers?: User[];
-  /** The mentioned message template. */
-  mentionedMessageTemplate?: string;
   /** The meta arrays of the message. */
   metaArrays?: MessageMetaArray[];
   /** The push notification delivery option user of the message. */
@@ -4053,7 +4054,7 @@ export declare class SendbirdChat {
    * @description If you want to use the interface without websocket connection,
    *  we'd recommend to authenticate using this function instead of SendbirdChat.connect.
    */
-  authenticate(userId: string, authToken?: string): Promise<User>;
+  authenticate(userId: string, authToken?: string, authTokenType?: AuthTokenType): Promise<User>;
   /**
    * @param userId
    * @param authToken
@@ -4968,6 +4969,8 @@ export declare class UserMessage extends SendableMessage {
 export declare interface UserMessageCreateParams extends BaseMessageCreateParams {
   /** The message text of the message. */
   message: string;
+  /** The mentioned message template. */
+  mentionedMessageTemplate?: string;
   /** The translation target languages. */
   translationTargetLanguages?: string[];
 }
@@ -4978,6 +4981,8 @@ export declare interface UserMessageCreateParams extends BaseMessageCreateParams
 export declare interface UserMessageUpdateParams extends BaseMessageUpdateParams {
   /** The message text of the message. */
   message?: string;
+  /** The mentioned message template. */
+  mentionedMessageTemplate?: string;
   /** The translation target languages. */
   translationTargetLanguages?: string[];
   /** The poll id of the message. */

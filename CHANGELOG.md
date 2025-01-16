@@ -1,5 +1,26 @@
 # Changelog
 
+## v4.16.3 (Jan 16, 2025)
+### **Improvements**
+- Added `AuthTokenType` to Enum Type
+``` typescript
+ export enum AuthTokenType {
+  SESSION_TOKEN = 'session_token',
+  ACCESS_TOKEN = 'access_token',
+ }
+```
+- Added `authTokenType` parameter to `authenticate()` (Default Value: AuthTokenType.SESSION_TOKEN)
+``` typescript
+ // using AccessToken
+ sb.authenticate('userId', 'access token', AuthTokenType.ACCESS_TOKEN);
+
+ // using SessionToken
+ sb.authenticate('userId', 'session token');
+    
+    or
+
+ sb.authenticate('userId', 'session token', AuthTokenType.SESSION_TOKEN);
+```
 ## v4.16.2 (Jan 09, 2025)
 ### **Features**
 - Supports for `Poll` feature is added for all message types.

@@ -1,6 +1,8 @@
 # Changelog
 
-## v4.16.3 (Jan 16, 2025)
+## v4.16.4 (Jan 24, 2025)
+### **Improvements**
+- Fixed a bug that cached channel remains after channel deletion## v4.16.3 (Jan 16, 2025)
 ### **Improvements**
 - Added `AuthTokenType` to Enum Type
 ``` typescript

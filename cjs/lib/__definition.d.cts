@@ -2508,8 +2508,6 @@ declare class MessagePrototype {
   mentionedUsers: User[] | null;
   /** The mentioned user ids of the message. */
   mentionedUserIds: string[] | null;
-  /** The mentioned message template of the message. */
-  mentionedMessageTemplate: string | undefined;
   /** Gets an array of meta arrays sorted by chronological order. */
   metaArrays: MessageMetaArray[];
   /** The template for the message. */
@@ -4934,6 +4932,8 @@ declare abstract class UserEventHandlerParams {
 export declare class UserMessage extends SendableMessage {
   /** The messageParams object that used for sending this message For more details. */
   messageParams: UserMessageCreateParams | null;
+  /** The mentioned message template of the message. */
+  mentionedMessageTemplate?: string;
   /** The translated messages (key-value map) for the language codes in key. */
   readonly translations: object;
   /**

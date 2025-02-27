@@ -1,6 +1,8 @@
 # Changelog
 
-## v4.16.5 (Feb 13, 2025)
+## v4.17.0 (Feb 27, 2025)
+### **Improvements**
+- Fixed a bug where the last message in the channel would not be updated## v4.16.5 (Feb 13, 2025)
 ### **Improvements**
 - Fixed a bug where the last message in the channel would not be updated## v4.16.4 (Jan 24, 2025)
 ### **Improvements**

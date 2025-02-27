@@ -1723,6 +1723,7 @@ export declare class GroupChannel extends BaseChannel {
   get hasBot(): boolean;
   /** Indicates whether this channel includes any AI bots. */
   get hasAiBot(): boolean;
+  get messageDeletionTimestamp(): number;
   /**
    * @param message
    * @returns
@@ -1971,6 +1972,12 @@ export declare class GroupChannel extends BaseChannel {
    * @description Copies a message from this channel to the target channel.
    */
   copyMessage(channel: BaseChannel, message: MultipleFilesMessage): MessageRequestHandler<MultipleFilesMessage>;
+  /**
+   *
+   * @returns messageDeletionTimestamp
+   * @description Requests message deletion timestamp.
+   */
+  getMessageDeletionTimestamp(): Promise<number>;
 }
 
 export declare type GroupChannelEventContext = BaseChannelEventContext;

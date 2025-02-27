@@ -1,10 +1,30 @@
 # Changelog
 
+## v4.17.0 (Feb 27, 2025)
+### **Features**
+- Added new read-only property `messageDeletionTimestamp` on the `GroupChannel`
+``` typescript
+   export default class GroupChannel extend BaseChannel {
+      ...
+      // messageDeletionTimestamp is the message deletion timestamp from the message archive.
+      // At this point, groupChannel.messageDeletionTimestamp also has the updated value.
+      messageDeletionTimestamp: number = 0;
+      ...
+   };
+```
+
+### **Improvements**
+- Fixed a bug Where don't get hidden channels in `BackgroundSync`
+
 ## v4.16.5 (Feb 13, 2025)
 ### **Improvements**
-- Fixed a bug where the last message in the channel would not be updated## v4.16.4 (Jan 24, 2025)
+- Fixed a bug where the last message in the channel would not be updated
+
+## v4.16.4 (Jan 24, 2025)
 ### **Improvements**
-- Fixed a bug that cached channel remains after channel deletion## v4.16.3 (Jan 16, 2025)
+- Fixed a bug that cached channel remains after channel deletion
+
+## v4.16.3 (Jan 16, 2025)
 ### **Improvements**
 - Added `AuthTokenType` to Enum Type
 ``` typescript

@@ -2671,11 +2671,11 @@ export declare class MessageSearchQuery extends BaseListQuery {
   /**
    * @description The current channel url set as the search scope.
    */
-  readonly channelUrl: string;
+  readonly channelUrl: string | null;
   /**
    * @description The current custom type of channel set as the search scope.
    */
-  readonly channelCustomType: string;
+  readonly channelCustomType: string | null;
   /**
    * @description The start message timestamp set as the search range.
    */

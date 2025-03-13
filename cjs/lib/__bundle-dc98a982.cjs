@@ -1,1 +1,0 @@
-var e=require("./__bundle-ad2509d1.cjs");class a extends e.BaseCommand{}exports.NotificationCollectionRefreshCommand=a,exports.getFeedChannelIndexBy=e=>["-lastMessageUpdatedAt","-createdAt","syncIndex"];

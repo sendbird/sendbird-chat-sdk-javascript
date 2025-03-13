@@ -4,7 +4,9 @@
 ### **Improvements**
 - Fixed a bug where closed WebSockets were not cleaned up when reconnecting
 - Fixed a bug that the default value of `channelCustomType` works unexpectedly with `MessageSearchQuery`
-- Improved sender profile update in super group channel## v4.17.0 (Feb 27, 2025)
+- Improved sender profile update in super group channel
+
+## v4.17.0 (Feb 27, 2025)
 ### **Features**
 - Added new read-only property `messageDeletionTimestamp` on the `GroupChannel`
 ``` typescript

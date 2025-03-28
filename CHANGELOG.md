@@ -1,4 +1,7 @@
 # Changelog
+## v4.17.2 (Mar 28, 2025)
+### **Improvements**
+- Fixed a bug that can't resend a failed `MultipleFilesMessage`
 
 ## v4.17.1 (Mar 13, 2025)
 ### **Improvements**
@@ -51,6 +54,7 @@
 
  sb.authenticate('userId', 'session token', AuthTokenType.SESSION_TOKEN);
 ```
+
 ## v4.16.2 (Jan 09, 2025)
 ### **Features**
 - Supports for `Poll` feature is added for all message types.
@@ -59,9 +63,11 @@
 
 ### **Improvements**
 - Fixed a bug that the API fails while refreshing session
+
 ## v4.16.1 (Dec 05, 2024)
 ### **Improvements**
 - Fixed a bug where excessive API calls in `MessageCollection`
+
 ## v4.16.0 (Nov 20, 2024)
 ### **Features**
 SDK now supports `Custom Report Categories` configured through Sendbird Dashboard, which takes effect after restarting the app.
@@ -86,6 +92,7 @@ Previous report categories will remain until app restart.
 ### **Improvements**
 - Added `sampledUserInfoList` in `Reaction`
 - Fixed a bug where called API with deprecated param in `markAsDelivered`
+
 ## v4.15.0 (Nov 07, 2024)
 ### **Features**
 Added new properties in `Reaction` to support more users
@@ -111,23 +118,29 @@ Added new properties in `Reaction` to support more users
 ### **Improvements**
 - Fixed a bug where GET muted API is called every time
 - Fixed a bug when autoresend started, did not update channel info
+
 ## v4.14.6 (Oct 24, 2024)
 ### **Improvements**
 - Fixed a bug where `expiring_session=true` regardless of whether `SessionHandler` is registered when `authToken` exists
 - Fixed typo in `markPushNotificationAsClicked` logs
+
 ## v4.14.5 (Oct 14, 2024)
 ### **Improvements**
 - Added `message` property in `FileMessageCreateParams`
 - Added `message` property in `FileMessage`
+
 ## v4.14.4 (Sep 27, 2024)
 ### **Improvements**
 - Fixed a bug that local cache data is broken in a certain condition
+
 ## v4.14.3 (Sep 13, 2024)
 ### **Improvements**
 - Fixed a bug where there was no mentionedUser when sending a message with mentionedUserId as CopyMessage
+
 ## v4.14.2 (Aug 29, 2024)
 ### **Improvements**
 - Improvement stability
+
 ## v4.14.1 (Aug 14, 2024)
 ### **Improvements**
 - Deprecated `customTypeFilters` in `UnreadItemCountParams`
@@ -143,15 +156,14 @@ Support `pinned message` in `OpenChannel`
 - Added `lastPinnedMessage` property in `OpenChannel`
 - Added `onPinnedMessageUpdated` in `OpenChannelHandler`
 
-
 ### **Improvements**
 - Added `customTypeFilters` in `UnreadItemCountParams`
-## v4.13.3 (Aug 01, 2024)
 
+## v4.13.3 (Aug 01, 2024)
 ### **Improvements**
 - Fixed a build error related to Node.js package inclusion
-## v4.13.2 (Jul 31, 2024)
 
+## v4.13.2 (Jul 31, 2024)
 ### **Improvements**
 - Added `hasBot` and `hasAiBot` in `GroupChannel`
 - Added `version` to `MessageForm`
@@ -161,11 +173,10 @@ Support `pinned message` in `OpenChannel`
 - Improved Message delivery speed in MessageCollection Initialize
 
 ## v4.13.1 (Jul 08, 2024)
-
 ### **Improvements**
 - Fixed a bug in `MessageForm` to support backward compatibility
-## v4.13.0 (Jul 03, 2024)
 
+## v4.13.0 (Jul 03, 2024)
 ### **Feature**
 SDK now supports `MessageForm`! Form message can only be sent through AI Chatbot in Sendbird dashboard.
  - Added `MessageForm`
@@ -199,10 +210,12 @@ SDK now supports `MessageForm`! Form message can only be sent through AI Chatbot
 ## v4.12.8 (Jun 20, 2024)
 ### **Improvement**
 - Added `includeMetaData` to `GroupChannelFilter`
+
 ## v4.12.7 (Jun 05, 2024)
 ### **Improvement**
 - Fixed the Feedback feature to function correctly
 - Fixed a bug where `groupChannel.cachedMetadata` was returned as `undefined` in the result value of `ChangeLogs`
+
 ## v4.12.6 (May 28, 2024)
 ### **Improvement**
 - Fixed a bug that always throws a `Connection is canceled` error when `connect()` is failed
@@ -210,11 +223,13 @@ SDK now supports `MessageForm`! Form message can only be sent through AI Chatbot
 - Fixed a bug where SessionHandler callback is called when `connect()` is failed
 - Fixed a bug inconsistent count of joined channels
 - Improved stability
+
 ## v4.12.5 (May 22, 2024)
 ### **Improvement**
 - Fixed a bug that pending `MultipleFilesMessage` has empty `data`
 - Fixed a bug that `loadMore()` in `GroupChannelCollection` gives less channels in a certain condition
 - Improved stability
+
 ## v4.12.4 (May 16, 2024)
 ### **Improvement**
 - Added `useMMKVStorageStore` to `SendbirdChatParams`
@@ -222,12 +237,15 @@ SDK now supports `MessageForm`! Form message can only be sent through AI Chatbot
 - Fixed a bug that `connect()` call may crash in a certain condition
 - Fixed a bug that `MultipleFilesMessage` has wrong `data` value
 - Improved stability
+
 ## v4.12.3 (Apr 19, 2024)
 ### **Improvement**
 - Fixed a bug when called `resetMyHistory()`, messages in the cache aren't deleted
+
 ## v4.12.2 (Apr 17, 2024)
 ### **Improvement**
 - Added ErrorCode(`USER_DEACTIVATED`) in Message Resendable Condition
+
 ## v4.12.1 (Apr 11, 2024)
 ### **Features**
 - Added additional parameters in `GroupChannelEventContext`
@@ -236,6 +254,7 @@ SDK now supports `MessageForm`! Form message can only be sent through AI Chatbot
 - Fixed a bug that `lastMessage` not updating on reply
 - Fixed a bug that database upgrade fails in certain environment
 - Improvement stability
+
 ## v4.12.0 (Mar 25, 2024)
 ### **Improvement**
 - Added `markPushNotificationAsDelivered`
@@ -247,11 +266,13 @@ SDK now supports `MessageForm`! Form message can only be sent through AI Chatbot
 - Fixed a bug that `onMessagesUpdated` event not firing on ThreadInfo updated event
 - Exported `SendbirdErrorCode`
 - Improvement stability
+
 ## v4.11.3 (Mar 14, 2024)
 ### **Improvement**
 - Added `keys` property to `MessageTemplateListParams`
 - Fixed a bug that database migration fails in a certain condition
 - Improvement stability
+
 ## v4.11.2 (Mar 08, 2024)
 ### **Improvement**
 - Fixed a bug that `markAsRead()` with messages does not trigger any event in `NotificationCollection`
@@ -260,6 +281,7 @@ SDK now supports `MessageForm`! Form message can only be sent through AI Chatbot
 ### **Improvement**
 - Fixed a bug that `markAsRead()` with messages wrongly signals updating messages in `NotificationCollection`
 - Improvement stability
+
 ## v4.11.0 (Feb 28, 2024)
 ### **Features**
 ### MessageTemplate
@@ -275,8 +297,6 @@ Message templates created via platform API can be fetched with `getMessageTempla
 ### **Improvement**
 - Fixed a bug where channel list of `GroupChannelCollection` was not removed when leaving a public group
 - Added get message template feature
-- Improvement stability
-### **Improvement**
 - Fixed a bug where `thumbnails` are not being set properly
 - Improvement stability
 
@@ -296,7 +316,6 @@ Message templates created via platform API can be fetched with `getMessageTempla
 - Fixed a bug that `unreadMessageCount` does not match in a certain condition
 - Fixed a bug with markAsRead() error in a certain condition
 - Improvement stability
-
 
 ## v4.10.8 (Feb 2, 2024)
 ### **Improvement**
@@ -364,6 +383,7 @@ Message templates created via platform API can be fetched with `getMessageTempla
 - Fixed bug where `is_reply_to_channel` parsing error in `BaseMessage`
 - Fixed bug where `onMessagesUpdated()` event do not called if `localCacheEnable` is `false`
 - Improvement stability
+
 ## v4.10.4 (Nov 16, 2023)
 ### **Improvement**
 - Fixed a bug of flooded cache in React Native

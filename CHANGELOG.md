@@ -1,5 +1,5 @@
 # Changelog
-## v4.17.1 (Mar 28, 2025)
+## v4.17.2 (Mar 28, 2025)
 ### **Improvements**
 - Fixed a bug that can't resend a failed `MultipleFilesMessage`
 

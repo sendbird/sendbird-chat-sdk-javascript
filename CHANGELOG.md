@@ -1,12 +1,43 @@
 # Changelog
 
+## v4.18.0 (May 21, 2025)
+### **Feature**
+A new feature has been added that allows you to mark messages in the channel as `unread` from a specific message.
+- Added `markAsUnread()` to `GroupChannel` 
+
+```typescript
+
+await groupChannel.markAsUnread(message);
+
+sb.groupChannel.addGroupChannelHandler('EVENT_HANDLER_UNIQUE_KEY', {
+    onChannelChanged: (channel: GroupChannel) => {
+        // broadcast when the channel's read status and unread message count changes
+    },
+    ...
+});
+
+sb.addUserEventHandler('EVENT_HANDLER_UNIQUE_KEY', {
+    onTotalUnreadMessageCountChanged: (unreadMessageCount) => {
+        // broadcast when the channel's total unread message count changes
+    },
+    ...
+);
+
+```
+
+### **Improvement**
+- Fixed MMKV dependency conflict in React Native
+
 ## v4.17.4 (Apr 29, 2025)
 ### **Improvements**
 - Fixed a bug that caused a stack overflow error when receiving large compressed data over websocket
+
 ## v4.17.3 (Apr 10, 2025)
 ### **Improvements**
 - Fixed a bug that caused an `Command received no ack.` error when `markAsRead` was called multiple times
 - Fixed a bug where the `API path` for the `notification statLog` was incorrect
+
+## v4.17.2 (Mar 28, 2025)
 ### **Improvements**
 - Fixed a bug that can't resend a failed `MultipleFilesMessage`
 

@@ -1879,6 +1879,7 @@ export declare class GroupChannel extends BaseChannel {
    * @description Sends mark as read to this channel.
    */
   markAsRead(): Promise<void>;
+  markAsUnread(message: BaseMessage): Promise<void>;
   /**
    * @description Sends mark as delivered to this channel.
    */
@@ -3766,6 +3767,7 @@ export declare class ReadStatus {
   readonly reader: User;
   /** The read time of a reader (refer to {@link ReadStatus.reader}). */
   readonly readAt: number;
+  readonly isExcluded: boolean;
 }
 
 /** ReplyType to be used in loading messages. */

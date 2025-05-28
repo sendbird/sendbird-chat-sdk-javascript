@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.18.1 (May 28, 2025)
+### **Improvement**
+- Added `metadataKey`, `metadataValues`, `metadataValueStartsWith` in `GroupChannelFilter`
+    - Metadata-related filters work with `includeMetaData` to be set to `true`
 ## v4.18.0 (May 21, 2025)
 ### **Feature**
 A new feature has been added that allows you to mark messages in the channel as `unread` from a specific message.

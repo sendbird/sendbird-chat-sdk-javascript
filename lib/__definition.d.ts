@@ -1733,7 +1733,7 @@ export declare class GroupChannel extends BaseChannel {
   /**
    * @returns
    * @description Serializes a {@link GroupChannel} instance.
-   *  The instance can be restored by {@link GroupChannelModule.buildGroupChannelFromSerializedData}.
+   *  The instance can be restored by {@link buildGroupChannelFromSerializedData} in {@link GroupChannelModule}.
    */
   serialize(): object;
   /**
@@ -5358,6 +5358,19 @@ export declare class GroupChannelFilter {
    */
   hiddenChannelFilter: HiddenChannelFilter;
   /**
+   * @description The metadataKey set with either metaDataValues or metaDataValueStartsWith.
+   *   To filter by metadata value, `includeMetaData` must be set to `true`.
+   */
+  metadataKey: string | null;
+  /**
+   * @description Works exclusively with metaDataValueStartsWith.
+   */
+  metadataValues: string[] | null;
+  /**
+   * @description Works exclusively with metaDataValues.
+   */
+  metadataValueStartsWith: string | null;
+  /**
    * @description Restricts the search scope to only retrieve group channels which have been created after the specified time, in milliseconds.
    */
   createdAfter: number;
@@ -5460,6 +5473,18 @@ export declare interface GroupChannelFilterParams {
    * @description Restricts the search scope to only retrieve group channels which have been created before the specified time, in milliseconds.
    */
   createdBefore?: number;
+  /**
+   * @description The metadataKey set with either metaDataValues or metaDataValueStartsWith.
+   */
+  metadataKey?: string;
+  /**
+   * @description Works exclusively with metaDataValueStartsWith.
+   */
+  metadataValues?: string[];
+  /**
+   * @description Works exclusively with metaDataValues.
+   */
+  metadataValueStartsWith?: string;
 }
 
 export declare class GroupChannelHandler extends GroupChannelHandlerParams {

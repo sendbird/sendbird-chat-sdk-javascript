@@ -1,5 +1,24 @@
 # Changelog
 
+## v4.19.0 (Jun 05, 2025)
+### **Features**
+
+#### AI Agent support is now available natively in the Chat SDK 🎉
+You can now enhance your chat with smart AI-driven interactions without separate integration.
+Includes conversation list, message templates, CSAT, agent handoff, and more — fully embedded in the SDK.
+
+- **AIAgentModule**
+    - Added `requestMessengerSettings(params: MessengerSettingsParams)`: Fetch settings such as startup options and UI preferences for the AI agent.
+    - Added `createConversationListQuery(params: ConversationListQueryParams)`: Create a query to retrieve the user's AI agent conversation list.
+    - Added `getMessageTemplates(params: AIAgentMessageTemplateListParams)`: Fetch a list of available AI message templates for UI rendering.
+
+- **GroupChannel**
+    - Added `submitCSAT(params: CSATSubmitParams)`: Submit a CSAT (Customer Satisfaction) rating for a conversation.
+    - Added `markConversationAsHandoff()`: Mark a conversation as handed off to a human agent.
+
+- **Etc**
+    - Added `AI_AGENT` enum value in `SendbirdProduct` for analytics.
+
 ## v4.18.1 (May 28, 2025)
 ### **Improvement**
 - Added `metadataKey`, `metadataValues`, `metadataValueStartsWith` in `GroupChannelFilter`

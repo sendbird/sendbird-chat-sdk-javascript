@@ -1,0 +1,17 @@
+export {
+  AIAgentInfo,
+  AIAgentMessageTemplateListParams,
+  AIAgentMessageTemplateListResult,
+  AIAgentModule,
+  Conversation,
+  ConversationChannelInfo,
+  ConversationHandoff,
+  ConversationListOrder,
+  ConversationListQuery,
+  ConversationListQueryParams,
+  ConversationResolution,
+  ConversationStatus,
+  ConversationType,
+  MessageTemplate,
+  MessengerSettingsParams,
+} from './lib/__definition.js';

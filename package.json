@@ -1,5 +1,5 @@
 {
-  "version": "4.18.1",
+  "version": "4.19.0",
   "description": "Sendbird SDK for JavaScript",
   "sideEffects": false,
   "name": "@sendbird/chat",
@@ -96,6 +96,16 @@
         "default": "./cjs/feedChannel.cjs"
       }
     },
+    "./aiAgent": {
+      "import": {
+        "types": "./aiAgent.d.ts",
+        "default": "./aiAgent.js"
+      },
+      "require": {
+        "types": "./cjs/aiAgent.d.cts",
+        "default": "./cjs/aiAgent.cjs"
+      }
+    },
     "./node": {
       "import": {
         "types": "./node.d.ts",
@@ -123,6 +133,9 @@
       ],
       "feedChannel": [
         "./feedChannel.d.ts"
+      ],
+      "aiAgent": [
+        "./aiAgent.d.ts"
       ],
       "node": [
         "./node.d.ts"

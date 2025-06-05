@@ -24,6 +24,11 @@ export declare class AdminMessage extends BaseMessage {
   }>;
 }
 
+export declare class AIAgentInfo {
+  /** Token for the message template list. */
+  readonly templateListToken: string | null;
+}
+
 /**
  * @description Represents information obtained from the application settings. The values for this will be set after a connection has been made.
  */
@@ -53,6 +58,7 @@ export declare class AppInfo {
   readonly notificationInfo: NotificationInfo | null;
   readonly uikitConfigInfo: UIKitConfigInfo;
   readonly messageTemplateInfo: MessageTemplateInfo | null;
+  readonly aiAgentInfo: AIAgentInfo | null;
   readonly disableSuperGroupMack: boolean;
 }
 
@@ -784,6 +790,8 @@ declare type BaseChannelEventContext =
         | CollectionEventSource.LOCAL_MESSAGE_FAILED
         | CollectionEventSource.LOCAL_MESSAGE_CANCELED
         | CollectionEventSource.LOCAL_MESSAGE_RESEND_STARTED
+        | CollectionEventSource.EVENT_CHANNEL_CSAT_SUBMITTED
+        | CollectionEventSource.EVENT_CHANNEL_CONVERSATION_HANDEDOFF
         | CollectionEventSource.EVENT_MESSAGE_READ
         | CollectionEventSource.EVENT_MESSAGE_DELIVERED
         | CollectionEventSource.EVENT_THREAD_INFO_UPDATED;
@@ -1254,6 +1262,8 @@ export declare enum CollectionEventSource {
   EVENT_POLL_UPDATED = 'EVENT_POLL_UPDATED',
   EVENT_POLL_VOTED = 'EVENT_POLL_VOTED',
   SYNC_POLL_CHANGELOGS = 'SYNC_POLL_CHANGELOGS',
+  EVENT_CHANNEL_CSAT_SUBMITTED = 'EVENT_CHANNEL_CSAT_SUBMITTED',
+  EVENT_CHANNEL_CONVERSATION_HANDEDOFF = 'EVENT_CHANNEL_CONVERSATION_HANDEDOFF',
   REQUEST_RESEND_MESSAGE = 'REQUEST_RESEND_MESSAGE',
   REQUEST_THREADED_MESSAGE = 'REQUEST_THREADED_MESSAGE',
   REQUEST_MESSAGE_CHANGELOGS = 'REQUEST_MESSAGE_CHANGELOGS',
@@ -1299,12 +1309,121 @@ export declare enum ConnectionState {
   CLOSED = 'CLOSED',
 }
 
+export declare class Conversation {
+  /**
+   * @description The ID of the conversation.
+   * */
+  readonly id: number;
+  /**
+   * @description The type of the conversation.
+   * */
+  readonly type: ConversationType;
+  /**
+   * @description The status of the conversation.
+   */
+  readonly status: ConversationStatus;
+  /**
+   * @description The channel information of the conversation.
+   * */
+  readonly channelInfo: ConversationChannelInfo;
+  /**
+   * @description The topics of the conversation.
+   */
+  readonly topics: string[];
+  /**
+   * @description The CSAT score of the conversation.
+   */
+  readonly csat?: number;
+  /**
+   * @description The reason for the CSAT score.
+   */
+  readonly csatReason?: string;
+  /**
+   * @description The expiration time when CSAT submission becomes impossible.
+   */
+  readonly csatExpireAt?: number;
+  /**
+   * @description The resolution status of the conversation.
+   */
+  readonly resolution?: ConversationResolution;
+  /**
+   * @description The handoff information of the conversation.
+   */
+  readonly handoff?: ConversationHandoff;
+}
+
+export declare class ConversationChannelInfo {
+  /**
+   * @description The URL of the channel.
+   */
+  readonly url: string;
+  /**
+   * @description The timestamp of the last message in the channel.
+   */
+  readonly lastMessageTs: number;
+}
+
+export declare class ConversationHandoff {
+  /**
+   * @description The type of the handoff.
+   */
+  readonly type: string;
+  /**
+   * @description The ticket ID of the handoff.
+   */
+  readonly ticketId?: string;
+  /**
+   * @description The timestamp of the handoff.
+   */
+  readonly timestamp?: number;
+}
+
+export declare class ConversationResolution {
+  /**
+   * @description Whether the conversation is resolved.
+   */
+  readonly isResolved: boolean;
+  /**
+   * @description The entity that determined the resolution.
+   */
+  readonly determinedBy: 'ai' | 'user';
+}
+
+export declare enum ConversationStatus {
+  OPEN = 'open',
+  CLOSED = 'closed',
+}
+
+export declare enum ConversationType {
+  DEFAULT = 'default',
+  PROACTIVE = 'proactive',
+}
+
 /** The count preference. Refer to {@link GroupChannel.setMyCountPreference}. */
 export declare enum CountPreference {
   ALL = 'all',
   UNREAD_MESSAGE_COUNT_ONLY = 'unread_message_count_only',
   UNREAD_MENTION_COUNT_ONLY = 'unread_mention_count_only',
   OFF = 'off',
+}
+
+declare interface CSATSubmitParams {
+  /**
+   * @description The CSAT score of the conversation.
+   * */
+  csat: number;
+  /**
+   * @description The type of the CSAT score.
+   * */
+  csatType: string;
+  /**
+   * @description The reason for the CSAT score.
+   * */
+  csatReason?: string;
+  /**
+   * @description Whether the issue was resolved at the end of the conversation.
+   */
+  isResolved?: boolean;
 }
 
 /**
@@ -1711,6 +1830,11 @@ export declare class GroupChannel extends BaseChannel {
   joinedAt: number;
   /** The last message among channel's pinned messages. */
   lastPinnedMessage: BaseMessage | null;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * The conversation data in this channel.
+   */
+  conversation: Conversation | null;
   /** Checks whether this channel is hidden. */
   get isHidden(): boolean;
   /** Whether one or more members are typing. */
@@ -1979,6 +2103,22 @@ export declare class GroupChannel extends BaseChannel {
    * @description Requests message deletion timestamp.
    */
   getMessageDeletionTimestamp(): Promise<number>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @param params
+   * @description Submit CSAT.
+   * */
+  submitCSAT(params: CSATSubmitParams): Promise<Conversation>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Hand off the conversation to a human agent.
+   * */
+  markConversationAsHandoff(): Promise<Conversation>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Close the conversation.
+   * */
+  closeConversation(): Promise<Conversation>;
 }
 
 export declare type GroupChannelEventContext = BaseChannelEventContext;
@@ -4027,11 +4167,6 @@ export declare class SendbirdChat {
    */
   setOfflineListener(listener: OnlineDetectorListener): void;
   /**
-   * @param locale
-   * @description DO NOT USE, Sets the locale for the chatbot.
-   * */
-  setLocaleForChatbot(locale: string): void;
-  /**
    * @param userId
    * @description Initializes local cache database.
    */
@@ -4597,6 +4732,7 @@ export declare enum SendbirdProduct {
   LIVE = 'live',
   UIKIT_CHAT = 'uikit-chat',
   UIKIT_LIVE = 'uikit-live',
+  AI_AGENT = 'ai-agent',
 }
 
 export declare interface SendbirdSdkInfo {
@@ -5273,6 +5409,8 @@ export declare const GroupChannelEventSource: {
   EVENT_POLL_UPDATED: CollectionEventSource.EVENT_POLL_UPDATED;
   EVENT_POLL_VOTED: CollectionEventSource.EVENT_POLL_VOTED;
   SYNC_POLL_CHANGELOGS: CollectionEventSource.SYNC_POLL_CHANGELOGS;
+  EVENT_CHANNEL_CSAT_SUBMITTED: CollectionEventSource.EVENT_CHANNEL_CSAT_SUBMITTED;
+  EVENT_CHANNEL_CONVERSATION_HANDEDOFF: CollectionEventSource.EVENT_CHANNEL_CONVERSATION_HANDEDOFF;
   REQUEST_RESEND_MESSAGE: CollectionEventSource.REQUEST_RESEND_MESSAGE;
   REQUEST_THREADED_MESSAGE: CollectionEventSource.REQUEST_THREADED_MESSAGE;
   REQUEST_MESSAGE_CHANGELOGS: CollectionEventSource.REQUEST_MESSAGE_CHANGELOGS;
@@ -6044,6 +6182,8 @@ export declare const MessageEventSource: {
   EVENT_POLL_UPDATED: CollectionEventSource.EVENT_POLL_UPDATED;
   EVENT_POLL_VOTED: CollectionEventSource.EVENT_POLL_VOTED;
   SYNC_POLL_CHANGELOGS: CollectionEventSource.SYNC_POLL_CHANGELOGS;
+  EVENT_CHANNEL_CSAT_SUBMITTED: CollectionEventSource.EVENT_CHANNEL_CSAT_SUBMITTED;
+  EVENT_CHANNEL_CONVERSATION_HANDEDOFF: CollectionEventSource.EVENT_CHANNEL_CONVERSATION_HANDEDOFF;
   REQUEST_RESEND_MESSAGE: CollectionEventSource.REQUEST_RESEND_MESSAGE;
   REQUEST_THREADED_MESSAGE: CollectionEventSource.REQUEST_THREADED_MESSAGE;
   REQUEST_MESSAGE_CHANGELOGS: CollectionEventSource.REQUEST_MESSAGE_CHANGELOGS;
@@ -6736,3 +6876,110 @@ declare interface NotificationTemplateListResult {
 }
 
 export declare type SendbirdFeedChat = SendbirdChatWith<[FeedChannelModule]>;
+
+/**
+ * Parameters for retrieving message template list for AIAgent.
+ */
+export declare interface AIAgentMessageTemplateListParams {
+  /**
+   * The key filter to retrieve only selected templates with given keys. Set to `null` if don't want to use template key filter.
+   */
+  keys?: string[];
+  /**
+   * The maximum number of items per queried page. (default: 10)
+   */
+  limit?: number;
+}
+
+export declare interface AIAgentMessageTemplateListResult {
+  token: string;
+  templates: MessageTemplate[];
+}
+
+export declare class AIAgentModule extends Module {
+  name: 'aiAgent';
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Gets the information of the given messenger settings.
+   */
+  requestMessengerSettings<T = object>(params: MessengerSettingsParams): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Creates a query instance to get conversation list.
+   */
+  createConversationListQuery(params?: ConversationListQueryParams): ConversationListQuery;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Retrieves Message template list for AI-Agent
+   */
+  getMessageTemplates(params?: AIAgentMessageTemplateListParams): Promise<AIAgentMessageTemplateListResult>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Gets the information of the given messenger settings.
+   */
+  getMessageTemplate(key: string): Promise<MessageTemplate>;
+}
+
+/** The conversation list order. */
+export declare enum ConversationListOrder {
+  CREATED_AT = 'created_at',
+  UPDATED_AT = 'updated_at',
+}
+
+/**
+ * @description Represents the group channel list paramters.
+ */
+declare interface ConversationListParams {
+  status?: ConversationStatus;
+  aiAgentId?: string;
+  reverse?: boolean;
+  order?: ConversationListOrder;
+}
+
+/**
+ * @description A class representing query to retrieve Conversation list for the current User.
+ *  The query can be get by calling sendbirdChat.aiAgent.createConversationListQuery().
+ */
+export declare class ConversationListQuery extends BaseListQuery {
+  /**
+   * @description The conversation status filter.
+   */
+  readonly status?: ConversationStatus;
+  /**
+   * @description The AI Agent ID filter.
+   */
+  readonly aiAgentId?: string;
+  /**
+   * @description The reverse flag.
+   * */
+  readonly reverse?: boolean;
+  /**
+   * @description The order of the list.
+   * */
+  readonly order?: ConversationListOrder;
+  /**
+   * @returns
+   * @description Serializes the ConversationListQuery instance.
+   *  This byte array can be stored in the database in your application. The instance can be restored by buildFromSerializedData.
+   */
+  serialize(): object;
+  /**
+   * @returns
+   * @description Gets the list of Conversations.
+   *  If this method is repeatedly called after each next is finished,
+   *  it retrieves the following pages of the Conversation list.
+   *  If there is no more pages to be read, an empty list (not null). is returned.
+   */
+  next(): Promise<Conversation[]>;
+}
+
+export declare interface ConversationListQueryParams extends BaseListQueryParams, ConversationListParams {}
+
+export declare interface MessengerSettingsParams {
+  aiAgentId: string;
+  userId?: string;
+  language?: string;
+  country?: string;
+  context?: Record<string, string>;
+  forceCreateChannel?: boolean;
+}

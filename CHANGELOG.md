@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.19.1 (Jun 10, 2025)
+### **Improvement**
+- Added `userIdsFilter` and `searchFilter` in `GroupChannelFilterParams`
+
 ## v4.19.0 (Jun 05, 2025)
 ### **Features**
 

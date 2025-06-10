@@ -5604,6 +5604,14 @@ export declare interface GroupChannelFilterParams {
    */
   hiddenChannelFilter?: HiddenChannelFilter;
   /**
+   * @description Search filter.
+   */
+  searchFilter?: GroupChannelSearchFilter;
+  /**
+   * @description User IDs filter.
+   */
+  userIdsFilter?: GroupChannelUserIdsFilter;
+  /**
    * @description Restricts the search scope to only retrieve group channels which have been created after the specified time, in milliseconds.
    */
   createdAfter?: number;

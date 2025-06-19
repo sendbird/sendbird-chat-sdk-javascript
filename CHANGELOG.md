@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.19.2 (Jun 19, 2025)
+### **Improvement**
+- Added `knownActiveChannelUrl` to `MessengerSettingsParams` to support N-active conversations
+- Added `onUserMarkedRead` and `onUserMarkedUnread` to `GroupChannelHandler`
+- Added `EVENT_CHANNEL_UNREAD` to `CollectionEventSource`
+- Deprecated `onUnreadMemberStatusUpdated` in `GroupChannelHandler`
+
 ## v4.19.1 (Jun 10, 2025)
 ### **Improvement**
 - Added `userIdsFilter` and `searchFilter` in `GroupChannelFilterParams`

@@ -741,12 +741,19 @@ declare type BaseChannelEventContext =
       operators: User[];
     }
   | {
+      source: CollectionEventSource.EVENT_CHANNEL_READ;
+      userIds: string[];
+    }
+  | {
+      source: CollectionEventSource.EVENT_CHANNEL_UNREAD;
+      userIds: string[];
+    }
+  | {
       source:
         | CollectionEventSource.UNKNOWN
         | CollectionEventSource.EVENT_CHANNEL_CREATED
         | CollectionEventSource.EVENT_CHANNEL_UPDATED
         | CollectionEventSource.EVENT_CHANNEL_DELETED
-        | CollectionEventSource.EVENT_CHANNEL_READ
         | CollectionEventSource.EVENT_CHANNEL_DELIVERED
         | CollectionEventSource.EVENT_CHANNEL_ACCEPTED_INVITE
         | CollectionEventSource.EVENT_CHANNEL_FROZEN
@@ -1202,6 +1209,7 @@ export declare enum CollectionEventSource {
   EVENT_CHANNEL_UPDATED = 'EVENT_CHANNEL_UPDATED',
   EVENT_CHANNEL_DELETED = 'EVENT_CHANNEL_DELETED',
   EVENT_CHANNEL_READ = 'EVENT_CHANNEL_READ',
+  EVENT_CHANNEL_UNREAD = 'EVENT_CHANNEL_UNREAD',
   EVENT_CHANNEL_DELIVERED = 'EVENT_CHANNEL_DELIVERED',
   EVENT_CHANNEL_INVITED = 'EVENT_CHANNEL_INVITED',
   EVENT_CHANNEL_JOINED = 'EVENT_CHANNEL_JOINED',
@@ -5358,6 +5366,7 @@ export declare const GroupChannelEventSource: {
   EVENT_CHANNEL_UPDATED: CollectionEventSource.EVENT_CHANNEL_UPDATED;
   EVENT_CHANNEL_DELETED: CollectionEventSource.EVENT_CHANNEL_DELETED;
   EVENT_CHANNEL_READ: CollectionEventSource.EVENT_CHANNEL_READ;
+  EVENT_CHANNEL_UNREAD: CollectionEventSource.EVENT_CHANNEL_UNREAD;
   EVENT_CHANNEL_DELIVERED: CollectionEventSource.EVENT_CHANNEL_DELIVERED;
   EVENT_CHANNEL_INVITED: CollectionEventSource.EVENT_CHANNEL_INVITED;
   EVENT_CHANNEL_JOINED: CollectionEventSource.EVENT_CHANNEL_JOINED;
@@ -5655,10 +5664,16 @@ declare abstract class GroupChannelHandlerParams extends BaseChannelHandlerParam
   onUserDeclinedInvitation?: (channel: GroupChannel, inviter: User, invitee: User) => void;
   /** A callback for when GroupChannel is hidden. */
   onChannelHidden?: (channel: GroupChannel) => void;
-  /** A callback for when read receipts are updated on GroupChannel.
+  /**
+   * @deprecated since v4.18.2 Please use onUserMarkedRead instead.
+   * A callback for when read receipts are updated on GroupChannel.
    *  To use the updated read receipt, refer to GroupChannel.getReadStatus, GroupChannel.getReadMembers, GroupChannel.getUnreadMembers.
    */
   onUnreadMemberStatusUpdated?: (channel: GroupChannel) => void;
+  /** A callback for when a user marks a message as read. */
+  onUserMarkedRead?: (channel: GroupChannel, userIds: string[]) => void;
+  /** A callback for when a user marks a message as unread. */
+  onUserMarkedUnread?: (channel: GroupChannel, userIds: string[]) => void;
   /** A callback for when delivered receipts are updated on GroupChannel.
    *  To use the updated delivered receipt, refer to groupChannel.getUndeliveredMemberCount
    */
@@ -6139,6 +6154,7 @@ export declare const MessageEventSource: {
   EVENT_CHANNEL_UPDATED: CollectionEventSource.EVENT_CHANNEL_UPDATED;
   EVENT_CHANNEL_DELETED: CollectionEventSource.EVENT_CHANNEL_DELETED;
   EVENT_CHANNEL_READ: CollectionEventSource.EVENT_CHANNEL_READ;
+  EVENT_CHANNEL_UNREAD: CollectionEventSource.EVENT_CHANNEL_UNREAD;
   EVENT_CHANNEL_DELIVERED: CollectionEventSource.EVENT_CHANNEL_DELIVERED;
   EVENT_CHANNEL_INVITED: CollectionEventSource.EVENT_CHANNEL_INVITED;
   EVENT_CHANNEL_JOINED: CollectionEventSource.EVENT_CHANNEL_JOINED;
@@ -6990,4 +7006,5 @@ export declare interface MessengerSettingsParams {
   country?: string;
   context?: Record<string, string>;
   forceCreateChannel?: boolean;
+  knownActiveChannelUrl?: string;
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.19.3 (Jul 03, 2025)
+### **Improvement**
+- Fixed a bug where `sb.connect()` would not correctly throw the error received from the server
+
 ## v4.19.2 (Jun 19, 2025)
 ### **Improvement**
 - Added `knownActiveChannelUrl` to `MessengerSettingsParams` to support N-active conversations

@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.19.4 (Jul 09, 2025)
+### **Improvement**
+- Added summary field to Conversation class
+
 ## v4.19.3 (Jul 03, 2025)
 ### **Improvement**
 - Fixed a bug where `sb.connect()` would not correctly throw the error received from the server

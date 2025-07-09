@@ -1339,6 +1339,10 @@ export declare class Conversation {
    */
   readonly topics: string[];
   /**
+   * @description The summary of the conversation.
+   * */
+  readonly summary?: string;
+  /**
    * @description The CSAT score of the conversation.
    */
   readonly csat?: number;

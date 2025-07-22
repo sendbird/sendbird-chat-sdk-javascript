@@ -120,7 +120,7 @@ export declare interface ApplicationUserListQueryParams extends BaseListQueryPar
   nicknameStartsWithFilter?: string;
 }
 
-declare enum AuthTokenType {
+export declare enum AuthTokenType {
   SESSION_TOKEN = 'session_token',
   ACCESS_TOKEN = 'access_token',
 }
@@ -1859,6 +1859,16 @@ export declare class GroupChannel extends BaseChannel {
   get hasBot(): boolean;
   /** Indicates whether this channel includes any AI bots. */
   get hasAiBot(): boolean;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Indicates whether this channel is a desk channel.
+   * */
+  get isDesk(): boolean;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Indicates whether this channel is an AI agent channel
+   * */
+  get isAIAgent(): boolean;
   get messageDeletionTimestamp(): number;
   /**
    * @param message
@@ -2131,6 +2141,21 @@ export declare class GroupChannel extends BaseChannel {
    * @description Close the conversation.
    * */
   closeConversation(): Promise<Conversation>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Gets the context object of the AI Agent channel.
+   * */
+  getContextObject<T = object>(aiAgentId: string): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Updates the context of the AI Agent channel. (overwrites the existing context)
+   * */
+  updateContext<T = object>(aiAgentId: string, context: Record<string, string>): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Patch the context of the AI Agent channel. (partially updates the existing context)
+   * */
+  patchContext<T = object>(aiAgentId: string, context: Record<string, string>): Promise<T>;
 }
 
 export declare type GroupChannelEventContext = BaseChannelEventContext;
@@ -6905,6 +6930,137 @@ declare interface NotificationTemplateListResult {
 
 export declare type SendbirdFeedChat = SendbirdChatWith<[FeedChannelModule]>;
 
+/** Whether to include or exclude AI Agent channels in the query results. */
+export declare enum AIAgentChannelFilter {
+  INCLUDE = 'include',
+  EXCLUDE = 'exclude',
+}
+
+/**
+ * @description Represents a ai agent group channel change logs params.
+ */
+export declare interface AIAgentGroupChannelChangeLogsParams {
+  /**
+   * The filter applied to AI agent channels.
+   * It determines whether to include or exclude AI agent channels in the query results.
+   */
+  aiAgentChannelFilter?: AIAgentChannelFilter;
+  /**
+   * The list of AI agent IDs to filter the channels.
+   * Only channels associated with these AI agents will be included in the results.
+   */
+  aiAgentIds?: string[];
+  /**
+   * The filter applied to Desk channels.
+   * It determines whether to include or exclude Desk channels in the query results.
+   */
+  deskChannelFilter?: DeskChannelFilter;
+  /**
+   * The list of pinned channel URLs.
+   * These channels are prioritized in the query results.
+   */
+  pinnedChannelUrls?: string[];
+}
+
+/**
+ * @description Represents the ai agent group channel list parameters.
+ */
+declare interface AIAgentGroupChannelListParams {
+  /**
+   * The filter applied to AI agent channels.
+   * It determines whether to include or exclude AI agent channels in the query results.
+   */
+  aiAgentChannelFilter?: AIAgentChannelFilter;
+  /**
+   * The filter applied to AI agent conversation statuses.
+   * It allows filtering channels based on the status of their conversations.
+   */
+  aiAgentConversationStatusFilter?: ConversationStatus[];
+  /**
+   * The list of AI agent IDs to filter the channels.
+   * Only channels associated with these AI agents will be included in the results.
+   */
+  aiAgentIds?: string[];
+  /**
+   * The filter applied to Desk channels.
+   * It determines whether to include or exclude Desk channels in the query results.
+   */
+  deskChannelFilter?: DeskChannelFilter;
+  /**
+   * The list of pinned channel URLs.
+   * These channels are prioritized in the query results.
+   */
+  pinnedChannelUrls?: string[];
+}
+
+export declare class AIAgentGroupChannelListQuery extends BaseListQuery {
+  readonly aiAgentChannelFilter: AIAgentChannelFilter;
+  readonly aiAgentConversationStatusFilter?: ConversationStatus[];
+  readonly aiAgentIds: string[];
+  readonly deskChannelFilter: DeskChannelFilter;
+  readonly pinnedChannelUrls: string[];
+  /**
+   * @returns
+   * @description Serializes the AIAgentGroupChannelListQuery instance.
+   *  This byte array can be stored in the database in your application. The instance can be restored by buildFromSerializedData.
+   */
+  serialize(): object;
+  /**
+   * @description The timestamp of the last response received from the server.
+   * This timestamp is updated each time a new page of channels is fetched.
+   * Use internal only
+   */
+  get lastResponseAt(): number;
+  /**
+   * Checks if the given [GroupChannel] belongs to this query based on the current parameters.
+   * This method evaluates the channel against the filters set in the query parameters.
+   *
+   * @param channel
+   * @return `true` if the channel matches the query parameters, `false` otherwise.
+   */
+  belongsTo(channel: GroupChannel): boolean;
+  /**
+   * @returns
+   * @description Gets the list of GroupChannels.
+   *  If this method is repeatedly called after each next is finished,
+   *  it retrieves the following pages of the GroupChannel list.
+   *  If there is no more pages to be read, an empty list (not null). is returned.
+   */
+  next(): Promise<GroupChannel[]>;
+}
+
+export declare interface AIAgentGroupChannelListQueryParams
+  extends BaseListQueryParams,
+    AIAgentGroupChannelListParams {}
+
+export declare interface AIAgentGroupChannelUnreadMessageCountParams {
+  /**
+   * The filter applied to AI agent channels.
+   * It determines whether to include or exclude AI agent channels in the query results.
+   */
+  aiAgentChannelFilter?: AIAgentChannelFilter;
+  /**
+   * The filter applied to AI agent conversation statuses.
+   * It allows filtering channels based on the status of their conversations.
+   */
+  aiAgentConversationStatusFilter?: ConversationStatus[];
+  /**
+   * The list of AI agent IDs to filter the channels.
+   * Only channels associated with these AI agents will be included in the results.
+   */
+  aiAgentIds?: string[];
+  /**
+   * The filter applied to Desk channels.
+   * It determines whether to include or exclude Desk channels in the query results.
+   */
+  deskChannelFilter?: DeskChannelFilter;
+  /**
+   * The list of pinned channel URLs.
+   * These channels are prioritized in the query results.
+   */
+  pinnedChannelUrls?: string[];
+}
+
 /**
  * Parameters for retrieving message template list for AIAgent.
  */
@@ -6938,6 +7094,32 @@ export declare class AIAgentModule extends Module {
   createConversationListQuery(params?: ConversationListQueryParams): ConversationListQuery;
   /**
    * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Creates a AIAgentGroupChannelListQuery with the params.
+   */
+  createMyGroupChannelListQuery(params?: AIAgentGroupChannelListQueryParams): AIAgentGroupChannelListQuery;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Requests the channel changelogs after given token.
+   */
+  getMyGroupChannelChangeLogsByToken(
+    token: string,
+    params?: AIAgentGroupChannelChangeLogsParams,
+  ): Promise<GroupChannelChangelogs>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Requests the channel changelogs after given timestamp.
+   */
+  getMyGroupChannelChangeLogsByTimestamp(
+    timestamp: number,
+    params?: AIAgentGroupChannelChangeLogsParams,
+  ): Promise<GroupChannelChangelogs>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Retrieves the unread message count of the AI-Agent group channels.
+   * */
+  getUnreadMessageCount(params?: AIAgentGroupChannelUnreadMessageCountParams): Promise<AIAgentUnreadMessageCount>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
    * @description Retrieves Message template list for AI-Agent
    */
   getMessageTemplates(params?: AIAgentMessageTemplateListParams): Promise<AIAgentMessageTemplateListResult>;
@@ -6946,6 +7128,30 @@ export declare class AIAgentModule extends Module {
    * @description Gets the information of the given messenger settings.
    */
   getMessageTemplate(key: string): Promise<MessageTemplate>;
+}
+
+export declare interface AIAgentPinnedChannelUnreadMessageCount {
+  /** The URL of the pinned channel. */
+  channelUrl: string;
+  /** The count of unread messages in the pinned channel. */
+  count: number;
+}
+
+/**
+ * @description Represents the aggregated unread message count information
+ */
+export declare interface AIAgentUnreadMessageCount {
+  /** The total number of unread messages across all AI agent and desk channels. */
+  total: number;
+  /** The number of unread messages in AI agent channels. */
+  aiAgentChannelCount: number;
+  /** The number of unread messages in desk channels. */
+  deskChannelCount: number;
+  /**
+   * An array of pinned channels with their unread message counts.
+   * Each object contains the channel URL and the count of unread messages.
+   * */
+  pinnedChannel: AIAgentPinnedChannelUnreadMessageCount[];
 }
 
 /** The conversation list order. */
@@ -7002,6 +7208,12 @@ export declare class ConversationListQuery extends BaseListQuery {
 }
 
 export declare interface ConversationListQueryParams extends BaseListQueryParams, ConversationListParams {}
+
+/** Whether to include or exclude Desk channels in the query results. */
+export declare enum DeskChannelFilter {
+  INCLUDE = 'include',
+  EXCLUDE = 'exclude',
+}
 
 export declare interface MessengerSettingsParams {
   aiAgentId: string;

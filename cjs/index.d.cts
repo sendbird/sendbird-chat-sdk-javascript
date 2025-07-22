@@ -10,6 +10,7 @@ export {
   AppInfo,
   ApplicationUserListQuery,
   ApplicationUserListQueryParams,
+  AuthTokenType,
   BannedUserListQuery,
   BannedUserListQueryParams,
   BaseChannel,

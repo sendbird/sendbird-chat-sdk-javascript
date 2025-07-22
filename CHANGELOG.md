@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.19.5 (Jul 22, 2025)
+### **Improvement**
+- Added `createMyGroupChannelListQuery`, `getMyGroupChannelChangeLogsByToken`, `getMyGroupChannelChangeLogsByTimestamp` and `getUnreadMessageCount` methods to AI Agent module
+- Added `getContextObject`, `updateContext` and `patchContext` methods to `GroupChannel`
+
 ## v4.19.4 (Jul 09, 2025)
 ### **Improvement**
 - Added summary field to Conversation class

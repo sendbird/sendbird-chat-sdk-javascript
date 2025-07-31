@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.19.6 (Jul 31, 2025)
+### **Improvement**
+- Fixed a bug that `loadMore()` may have unfiltered channels
+
 ## v4.19.5 (Jul 22, 2025)
 ### **Improvement**
 - Added `createMyGroupChannelListQuery`, `getMyGroupChannelChangeLogsByToken`, `getMyGroupChannelChangeLogsByTimestamp` and `getUnreadMessageCount` methods to AI Agent module

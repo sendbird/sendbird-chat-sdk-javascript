@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.19.8 (Aug 27, 2025)
+### **Improvement**
+- Fixed a bug in parsing `data` and `customType` properties in `FileMessage`
+
 ## v4.19.7 (Aug 22, 2025)
 ### **Improvement**
 - Fixed a bug that prevented fetching all information stored in the memory cache for `parent messages`

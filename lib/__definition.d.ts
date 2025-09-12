@@ -56,8 +56,9 @@ export declare class AppInfo {
   readonly lastMessageThreadingPolicy: LastMessageThreadingPolicy;
   /** Notification info. */
   readonly notificationInfo: NotificationInfo | null;
-  readonly uikitConfigInfo: UIKitConfigInfo;
+  readonly channelRotationInfo: ChannelRotationInfo | null;
   readonly messageTemplateInfo: MessageTemplateInfo | null;
+  readonly uikitConfigInfo: UIKitConfigInfo;
   readonly aiAgentInfo: AIAgentInfo | null;
   readonly disableSuperGroupMack: boolean;
 }
@@ -1192,6 +1193,13 @@ declare interface ChannelDataListQueryParams extends BaseListQueryParams {
   channelType: ChannelType;
 }
 
+declare class ChannelRotationInfo {
+  readonly enabled: boolean;
+  readonly orderBy: 'LAST_MESSAGE_TS_EXCLUDING_RECENT_JOINS';
+  readonly excludeRecentHours?: number;
+  readonly bufferRatio: number;
+}
+
 /** Represents channel types. */
 export declare enum ChannelType {
   BASE = 'base',
@@ -1362,6 +1370,10 @@ export declare class Conversation {
    * @description The handoff information of the conversation.
    */
   readonly handoff?: ConversationHandoff;
+  /**
+   * @description The timestamp when the conversation was handed over to an agent.
+   * */
+  readonly handedOverAt?: number;
 }
 
 export declare class ConversationChannelInfo {
@@ -1847,6 +1859,11 @@ export declare class GroupChannel extends BaseChannel {
    * The conversation data in this channel.
    */
   conversation: Conversation | null;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * The helpdesk information in this channel.
+   * */
+  helpdeskInfo: HelpdeskInfo | null;
   /** Checks whether this channel is hidden. */
   get isHidden(): boolean;
   /** Whether one or more members are typing. */
@@ -2207,6 +2224,17 @@ export declare interface GroupChannelUpdateParams {
   operatorUserIds?: string[];
   /** @ignore The message survival seconds of the channel. */
   messageSurvivalSeconds?: number;
+}
+
+export declare class HelpdeskInfo {
+  /**
+   * @description The type of the helpdesk.
+   */
+  readonly type: string;
+  /**
+   * @description The status of the helpdesk ticket.
+   */
+  readonly ticketStatus: string;
 }
 
 /** The hidden state. Refer to {@link GroupChannel.hide}. */
@@ -6936,6 +6964,16 @@ export declare enum AIAgentChannelFilter {
   EXCLUDE = 'exclude',
 }
 
+export declare interface AIAgentFormBaseParams {
+  channelUrl: string;
+  messageId: number;
+  formKey: string;
+}
+
+export declare interface AIAgentFormSubmitParams extends AIAgentFormBaseParams {
+  formData: Record<string, unknown>;
+}
+
 /**
  * @description Represents a ai agent group channel change logs params.
  */
@@ -7061,6 +7099,32 @@ export declare interface AIAgentGroupChannelUnreadMessageCountParams {
   pinnedChannelUrls?: string[];
 }
 
+export declare interface AIAgentMessageFeedbackBaseParams {
+  channelUrl: string;
+  messageId: number;
+}
+
+export declare interface AIAgentMessageFeedbackCreateParams extends AIAgentMessageFeedbackBaseParams {
+  rating: AIAgentMessageFeedbackRating;
+  comment?: string;
+}
+
+export declare enum AIAgentMessageFeedbackRating {
+  GOOD = 'good',
+  BAD = 'bad',
+}
+
+export declare interface AIAgentMessageFeedbackResponse {
+  id: number;
+  rating: AIAgentMessageFeedbackRating;
+  comment: string | null;
+}
+
+export declare interface AIAgentMessageFeedbackUpdateParams extends AIAgentMessageFeedbackBaseParams {
+  rating: AIAgentMessageFeedbackRating;
+  comment?: string;
+}
+
 /**
  * Parameters for retrieving message template list for AIAgent.
  */
@@ -7128,6 +7192,61 @@ export declare class AIAgentModule extends Module {
    * @description Gets the information of the given messenger settings.
    */
   getMessageTemplate(key: string): Promise<MessageTemplate>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Submits the AI Agent form of this message.
+   */
+  submitForm<T = object>(params: AIAgentFormSubmitParams): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Cancels the AI Agent form of this message.
+   */
+  cancelForm(params: AIAgentFormBaseParams): Promise<void>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Creates the AI Agent message feedback.
+   */
+  createMessageFeedback(params: AIAgentMessageFeedbackCreateParams): Promise<AIAgentMessageFeedbackResponse>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Updates the AI Agent message feedback.
+   */
+  updateMessageFeedback(params: AIAgentMessageFeedbackUpdateParams): Promise<AIAgentMessageFeedbackResponse>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Request the AI Agent OTP of this message.
+   */
+  requestOTP<T = object>(params: AIAgentOTPRequestParams): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Verify the AI Agent OTP of this message.
+   */
+  verifyOTP<T = object>(params: AIAgentOTPVerifyParams): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Cancel the AI Agent OTP of this message.
+   */
+  cancelOTP(params: AIAgentOTPBaseParams): Promise<void>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Deletes the AI Agent message feedback.
+   */
+  deleteMessageFeedback(params: AIAgentMessageFeedbackBaseParams): Promise<void>;
+}
+
+export declare interface AIAgentOTPBaseParams {
+  channelUrl: string;
+  messageId: number;
+  otpKey: string;
+}
+
+export declare interface AIAgentOTPRequestParams extends AIAgentOTPBaseParams {
+  otpChannel: string;
+  otpData: Record<string, unknown>;
+}
+
+export declare interface AIAgentOTPVerifyParams extends AIAgentOTPBaseParams {
+  code: string;
 }
 
 export declare interface AIAgentPinnedChannelUnreadMessageCount {

@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.19.9 (Sep 12, 2025)
+### **Improvement**
+- Improved stability
+
 ## v4.19.8 (Aug 27, 2025)
 ### **Improvement**
 - Fixed a bug in parsing `data` and `customType` properties in `FileMessage`

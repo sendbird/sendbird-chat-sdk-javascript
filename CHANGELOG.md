@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.19.10 (Sep 19, 2025)
+### **Improvement**
+- Fixed ping interval being incorrectly converted during session refresh, causing ping frequency to change from 15 seconds to ~4 hours
+
 ## v4.19.9 (Sep 12, 2025)
 ### **Improvement**
 - Improved stability

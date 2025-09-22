@@ -20,6 +20,7 @@ export {
   AIAgentOTPVerifyParams,
   AIAgentPinnedChannelUnreadMessageCount,
   AIAgentUnreadMessageCount,
+  AIAgentUserActionMessageParams,
   Conversation,
   ConversationChannelInfo,
   ConversationHandoff,

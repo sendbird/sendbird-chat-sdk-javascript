@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.19.11 (Sep 22, 2025)
+### **Improvement**
+- Add `copilot_conversation_only` boolean parameter to filter copilot conversation channels
+- Add `copilot_support_channel_url` string parameter for copilot support channel identification
+- Update `AIAgentGroupChannelListParams` interface and default values
+- Update `LoadAIAgentMyGroupChannelListRequestCommand` to handle new parameters
+
+
 ## v4.19.10 (Sep 19, 2025)
 ### **Improvement**
 - Fixed ping interval being incorrectly converted during session refresh, causing ping frequency to change from 15 seconds to ~4 hours

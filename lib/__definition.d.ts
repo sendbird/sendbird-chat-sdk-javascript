@@ -7029,6 +7029,16 @@ declare interface AIAgentGroupChannelListParams {
    * These channels are prioritized in the query results.
    */
   pinnedChannelUrls?: string[];
+  /**
+   * Filter for copilot conversation channels only.
+   * When set to true, only returns channels with copilot conversations.
+   */
+  copilotConversationOnly?: boolean;
+  /**
+   * The URL of the copilot support channel.
+   * Used for filtering or identifying the support channel.
+   */
+  copilotSupportChannelUrl?: string;
 }
 
 export declare class AIAgentGroupChannelListQuery extends BaseListQuery {
@@ -7232,6 +7242,11 @@ export declare class AIAgentModule extends Module {
    * Deletes the AI Agent message feedback.
    */
   deleteMessageFeedback(params: AIAgentMessageFeedbackBaseParams): Promise<void>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Submits the user action message status for a handed-off channel.
+   */
+  submitUserActionMessage(params: AIAgentUserActionMessageParams): Promise<void>;
 }
 
 export declare interface AIAgentOTPBaseParams {
@@ -7271,6 +7286,13 @@ export declare interface AIAgentUnreadMessageCount {
    * Each object contains the channel URL and the count of unread messages.
    * */
   pinnedChannel: AIAgentPinnedChannelUnreadMessageCount[];
+}
+
+export declare interface AIAgentUserActionMessageParams {
+  channelUrl: string;
+  messageId: number;
+  status: string;
+  detail?: string;
 }
 
 /** The conversation list order. */

@@ -1314,6 +1314,8 @@ declare abstract class ConnectionHandlerParams {
   onReconnectFailed?: () => void;
   /** A callback for when SendbirdChat is disconnected. */
   onDisconnected?: (userId: string) => void;
+  /** A callback for when connection is delayed. */
+  onConnectionDelayed?: (retryAfterTime: number) => void;
 }
 
 /**
@@ -1330,6 +1332,10 @@ export declare class Conversation {
    * @description The ID of the conversation.
    * */
   readonly id: number;
+  /**
+   * @description The AI agent ID associated with the conversation.
+   * */
+  readonly aiAgentId: string;
   /**
    * @description The type of the conversation.
    * */
@@ -4765,6 +4771,7 @@ export declare enum SendbirdErrorCode {
   WEBSOCKET_CONNECTION_CLOSED = 800200,
   WEBSOCKET_CONNECTION_FAILED = 800210,
   REQUEST_FAILED = 800220,
+  DELAYED_CONNECTING = 800221,
   FILE_UPLOAD_CANCEL_FAILED = 800230,
   REQUEST_CANCELED = 800240,
   REQUEST_DUPLICATED = 800250,
@@ -6998,6 +7005,16 @@ export declare interface AIAgentGroupChannelChangeLogsParams {
    * These channels are prioritized in the query results.
    */
   pinnedChannelUrls?: string[];
+  /**
+   * Filter for copilot conversation channels only.
+   * When set to true, only returns channels with copilot conversations.
+   */
+  copilotConversationOnly?: boolean;
+  /**
+   * The URL of the copilot support channel.
+   * Used for filtering or identifying the support channel.
+   */
+  copilotSupportChannelUrl?: string;
 }
 
 /**
@@ -7047,6 +7064,8 @@ export declare class AIAgentGroupChannelListQuery extends BaseListQuery {
   readonly aiAgentIds: string[];
   readonly deskChannelFilter: DeskChannelFilter;
   readonly pinnedChannelUrls: string[];
+  readonly copilotConversationOnly: boolean;
+  readonly copilotSupportChannelUrl: string | undefined;
   /**
    * @returns
    * @description Serializes the AIAgentGroupChannelListQuery instance.
@@ -7107,6 +7126,16 @@ export declare interface AIAgentGroupChannelUnreadMessageCountParams {
    * These channels are prioritized in the query results.
    */
   pinnedChannelUrls?: string[];
+  /**
+   * Filter for copilot conversation channels only.
+   * When set to true, only returns channels with copilot conversations.
+   */
+  copilotConversationOnly?: boolean;
+  /**
+   * The URL of the copilot support channel.
+   * Used for filtering or identifying the support channel.
+   */
+  copilotSupportChannelUrl?: string;
 }
 
 export declare interface AIAgentMessageFeedbackBaseParams {

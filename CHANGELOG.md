@@ -1,5 +1,67 @@
 # Changelog
 
+## v4.20.0 (Sep 25, 2025)
+### **Improvements**
+
+- Added `onConnectionDelayed` callback to `ConnectionHandler`
+  A new callback method that is invoked when the server is overloaded. This callback provides information about the delay time before automatic reconnection. After the delayed time period, the SDK automatically initiates reconnection and triggers the callback sequence: `onReconnectStarted` → `onReconnectSucceeded`
+
+```typescript
+  sb.addConnectionHandler('connection-handler-key', new ConnectionHandler({
+    onConnected: (userId: string) => {
+      /** A callback for when SendbirdChat is connected. */
+    },
+    onReconnectStarted: () => {
+      /** A callback for when SendbirdChat tries to reconnect. */
+    },
+    onReconnectSucceeded: () => {
+      /** A callback for when connection is reestablished. */
+    },
+    onReconnectFailed: () => {
+      /** A callback for when reconnection is failed. */
+    },
+    onDisconnected: () => {
+      /** A callback for when SendbirdChat is disconnected. */
+    },
+    onConnectionDelayed: (retryAfterTime: number /* second */) => {
+      /** A callback for when connection is delayed. */
+            
+      // Example: Show user-friendly message
+      // showNotification(`Server is busy. Reconnecting in ${retryAfterTime} seconds...`);
+    }
+  }));
+```
+
+- Added `SendbirdErrorCode.DELAYED_CONNECTING` error code
+  A new error code that is thrown when the server is overloaded and connection is delayed. Provides detailed information about the delay through the `error.detail` property.
+
+```typescript
+  try {
+    await sb.connect(USER_ID, AUTH_TOKEN);
+  } catch(error) {
+    if (error.code === SendbirdErrorCode.DELAYED_CONNECTING) {
+      console.log('error message', error.message);
+
+      // detail info
+      const detailInfo = JSON.parse(error.detail);
+      console.log('retryAfterTime', detailInfo.retry_after);     // Delay time in seconds
+      console.log('reasonCode', detailInfo.reason_code);         // Server reason code
+      console.log('message', detailInfo.message);               // Detailed error message
+      
+      // Handle delayed connection appropriately
+      // The SDK will automatically retry after the specified delay time
+    }
+  }
+```
+
+**Error Detail Properties:**
+- `retry_after`: The delay time in seconds before automatic reconnection
+- `reason_code`: Server-provided reason code for the delay
+- `message`: Detailed error message explaining the delay
+
+- Fixed typing indicator persistence bug after `channel.refresh()`
+- Fixed a bug where messages below the channel's `messageOffsetTimestamp` were not properly filtered
+
 ## v4.19.11 (Sep 22, 2025)
 ### **Improvement**
 - Add `copilot_conversation_only` boolean parameter to filter copilot conversation channels

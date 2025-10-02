@@ -1,6 +1,8 @@
 # Changelog
 
-## v4.20.0 (Sep 25, 2025)
+## v4.20.1 (Oct 02, 2025)
+### **Improvements**
+- LocalCache Improvement## v4.20.0 (Sep 25, 2025)
 ### **Improvements**
 
 - Added `onConnectionDelayed` callback to `ConnectionHandler`

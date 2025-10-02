@@ -1406,6 +1406,14 @@ export declare class ConversationHandoff {
    * @description The timestamp of the handoff.
    */
   readonly timestamp?: number;
+  /**
+   * @description The estimated time when an agent will join.
+   */
+  readonly estimatedAgentJoinAt?: number;
+  /**
+   * @description The timestamp when the handoff was requested.
+   */
+  readonly requestedAt?: number;
 }
 
 export declare class ConversationResolution {
@@ -1454,6 +1462,14 @@ declare interface CSATSubmitParams {
    * @description Whether the issue was resolved at the end of the conversation.
    */
   isResolved?: boolean;
+  /**
+   * @description The resolution feedback score. Used when boolean representation is insufficient.
+   */
+  resolutionScore?: number;
+  /**
+   * @description The timestamp when CSAT started.
+   */
+  csatStartedAt?: number;
 }
 
 /**

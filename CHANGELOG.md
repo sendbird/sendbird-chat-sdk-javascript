@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.20.2 (Nov 11, 2025)
+### **Improvements**
+- Added support for `MMKV v4` in React Native
 ## v4.20.1 (Oct 02, 2025)
 ### **Improvements**
 - LocalCache Improvement

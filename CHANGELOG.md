@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.20.3 (Dec 03, 2025)
+### **Improvements**
+- Fixed a bug where Reconnect after session refresh even it's in connecting state
+- Fixed a bug where some messages were missing due to a DB integrity issue
 ## v4.20.2 (Nov 11, 2025)
 ### **Improvements**
 - Added support for `MMKV v4` in React Native

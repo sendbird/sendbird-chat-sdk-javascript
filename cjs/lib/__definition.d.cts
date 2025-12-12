@@ -1312,6 +1312,8 @@ declare abstract class ConnectionHandlerParams {
   onReconnectSucceeded?: () => void;
   /** A callback for when reconnection is failed. */
   onReconnectFailed?: () => void;
+  /** A callback for when connection is lost. */
+  onConnectionLost?: () => void;
   /** A callback for when SendbirdChat is disconnected. */
   onDisconnected?: (userId: string) => void;
   /** A callback for when connection is delayed. */

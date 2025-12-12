@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.20.4 (Dec 12, 2025)
+### **Improvements**
+- Added `onConnectionLost` in `ConnectionHandler`
+  - The handler is called when the WebSocket connection is closed but the session persists.
 ## v4.20.3 (Dec 03, 2025)
 ### **Improvements**
 - Fixed a bug where Reconnect after session refresh even it's in connecting state

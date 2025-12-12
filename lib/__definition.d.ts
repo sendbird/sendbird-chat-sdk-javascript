@@ -1312,6 +1312,8 @@ declare abstract class ConnectionHandlerParams {
   onReconnectSucceeded?: () => void;
   /** A callback for when reconnection is failed. */
   onReconnectFailed?: () => void;
+  /** A callback for when connection is lost. */
+  onConnectionLost?: () => void;
   /** A callback for when SendbirdChat is disconnected. */
   onDisconnected?: (userId: string) => void;
   /** A callback for when connection is delayed. */
@@ -2278,9 +2280,16 @@ export declare enum LastMessageThreadingPolicy {
 }
 
 export declare class LocalCacheConfig {
-  constructor({ maxSize, clearOrder, customClearOrderComparator, enableAutoResend }?: LocalCacheConfigParams);
+  constructor({
+    maxSize,
+    clearOrder,
+    customClearOrderComparator,
+    enableAutoResend,
+    enableRestoreDB,
+  }?: LocalCacheConfigParams);
   get maxSize(): number;
   get clearOrder(): CachedDataClearOrder;
+  get enableRestoreDB(): boolean;
   get clearOrderComparator(): Comparator<CachedChannelInfo>;
   get enableAutoResend(): boolean;
 }
@@ -2290,6 +2299,7 @@ export declare interface LocalCacheConfigParams {
   clearOrder?: CachedDataClearOrder;
   customClearOrderComparator?: Comparator<CachedChannelInfo>;
   enableAutoResend?: boolean;
+  enableRestoreDB?: boolean;
 }
 
 export declare enum LogLevel {

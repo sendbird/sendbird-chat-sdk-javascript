@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.20.5 (Dec 24, 2025)
+### **Improvements**
+- Fixed a `payloadify error (hasBot of undefined)` that occurred when loading locally cached channels.
+
 ## v4.20.4 (Dec 12, 2025)
 ### **Improvements**
 - Added `onConnectionLost` in `ConnectionHandler`

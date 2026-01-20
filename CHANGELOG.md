@@ -1,5 +1,21 @@
 # Changelog
 
+## v4.20.6 (Jan 20, 2026)
+### **Improvements**
+- Fixed a bug where duplicate reconnect attempts could occur when the WebSocket closed during the `RECONNECTING` state
+- Made `csat` parameter optional in `submitCSAT` method
+- Added the `supportMultipleTabs` option to `SendbirdChatParams`
+  - This helps ensure stable behavior in `multi-tab` and `multi-window` environments. </br>
+    This option defaults to `false` and is applied only when `LocalCacheEnabled is set to true`.
+  ``` ts
+    const sb = SendbirdChat.init({
+      appId: APP_ID,
+      localCacheEnabled: true,
+      supportMultipleTabs: true,
+      ...
+    });
+  ```
+
 ## v4.20.5 (Dec 24, 2025)
 ### **Improvements**
 - Fixed a `payloadify error (hasBot of undefined)` that occurred when loading locally cached channels.

@@ -1449,13 +1449,13 @@ export declare enum CountPreference {
 
 declare interface CSATSubmitParams {
   /**
-   * @description The CSAT score of the conversation.
-   * */
-  csat: number;
-  /**
    * @description The type of the CSAT score.
    * */
   csatType: string;
+  /**
+   * @description The CSAT score of the conversation.
+   * */
+  csat?: number;
   /**
    * @description The reason for the CSAT score.
    * */
@@ -4734,6 +4734,7 @@ export declare interface SendbirdChatParams<Modules extends Module[]> {
   localCacheEnabled?: boolean;
   localCacheConfig?: LocalCacheConfig;
   localCacheEncryption?: Encryption;
+  supportMultipleTabs?: boolean;
   /** @deprecated */
   useAsyncStorageStore?: typeof AsyncStorage;
   useMMKVStorageStore?: MMKV;

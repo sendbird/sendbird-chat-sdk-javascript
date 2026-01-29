@@ -33,6 +33,7 @@ export {
   DeskChannelFilter,
   GroupChannelChangelogs,
   HelpdeskInfo,
+  InitConversationParams,
   MessageTemplate,
   MessengerSettingsParams,
 } from './lib/__definition.js';

@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.21.0 (Jan 29, 2026)
+### Deprecated
+- Deprecated `BaseMessage.submitFeedback()`, `updateFeedback()`, and `deleteFeedback()` methods
+  - These methods are no longer supported and will return a `SendbirdError(code: 800111)` when called
+- Deprecated `BaseMessage.submitMessageForm()` method
+  - This method is no longer supported and will return a `SendbirdError(code: 800111)` when called
+
 ## v4.20.6 (Jan 20, 2026)
 ### **Improvements**
 - Fixed a bug where duplicate reconnect attempts could occur when the WebSocket closed during the `RECONNECTING` state

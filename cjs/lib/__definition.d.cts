@@ -900,33 +900,25 @@ export declare class BaseMessage extends MessagePrototype {
    */
   setPushNotificationEnabled(pushEnabled: boolean): Promise<void>;
   /**
-   * @param data
-   * @returns
-   * @description Submits the message form of this message.
+   * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
    */
   submitMessageForm(): Promise<void>;
   /**
-   * @deprecated since v4.13.0. Use submitMessageForm() instead.
+   * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
    */
   submitMessageForm(data: { formId: number; answers: Record<string, string> }): Promise<void>;
   /**
-   * @param data
-   * @description Submits the feedback for the message.
-   *  The feedback can be submitted only when the {@link FeedbackStatus} is {@link FeedbackStatus.NO_FEEDBACK}.
+   * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
    */
-  submitFeedback(data: Pick<Feedback, 'rating' | 'comment'>): Promise<void>;
+  submitFeedback(_data: Pick<Feedback, 'rating' | 'comment'>): Promise<void>;
   /**
-   * @param data
-   * @description Updates the feedback for the message.
-   *  The feedback can be updated only when the {@link FeedbackStatus} is {@link FeedbackStatus.SUBMITTED}.
+   * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
    */
-  updateFeedback(data: Feedback): Promise<void>;
+  updateFeedback(_data: Feedback): Promise<void>;
   /**
-   * @param feedbackId
-   * @description Deletes the feedback for the message.
-   *  The feedback can be deleted only when the {@link FeedbackStatus} is {@link FeedbackStatus.SUBMITTED}.
+   * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
    */
-  deleteFeedback(feedbackId: number): Promise<void>;
+  deleteFeedback(_feedbackId: number): Promise<void>;
 }
 
 /**
@@ -1382,6 +1374,10 @@ export declare class Conversation {
    * @description The timestamp when the conversation was handed over to an agent.
    * */
   readonly handedOverAt?: number;
+  /**
+   * @description The context of the conversation.
+   * */
+  readonly context?: object;
 }
 
 export declare class ConversationChannelInfo {
@@ -1432,6 +1428,7 @@ export declare class ConversationResolution {
 export declare enum ConversationStatus {
   OPEN = 'open',
   CLOSED = 'closed',
+  INITIALIZED = 'initialized',
 }
 
 export declare enum ConversationType {
@@ -1552,40 +1549,26 @@ export declare interface Encryption {
 export declare type FailedMessageHandler<T> = (err: Error, message: T | null) => void;
 
 /**
- * @description User's feedback data about the message.
+ * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
  */
-export declare class Feedback {
-  /** The feedback ID. This is used for deleting the feedback. */
+export declare interface Feedback {
   readonly id: number;
-  /** The feedback rating. */
   readonly rating: FeedbackRating;
-  /** The feedback comment. */
   readonly comment?: string;
-  constructor(payload: FeedbackPayload);
-}
-
-declare interface FeedbackPayload {
-  id: number;
-  rating: FeedbackRating;
-  comment?: string;
 }
 
 /**
- * @description The feedback rating the user gave.
+ * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
  */
 export declare enum FeedbackRating {
   GOOD = 'good',
   BAD = 'bad',
 }
 
-/** The status of the feedback in the message. */
-export declare type FeedbackStatus =
-  /** Feedback is unavailable for this message. */
-  | 'NOT_APPLICABLE'
-  /** Feedback can be set for this message, but nothing has been submitted yet. */
-  | 'NO_FEEDBACK'
-  /** Feedback can be set for this message, and something has been submitted. */
-  | 'SUBMITTED';
+/**
+ * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
+ */
+export declare type FeedbackStatus = 'NOT_APPLICABLE' | 'NO_FEEDBACK' | 'SUBMITTED';
 
 /**
  * @description Represents a feed channel.
@@ -2197,6 +2180,11 @@ export declare class GroupChannel extends BaseChannel {
    * @description Patch the context of the AI Agent channel. (partially updates the existing context)
    * */
   patchContext<T = object>(aiAgentId: string, context: Record<string, string>): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Initializes a conversation with the AI Agent.
+   * */
+  initConversation(params: InitConversationParams): Promise<void>;
 }
 
 export declare type GroupChannelEventContext = BaseChannelEventContext;
@@ -2266,6 +2254,10 @@ export declare enum HiddenState {
   UNHIDDEN = 'unhidden',
   HIDDEN_ALLOW_AUTO_UNHIDE = 'hidden_allow_auto_unhide',
   HIDDEN_PREVENT_AUTO_UNHIDE = 'hidden_prevent_auto_unhide',
+}
+
+export declare interface InitConversationParams {
+  aiAgentId: string;
 }
 
 export declare interface InvitationPreference {
@@ -2575,51 +2567,35 @@ export declare interface MessageFilterParams {
 }
 
 /**
- * @description Represents a form.
+ * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
  */
-export declare class MessageForm {
-  /** The id of this form. */
+export declare interface MessageForm {
   readonly id: number;
-  /** The name of this form. */
   readonly name: string;
-  /** The id of the message to which this form is attached. */
   readonly messageId: number;
-  /** The version of this form. */
   readonly version: number;
-  /** A form items of this form. */
   items: MessageFormItem[];
-  /** Submitted state of this form. */
-  get isSubmitted(): boolean;
-  /** Submittable state of this form. */
-  get isSubmittable(): boolean;
+  readonly isSubmitted: boolean;
+  readonly isSubmittable: boolean;
 }
 
 /**
- * @description Represents a messageForm item where users can enter values.
+ * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
  */
-export declare class MessageFormItem {
-  /** The id of this messageForm item. */
+export declare interface MessageFormItem {
   readonly id: number;
-  /** The name of this messageForm item. */
   readonly name: string;
-  /** Whether this messageForm item is required or not. */
   readonly required: boolean;
-  /** The sort order of this messageForm item. */
   readonly sortOrder: number;
-  /** The placeholder of this messageForm item. */
   readonly placeholder: string;
-  /** The style of this messageForm item. */
   readonly style: MessageFormItemStyle;
-  /** The submitted values of  */
   readonly submittedValues?: string[];
   draftValues?: string[];
-  /**
-   * @returns
-   * @description Checks whether the given values are valid or not.
-   */
-  isValid(values: string[]): boolean;
 }
 
+/**
+ * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
+ */
 export declare enum MessageFormItemLayout {
   TEXT = 'text',
   TEXTAREA = 'textarea',
@@ -2630,13 +2606,16 @@ export declare enum MessageFormItemLayout {
 }
 
 /**
- * Represents range of possible number of options to be submitted for MessageFormItemLayout.CHIP layout.
+ * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
  */
 export declare interface MessageFormItemResultCount {
   min: number;
   max: number;
 }
 
+/**
+ * @deprecated This is a legacy chatbot feature that is no longer supported. Use AI Agent instead.
+ */
 export declare interface MessageFormItemStyle {
   layout: MessageFormItemLayout;
   options?: string[];
@@ -7050,27 +7029,27 @@ export declare interface AIAgentGroupChannelChangeLogsParams {
 declare interface AIAgentGroupChannelListParams {
   /**
    * The filter applied to AI agent channels.
-   * It determines whether to include or exclude AI agent channels in the query results.
+   * It determines whether to include or exclude AI agent channels in the query results. (default: INCLUDE)
    */
   aiAgentChannelFilter?: AIAgentChannelFilter;
   /**
    * The filter applied to AI agent conversation statuses.
-   * It allows filtering channels based on the status of their conversations.
+   * It allows filtering channels based on the status of their conversations. (default: OPEN and CLOSED)
    */
   aiAgentConversationStatusFilter?: ConversationStatus[];
   /**
    * The list of AI agent IDs to filter the channels.
-   * Only channels associated with these AI agents will be included in the results.
+   * Only channels associated with these AI agents will be included in the results. (default: empty array)
    */
   aiAgentIds?: string[];
   /**
    * The filter applied to Desk channels.
-   * It determines whether to include or exclude Desk channels in the query results.
+   * It determines whether to include or exclude Desk channels in the query results. (default: INCLUDE)
    */
   deskChannelFilter?: DeskChannelFilter;
   /**
    * The list of pinned channel URLs.
-   * These channels are prioritized in the query results.
+   * These channels are prioritized in the query results. (default: empty array)
    */
   pinnedChannelUrls?: string[];
   /**
@@ -7130,27 +7109,27 @@ export declare interface AIAgentGroupChannelListQueryParams
 export declare interface AIAgentGroupChannelUnreadMessageCountParams {
   /**
    * The filter applied to AI agent channels.
-   * It determines whether to include or exclude AI agent channels in the query results.
+   * It determines whether to include or exclude AI agent channels in the query results. (default: INCLUDE)
    */
   aiAgentChannelFilter?: AIAgentChannelFilter;
   /**
    * The filter applied to AI agent conversation statuses.
-   * It allows filtering channels based on the status of their conversations.
+   * It allows filtering channels based on the status of their conversations. (default: OPEN and CLOSED)
    */
   aiAgentConversationStatusFilter?: ConversationStatus[];
   /**
    * The list of AI agent IDs to filter the channels.
-   * Only channels associated with these AI agents will be included in the results.
+   * Only channels associated with these AI agents will be included in the results. (default: empty array)
    */
   aiAgentIds?: string[];
   /**
    * The filter applied to Desk channels.
-   * It determines whether to include or exclude Desk channels in the query results.
+   * It determines whether to include or exclude Desk channels in the query results. (default: INCLUDE)
    */
   deskChannelFilter?: DeskChannelFilter;
   /**
    * The list of pinned channel URLs.
-   * These channels are prioritized in the query results.
+   * These channels are prioritized in the query results. (default: empty array)
    */
   pinnedChannelUrls?: string[];
   /**
@@ -7420,4 +7399,5 @@ export declare interface MessengerSettingsParams {
   context?: Record<string, string>;
   forceCreateChannel?: boolean;
   knownActiveChannelUrl?: string;
+  shouldSendFirstMessage?: boolean;
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.21.1 (Feb 06, 2026)
+### Improvements
+- Fixed an issue where event callbacks were not triggered correctly in certain environments
+
 ## v4.21.0 (Jan 29, 2026)
 ### Deprecated
 - Deprecated `BaseMessage.submitFeedback()`, `updateFeedback()`, and `deleteFeedback()` methods

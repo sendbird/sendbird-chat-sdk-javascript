@@ -6,6 +6,7 @@ export {
   AIAgentGroupChannelListQuery,
   AIAgentGroupChannelListQueryParams,
   AIAgentGroupChannelUnreadMessageCountParams,
+  AIAgentHandler,
   AIAgentInfo,
   AIAgentMessageFeedbackBaseParams,
   AIAgentMessageFeedbackCreateParams,

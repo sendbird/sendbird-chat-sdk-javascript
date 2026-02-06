@@ -7144,6 +7144,10 @@ export declare interface AIAgentGroupChannelUnreadMessageCountParams {
   copilotSupportChannelUrl?: string;
 }
 
+export declare interface AIAgentHandler {
+  (data: object): void;
+}
+
 export declare interface AIAgentMessageFeedbackBaseParams {
   channelUrl: string;
   messageId: number;
@@ -7191,6 +7195,34 @@ export declare interface AIAgentMessageTemplateListResult {
 
 export declare class AIAgentModule extends Module {
   name: 'aiAgent';
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @param key
+   * @param handler
+   * @description Adds an AIAgentHandler with a key.
+   */
+  addEventHandler(key: string, handler: AIAgentHandler): void;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @param key
+   * @description Removes an AIAgentHandler for a key.
+   */
+  removeEventHandler(key: string): void;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Removes all AIAgentHandlers.
+   */
+  removeAllEventHandlers(): void;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Updates the context of the AI Agent channel. (overwrites the existing context)
+   */
+  updateContext<T = object>(aiAgentId: string, channelUrl: string, context: Record<string, string>): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Patches the context of the AI Agent channel. (partially updates the existing context)
+   */
+  patchContext<T = object>(aiAgentId: string, channelUrl: string, context: Record<string, string>): Promise<T>;
   /**
    * @experimental This API is experimental and may be changed or removed at any time without notice.
    * @description Gets the information of the given messenger settings.

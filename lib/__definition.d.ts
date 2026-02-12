@@ -7314,6 +7314,10 @@ export declare class AIAgentModule extends Module {
    * Submits the user action message status for a handed-off channel.
    */
   submitUserActionMessage(params: AIAgentUserActionMessageParams): Promise<void>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   */
+  appendStat(type: string, data: Record<string, unknown>): boolean;
 }
 
 export declare interface AIAgentOTPBaseParams {

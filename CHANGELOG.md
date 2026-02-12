@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.21.2 (Feb 12, 2026)
+### Improvements
+- Fixed a bug where not all channels were fetched when GroupChannel ChangeLogSync failed
+
 ## v4.21.1 (Feb 06, 2026)
 ### Improvements
 - Fixed an issue where event callbacks were not triggered correctly in certain environments

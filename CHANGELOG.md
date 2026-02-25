@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.21.3 (Feb 25, 2026)
+### Improvements
+- `CHANNEL_IS_FROZEN(900050)` errors are no longer included in the AutoResend retry logic
+
 ## v4.21.2 (Feb 12, 2026)
 ### Improvements
 - Fixed a bug where not all channels were fetched when GroupChannel ChangeLogSync failed

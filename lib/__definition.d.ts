@@ -1347,7 +1347,11 @@ export declare class Conversation {
    */
   readonly topics: string[];
   /**
-   * @description The summary of the conversation.
+   * @description The title of the conversation. The title is generated after the conversation is closed.
+   */
+  readonly title?: string;
+  /**
+   * @description The summary of the conversation. The summary is generated after the conversation is closed.
    * */
   readonly summary?: string;
   /**

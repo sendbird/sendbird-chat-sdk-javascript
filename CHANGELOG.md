@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.21.4 (Mar 12, 2026)
+### Improvements
+- Fixed a bug Where messages received during `MessageCollection.initialize()` could be lost
+- Add `cancelStewardTask` API to `AIAgentModule` for canceling steward tasks by message ID
+
 ## v4.21.3 (Feb 25, 2026)
 ### Improvements
 - `CHANNEL_IS_FROZEN(900050)` errors are no longer included in the AutoResend retry logic

@@ -7319,6 +7319,10 @@ export declare class AIAgentModule extends Module {
    */
   submitUserActionMessage(params: AIAgentUserActionMessageParams): Promise<void>;
   /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice. (js only)
+   */
+  cancelStewardTask(params: AIAgentStewardBaseParams): Promise<void>;
+  /**
    * @experimental This API is experimental and may be changed or removed at any time without notice.
    */
   appendStat(type: string, data: Record<string, unknown>): boolean;
@@ -7344,6 +7348,11 @@ export declare interface AIAgentPinnedChannelUnreadMessageCount {
   channelUrl: string;
   /** The count of unread messages in the pinned channel. */
   count: number;
+}
+
+export declare interface AIAgentStewardBaseParams {
+  channelUrl: string;
+  messageId: number;
 }
 
 /**

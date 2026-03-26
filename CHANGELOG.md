@@ -1,6 +1,97 @@
 # Changelog
 
-## v4.21.4 (Mar 12, 2026)
+## v4.22.0 (Mar 26, 2026)
+### Features
+
+#### Weekly Do-Not-Disturb Schedule
+
+Added support for per-day weekly DND scheduling. You can now configure different DND time windows for each day of the week, replacing the previous single-time window DND setting.
+
+**New methods:**
+- `setWeeklyDoNotDisturb(weeklyDndSchedules, timezone?)` — Sets a weekly DND schedule
+- `getWeeklyDoNotDisturb()` — Gets the current weekly DND schedule
+- `clearWeeklyDoNotDisturb()` — Clears the weekly DND schedule
+
+**New types:**
+- `DndSchedule` — Model class for managing per-day DND time windows
+- `DndSchedules` — `Partial<Record<DayOfWeek, DndTimeWindow[]>>`
+- `DndTimeWindow` — `{ startHour, startMin, endHour, endMin }`
+- `DndSchedulePreference` — `{ doNotDisturbOn, dndSchedules?, timezone? }`
+- `DayOfWeek` — Enum (`sunday` | `monday` | ... | `saturday`)
+
+### Deprecated
+- `setDoNotDisturb()` — Use `setWeeklyDoNotDisturb()` instead.
+- `getDoNotDisturb()` — Use `getWeeklyDoNotDisturb()` instead.
+- `DoNotDisturbPreference` — Use `DndSchedulePreference` instead.
+
+### Usage Examples
+
+**Set a weekly DND schedule**
+
+```typescript
+import { DndSchedule, DayOfWeek } from '@sendbird/chat';
+
+const dndSchedule = new DndSchedule();
+
+// Set weekdays to 22:00 ~ 23:59
+dndSchedule.setWeekdays([
+  { startHour: 22, startMin: 0, endHour: 23, endMin: 59 },
+]);
+
+// Set weekends to full-day DND
+dndSchedule.setFullDay([DayOfWeek.SATURDAY, DayOfWeek.SUNDAY]);
+
+const preference = await sb.setWeeklyDoNotDisturb(dndSchedule, 'Asia/Seoul');
+```
+
+**Get current weekly DND schedule**
+
+```typescript
+const preference = await sb.getWeeklyDoNotDisturb();
+
+console.log(preference.doNotDisturbOn); // true
+console.log(preference.timezone);       // 'Asia/Seoul'
+console.log(preference.dndSchedules);
+// DndSchedule {
+//   monday:    [{ startHour: 22, startMin: 0, endHour: 23, endMin: 59 }],
+//   tuesday:   [{ startHour: 22, startMin: 0, endHour: 23, endMin: 59 }],
+//   wednesday: [{ startHour: 22, startMin: 0, endHour: 23, endMin: 59 }],
+//   thursday:  [{ startHour: 22, startMin: 0, endHour: 23, endMin: 59 }],
+//   friday:    [{ startHour: 22, startMin: 0, endHour: 23, endMin: 59 }],
+//   saturday:  [{ startHour: 0, startMin: 0, endHour: 23, endMin: 59 }],
+//   sunday:    [{ startHour: 0, startMin: 0, endHour: 23, endMin: 59 }],
+// }
+```
+
+**Clear weekly DND schedule**
+
+```typescript
+await sb.clearWeeklyDoNotDisturb();
+```
+
+**Migration from deprecated DND**
+
+```typescript
+// Before (deprecated)
+await sb.setDoNotDisturb(true, 22, 0, 8, 0, 'Asia/Seoul');
+
+// After
+const dndSchedule = new DndSchedule();
+dndSchedule.setWeekdays([
+  { starHour: 0, startMin: 0, endHour: 8, endMin: 0 },
+  { startHour: 22, startMin: 0, endHour: 23, endMin: 59 },
+]);
+await sb.setWeeklyDoNotDisturb(dndSchedule, 'Asia/Seoul');
+```
+
+### Migration Notes
+
+> **Important:** When you call `setWeeklyDoNotDisturb`, any existing DND schedule configured via the deprecated `setDoNotDisturb` will be reset and replaced by the new weekly schedule. The two settings are mutually exclusive — once the weekly DND schedule is set, the previous DND configuration will no longer be in effect.
+
+### Improvements
+- Added `joinedAt` to `Member`
+- Fixed a bug where `MMKV` data was not trimmed after deletion
+- Fixed a bug where `loadMore()` pagination missed channels when an empty channel exists in the channel list## v4.21.4 (Mar 12, 2026)
 ### Improvements
 - Fixed a bug Where messages received during `MessageCollection.initialize()` could be lost
 - Add `cancelStewardTask` API to `AIAgentModule` for canceling steward tasks by message ID

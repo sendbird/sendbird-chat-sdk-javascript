@@ -1120,6 +1120,7 @@ declare abstract class BaseStore {
   remove(key: string): Promise<boolean>;
   removeMany(keys: string[]): Promise<string[]>;
   clear(): Promise<void>;
+  trim(): void;
 }
 
 declare interface BaseStoreParams {
@@ -1475,6 +1476,17 @@ declare interface CSATSubmitParams {
   csatStartedAt?: number;
 }
 
+/** Day of week. Uses lowercase string to match the API. */
+export declare enum DayOfWeek {
+  SUNDAY = 'sunday',
+  MONDAY = 'monday',
+  TUESDAY = 'tuesday',
+  WEDNESDAY = 'wednesday',
+  THURSDAY = 'thursday',
+  FRIDAY = 'friday',
+  SATURDAY = 'saturday',
+}
+
 /**
  * @description Object representing delivery status.
  */
@@ -1502,6 +1514,43 @@ export declare enum DeviceOsPlatform {
   WINDOWS = 'windows',
 }
 
+export declare class DndSchedule {
+  constructor(dndSchedules?: DndSchedules);
+  setDayDndSchedule(dayOfWeek: DayOfWeek, timeWindows: DndTimeWindow[]): DndSchedules;
+  getDayDndSchedule(dayOfWeek: DayOfWeek): DndTimeWindow[] | undefined;
+  getDndSchedules(): DndSchedules;
+  setDndSchedules(dndSchedules: DndSchedules): DndSchedules;
+  setWeekdays(dndSchedules: DndTimeWindow[]): DndSchedules;
+  setWeekends(dndSchedules: DndTimeWindow[]): DndSchedules;
+  setFullDay(days: DayOfWeek[]): DndSchedules;
+}
+
+/**
+ * Weekly Do Not Disturb preference.
+ * Return type of getWeeklyDoNotDisturb() and setWeeklyDoNotDisturb().
+ */
+export declare interface DndSchedulePreference {
+  doNotDisturbOn: boolean;
+  /** DND time windows per day. Omitted when not set. */
+  dndSchedules?: DndSchedule;
+  /** IANA timezone (e.g. 'Asia/Seoul'). */
+  timezone?: string;
+}
+
+export declare type DndSchedules = Partial<Record<DayOfWeek, DndTimeWindow[]>>;
+
+/**
+ * A single DND time window within a day (start ~ end).
+ * startHour/startMin and endHour/endMin must be in 0–23 and 0–59 respectively.
+ */
+export declare interface DndTimeWindow {
+  startHour: number;
+  startMin: number;
+  endHour: number;
+  endMin: number;
+}
+
+/** @deprecated since version v4.22.0. Please use DndSchedulePreference instead. */
 export declare interface DoNotDisturbPreference {
   doNotDisturbOn: boolean;
   startHour?: number;
@@ -2321,6 +2370,8 @@ export declare class Member extends RestrictedUser {
   isBlockedByMe: boolean;
   /** Whether the {@link Member} is blocking the SendbirdChat.currentUser. */
   isBlockingMe: boolean;
+  /** The timestamp when the member joined the channel, in milliseconds. */
+  joinedAt: number;
 }
 
 export declare enum MemberListOrder {
@@ -4478,21 +4529,11 @@ export declare class SendbirdChat {
    */
   setChannelInvitationPreference(willAutoAccept: boolean): Promise<InvitationPreference>;
   /**
-   * @returns
-   * @description Gets Do-not-disturb option for the current User.
+   * @deprecated since version v4.22.0. Please use getWeeklyDoNotDisturb instead.
    */
   getDoNotDisturb(): Promise<DoNotDisturbPreference>;
   /**
-   * @param doNotDisturbOn
-   * @param startHour
-   * @param startMin
-   * @param endHour
-   * @param endMin
-   * @param timezone
-   * @returns
-   * @description Sets Do-not-disturb option for the current User.
-   *  If this option is enabled, the current User does not receive push notification during the specified time repeatedly.
-   *  If you want to snooze specific period, use setSnoozePeriod.
+   * @deprecated since version v4.22.0. Please use setWeeklyDoNotDisturb instead.
    */
   setDoNotDisturb(
     doNotDisturbOn: boolean,
@@ -4502,6 +4543,29 @@ export declare class SendbirdChat {
     endMin?: number,
     timezone?: string,
   ): Promise<DoNotDisturbPreference>;
+  /**
+   * @param weeklyDndSchedules - A {@link DndSchedule} that contains DND time windows for each day of the week.
+   * @param timezone - The timezone to apply to the schedule (e.g. `'Asia/Seoul'`). Defaults to `''`.
+   * @returns A promise that resolves to {@link DndSchedulePreference}.
+   * @description Sets a weekly Do-not-disturb schedule for the current User.
+   *  This method allows configuring different DND time windows per day of the week.
+   *  If this schedule is enabled, the current User does not receive push notifications during the specified time windows.
+   *  If you want to snooze for a specific period, use {@link setSnoozePeriod}.
+   */
+  setWeeklyDoNotDisturb(weeklyDndSchedules: DndSchedule, timezone?: string): Promise<DndSchedulePreference>;
+  /**
+   * @returns A promise that resolves to {@link DndSchedulePreference}.
+   * @description Gets the weekly Do-not-disturb schedule for the current User.
+   *  The returned preference includes whether weekly DND is enabled and the configured time windows per day.
+   */
+  getWeeklyDoNotDisturb(): Promise<DndSchedulePreference>;
+  /**
+   * @returns A promise that resolves when the weekly DND schedule has been cleared.
+   * @description Clears the weekly Do-not-disturb schedule for the current User.
+   *  After calling this method, the User will no longer have a weekly DND schedule
+   *  and will receive push notifications as normal (unless other DND or snooze settings are active).
+   */
+  clearWeeklyDoNotDisturb(): Promise<void>;
   /**
    * @returns
    * @description Gets snooze period for the current User.
@@ -7449,4 +7513,5 @@ export declare interface MessengerSettingsParams {
   forceCreateChannel?: boolean;
   knownActiveChannelUrl?: string;
   shouldSendFirstMessage?: boolean;
+  agentVersion?: number;
 }

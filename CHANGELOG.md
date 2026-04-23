@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.22.1 (Apr 23, 2026)
+### Improvements
+- Fix for the bug where the initial loading becomes slow when there is a large amount of channel data in the cache
+
 ## v4.22.0 (Mar 26, 2026)
 ### Features
 

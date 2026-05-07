@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.22.2 (May 07, 2026)
+### Improvements
+- Fixed `SendableMessage.sender` being `undefined` in rare cases where the server payload omits sender information
+- Added support for Node.js 24 build environment and resolved high-severity npm audit issues (devDependencies only; published bundle is unaffected)
 ## v4.22.1 (Apr 23, 2026)
 ### Improvements
 - Fix for the bug where the initial loading becomes slow when there is a large amount of channel data in the cache

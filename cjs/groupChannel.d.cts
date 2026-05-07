@@ -1,4 +1,10 @@
 export {
+  BaseChannelCollection,
+  BaseChannelCollectionConfig,
+  BaseChannelCollectionEventHandler,
+  BaseChannelCollectionParams,
+  ChannelCollectionFetcher,
+  ChannelCollectionFilter,
   CountPreference,
   DeliveryStatus,
   GroupChannel,

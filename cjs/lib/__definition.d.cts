@@ -1,4 +1,4 @@
-import type AsyncStorage from '@react-native-async-storage/async-storage';
+import type { AsyncStorageStatic } from '@react-native-async-storage/async-storage';
 
 import type { MMKV } from 'react-native-mmkv';
 
@@ -4783,7 +4783,7 @@ export declare interface SendbirdChatParams<Modules extends Module[]> {
   localCacheEncryption?: Encryption;
   supportMultipleTabs?: boolean;
   /** @deprecated */
-  useAsyncStorageStore?: typeof AsyncStorage;
+  useAsyncStorageStore?: AsyncStorageStatic;
   useMMKVStorageStore?: MMKV;
   appStateToggleEnabled?: boolean;
 }
@@ -5301,6 +5301,61 @@ export declare interface UserUpdateParams {
   nickname?: string;
 }
 
+export declare abstract class BaseChannelCollection<TFilter = ChannelCollectionFilter> {
+  readonly filter: TFilter;
+  /** The order of the channel list. */
+  readonly order: GroupChannelListOrder;
+  /** @protected */
+  constructor(_iid: string, config: BaseChannelCollectionConfig<TFilter>);
+  /** Whether the collection has more channels to load. */
+  get hasMore(): boolean;
+  get handler(): BaseChannelCollectionEventHandler;
+  get channels(): GroupChannel[];
+  /**
+   * @param handler
+   * @description Sets `GroupChannelCollection` event handler.
+   */
+  setGroupChannelCollectionHandler(handler: BaseChannelCollectionEventHandler): void;
+  /**
+   * @returns
+   * @description Loads next channel lists with the filter and the order.
+   */
+  loadMore(): Promise<GroupChannel[]>;
+}
+
+export declare interface BaseChannelCollectionConfig<TFilter = ChannelCollectionFilter>
+  extends Omit<BaseChannelCollectionParams<TFilter>, 'filter' | 'order' | 'limit'> {
+  filter: TFilter;
+  order: GroupChannelListOrder;
+  limit: number;
+  fetcher: Required<Pick<ChannelCollectionFetcher<TFilter>, 'getRemoteChannels' | 'changeLogSync'>>;
+  syncKeyPrefix?: string;
+}
+
+/**
+ * @description Represents an interface to receive `GroupChannelCollection` events.
+ */
+export declare interface BaseChannelCollectionEventHandler {
+  /** Called when there are newly added {@link GroupChannel}s. */
+  onChannelsAdded?: (context: GroupChannelEventContext, channels: BaseChannel[]) => void;
+  /** Called when there's an update in one or more of the {@link GroupChannel}s that `GroupChannelCollection` holds. */
+  onChannelsUpdated?: (context: GroupChannelEventContext, channels: BaseChannel[]) => void;
+  /** Called when one or more of the {@link GroupChannel}s that `GroupChannelCollection` holds has been deleted. */
+  onChannelsDeleted?: (context: GroupChannelEventContext, channelUrls: string[]) => void;
+}
+
+export declare interface BaseChannelCollectionParams<TFilter = ChannelCollectionFilter> {
+  filter?: TFilter;
+  order?: GroupChannelListOrder;
+  limit?: number;
+  /**
+   * temporary option for Dream11. (default: false) will be deprecated later.
+   * if the option turns to `true`, the first call of `loadMore()` waits for changelog sync to progress.
+   * once the changelog sync advances (a single page), it applies the changelogs to the result of `loadMore()` and return.
+   */
+  includeChangesOnInitialLoad?: boolean;
+}
+
 declare abstract class BaseChannelHandlerParams {
   /** A callback for when a User is muted from channel. */
   onUserMuted?: (channel: BaseChannel, user: RestrictedUser) => void;
@@ -5347,6 +5402,38 @@ declare abstract class BaseChannelHandlerParams {
   onThreadInfoUpdated?: (channel: BaseChannel, threadInfoUpdateEvent: ThreadInfoUpdateEvent) => void;
 }
 
+export declare interface ChannelCollectionFetcher<TFilter = ChannelCollectionFilter> {
+  /**
+   * Used by loadMore() → _getRemoteChannels().
+   * For GroupChannel, calls GroupChannelManager.getMyGroupChannels().
+   * For AI-Agent, calls sdk.aiAgent.getMyGroupChannels().
+   */
+  getRemoteChannels?(
+    token: string,
+    filter: TFilter,
+    order: GroupChannelListOrder,
+    limit: number,
+  ): Promise<{
+    channels: GroupChannel[];
+    token: string;
+  }>;
+  /**
+   * Used by ChangelogSync.
+   * For GroupChannel, calls GroupChannelManager.getMyGroupChannelChangeLogs().
+   * For AI-Agent, calls sdk.aiAgent.getMyGroupChannelChangeLogs().
+   */
+  changeLogSync?(token: string | number): Promise<{
+    updatedChannels: GroupChannel[];
+    deletedChannelUrls: string[];
+    hasMore: boolean;
+    token: string;
+  }>;
+}
+
+export declare interface ChannelCollectionFilter {
+  match(channel: GroupChannel, userId: string): boolean;
+}
+
 /**
  * @description Represents {@link GroupChannel} changelogs.
  */
@@ -5378,57 +5465,16 @@ export declare interface GroupChannelChangeLogsParams {
   includeChatNotification?: boolean;
 }
 
-/**
- * @description Collection that handles channel lists, also supporting local caching.
- */
-export declare class GroupChannelCollection {
-  /** The list of {@link GroupChannel}s managed by collection. */
-  readonly channels: GroupChannel[];
-  /** The filter to show matched {@link GroupChannel}s only. */
-  readonly filter: GroupChannelFilter;
-  /** The order of the channel list. */
-  readonly order: GroupChannelListOrder;
-  /** Whether the collection has more channels to load. */
-  get hasMore(): boolean;
-  /**
-   * @param handler
-   * @description Sets `GroupChannelCollection` event handler.
-   */
-  setGroupChannelCollectionHandler(handler: GroupChannelCollectionEventHandler): void;
-  /**
-   * @returns
-   * @description Loads next channel lists with the filter and the order.
-   */
-  loadMore(): Promise<GroupChannel[]>;
-  /**
-   * @returns
-   * @description Disposes current `GroupChannelCollection` and stops all events from being received.
-   */
+export declare class GroupChannelCollection extends BaseChannelCollection<GroupChannelFilter> {
+  constructor(_iid: string, params?: GroupChannelCollectionParams);
   dispose(): void;
 }
 
-/**
- * @description Represents an interface to receive `GroupChannelCollection` events.
- */
-export declare interface GroupChannelCollectionEventHandler {
-  /** Called when there are newly added {@link GroupChannel}s. */
-  onChannelsAdded?: (context: GroupChannelEventContext, channels: BaseChannel[]) => void;
-  /** Called when there's an update in one or more of the {@link GroupChannel}s that `GroupChannelCollection` holds. */
-  onChannelsUpdated?: (context: GroupChannelEventContext, channels: BaseChannel[]) => void;
-  /** Called when one or more of the {@link GroupChannel}s that `GroupChannelCollection` holds has been deleted. */
-  onChannelsDeleted?: (context: GroupChannelEventContext, channelUrls: string[]) => void;
-}
+export declare type GroupChannelCollectionEventHandler = BaseChannelCollectionEventHandler;
 
-export declare interface GroupChannelCollectionParams {
+export declare interface GroupChannelCollectionParams
+  extends Omit<BaseChannelCollectionParams<GroupChannelFilter>, 'filter'> {
   filter?: GroupChannelFilter;
-  order?: GroupChannelListOrder;
-  limit?: number;
-  /**
-   * temporary option for Dream11. (default: false) will be deprecated later.
-   * if the option turns to `true`, the first call of `loadMore()` waits for changelog sync to progress.
-   * once the changelog sync advances (a single page), it applies the changelogs to the result of `loadMore()` and return.
-   */
-  includeChangesOnInitialLoad?: boolean;
 }
 
 /**

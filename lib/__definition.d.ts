@@ -7091,6 +7091,13 @@ export declare enum AIAgentChannelFilter {
   EXCLUDE = 'exclude',
 }
 
+/**
+ * @experimental This API is experimental and may be changed or removed at any time without notice.
+ */
+export declare interface AIAgentClearUserMemoriesParams {
+  contextAiAgentId?: string;
+}
+
 export declare interface AIAgentFormBaseParams {
   channelUrl: string;
   messageId: number;
@@ -7344,6 +7351,16 @@ export declare class AIAgentModule extends Module {
   requestMessengerSettings<T = object>(params: MessengerSettingsParams): Promise<T>;
   /**
    * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Sets whether the current user uses AI Agent memory.
+   */
+  setUserMemoryState<T = object>(params: AIAgentSetUserMemoryStateParams): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Clears the current user's AI Agent memories.
+   */
+  clearUserMemories(params?: AIAgentClearUserMemoriesParams): Promise<void>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
    * @description Creates a query instance to get conversation list.
    */
   createConversationListQuery(params?: ConversationListQueryParams): ConversationListQuery;
@@ -7458,6 +7475,14 @@ export declare interface AIAgentPinnedChannelUnreadMessageCount {
   channelUrl: string;
   /** The count of unread messages in the pinned channel. */
   count: number;
+}
+
+/**
+ * @experimental This API is experimental and may be changed or removed at any time without notice.
+ */
+export declare interface AIAgentSetUserMemoryStateParams {
+  enabled: boolean;
+  contextAiAgentId?: string;
 }
 
 export declare interface AIAgentStewardBaseParams {

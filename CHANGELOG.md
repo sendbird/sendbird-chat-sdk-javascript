@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.22.3 (May 13, 2026)
+### Improvements
+- Fixed FileMessage / MultipleFilesMessage send requests to omit the message field when no caption is provided, instead of sending an empty string
+
 ## v4.22.2 (May 07, 2026)
 ### Improvements
 - Fixed `SendableMessage.sender` being `undefined` in rare cases where the server payload omits sender information

@@ -1,5 +1,6 @@
 export {
   AIAgentChannelFilter,
+  AIAgentClearUserMemoriesParams,
   AIAgentFormBaseParams,
   AIAgentFormSubmitParams,
   AIAgentGroupChannelChangeLogsParams,
@@ -20,6 +21,7 @@ export {
   AIAgentOTPRequestParams,
   AIAgentOTPVerifyParams,
   AIAgentPinnedChannelUnreadMessageCount,
+  AIAgentSetUserMemoryStateParams,
   AIAgentStewardBaseParams,
   AIAgentUnreadMessageCount,
   AIAgentUserActionMessageParams,

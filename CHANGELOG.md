@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.22.4 (May 27, 2026)
+### Improvements
+- Added early `PushTokenRegistrationState.ERROR` return with a warning log when FCM/APNS push token register/unregister receives an empty or whitespace-only token
+
 ## v4.22.3 (May 13, 2026)
 ### Improvements
 - Fixed FileMessage / MultipleFilesMessage send requests to omit the message field when no caption is provided, instead of sending an empty string

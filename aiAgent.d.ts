@@ -1,4 +1,5 @@
 export {
+  AIAgentChallengeActionParams,
   AIAgentChannelFilter,
   AIAgentClearUserMemoriesParams,
   AIAgentFormBaseParams,

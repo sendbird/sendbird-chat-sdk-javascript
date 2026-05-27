@@ -7085,6 +7085,14 @@ declare interface NotificationTemplateListResult {
 
 export declare type SendbirdFeedChat = SendbirdChatWith<[FeedChannelModule]>;
 
+export declare interface AIAgentChallengeActionParams {
+  channelUrl: string;
+  key: string;
+  requestId: string;
+  action: string;
+  data?: Record<string, unknown>;
+}
+
 /** Whether to include or exclude AI Agent channels in the query results. */
 export declare enum AIAgentChannelFilter {
   INCLUDE = 'include',
@@ -7410,6 +7418,11 @@ export declare class AIAgentModule extends Module {
    * Cancels the AI Agent form of this message.
    */
   cancelForm(params: AIAgentFormBaseParams): Promise<void>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * Sends a challenge action for the AI Agent channel.
+   */
+  sendChallengeAction<T = object>(params: AIAgentChallengeActionParams): Promise<T>;
   /**
    * @experimental This API is experimental and may be changed or removed at any time without notice.
    * Creates the AI Agent message feedback.

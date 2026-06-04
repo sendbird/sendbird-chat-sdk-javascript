@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.22.5 (Jun 04, 2026)
+### Improvements
+- Add `PushTokenRegistrationDetails.unique` to control whether FCM/APNS push token registration replaces previously registered tokens
+
 ## v4.22.4 (May 27, 2026)
 ### Improvements
 - Added early `PushTokenRegistrationState.ERROR` return with a warning log when FCM/APNS push token register/unregister receives an empty or whitespace-only token

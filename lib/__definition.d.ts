@@ -3936,6 +3936,12 @@ declare interface PushTokenRegistrationDetails {
    * Whether system push is enabled.
    * */
   systemPushEnabled?: boolean;
+  /**
+   * Whether to delete all previously registered push tokens for the current user before registering this token.
+   * When `unique` is `false`, the token is added alongside any tokens already registered for the user, enabling multi-device push notifications.
+   * When `unique` is `true`, all previously registered tokens for the user are removed and only this token is kept, restricting push notifications to the most recently registered device.
+   * */
+  unique?: boolean;
 }
 
 export declare enum PushTokenRegistrationState {

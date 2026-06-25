@@ -1,5 +1,5 @@
 {
-  "version": "4.22.5",
+  "version": "4.22.6",
   "description": "Sendbird SDK for JavaScript",
   "sideEffects": false,
   "name": "@sendbird/chat",
@@ -18,13 +18,9 @@
     "url": "https://github.com/sendbird/sendbird-chat-sdk-javascript"
   },
   "peerDependencies": {
-    "@react-native-async-storage/async-storage": "^1.17.6",
     "react-native-mmkv": ">=2.0.0"
   },
   "peerDependenciesMeta": {
-    "@react-native-async-storage/async-storage": {
-      "optional": true
-    },
     "react-native-mmkv": {
       "optional": true
     }

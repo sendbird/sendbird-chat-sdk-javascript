@@ -1,5 +1,3 @@
-import type { AsyncStorageStatic } from '@react-native-async-storage/async-storage';
-
 import type { MMKV } from 'react-native-mmkv';
 
 /**
@@ -119,6 +117,18 @@ export declare interface ApplicationUserListQueryParams extends BaseListQueryPar
    * @description A filter to return users whose nicknames start with the specified string.
    */
   nicknameStartsWithFilter?: string;
+}
+
+/**
+ * Structural subset of `@react-native-async-storage/async-storage` that this store relies on.
+ * Declaring it locally decouples the SDK from the package's published types, so consumers can
+ * keep any async-storage version (or none) in their dependency tree without type/peer conflicts.
+ */
+declare interface AsyncStorageLike {
+  getItem(key: string): Promise<string | null>;
+  getAllKeys(): Promise<readonly string[]>;
+  multiSet(keyValuePairs: [string, string][]): Promise<void>;
+  multiRemove(keys: readonly string[]): Promise<void>;
 }
 
 export declare enum AuthTokenType {
@@ -4789,7 +4799,7 @@ export declare interface SendbirdChatParams<Modules extends Module[]> {
   localCacheEncryption?: Encryption;
   supportMultipleTabs?: boolean;
   /** @deprecated */
-  useAsyncStorageStore?: AsyncStorageStatic;
+  useAsyncStorageStore?: AsyncStorageLike;
   useMMKVStorageStore?: MMKV;
   appStateToggleEnabled?: boolean;
 }

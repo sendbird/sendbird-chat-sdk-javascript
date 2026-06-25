@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.22.6 (Jun 25, 2026)
+### Improvements
+- Session key now auto-refreshes on expiry, and session revocation clears the session, even when no `SessionHandler` is registered
+- Fixed a race condition where realtime message events received during the initial `GroupChannelCollection.loadMore()` could be overwritten by the fetched channel page
+- Removed the deprecated `@react-native-async-storage/async-storage` optional peer dependency, so apps can use any (or no) async-storage version without peer dependency warnings or type errors
+
 ## v4.22.5 (Jun 04, 2026)
 ### Improvements
 - Add `PushTokenRegistrationDetails.unique` to control whether FCM/APNS push token registration replaces previously registered tokens

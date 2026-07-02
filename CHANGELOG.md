@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.22.7 (Jul 02, 2026)
+### Improvements
+- Improved stability
+
 ## v4.22.6 (Jun 25, 2026)
 ### Improvements
 - Session key now auto-refreshes on expiry, and session revocation clears the session, even when no `SessionHandler` is registered

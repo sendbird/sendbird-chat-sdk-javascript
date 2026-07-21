@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.22.8 (Jul 21, 2026)
+### Improvements
+- Fixed reconnection issues where the WebSocket could stay stuck after a ping/pong timeout or a background/hidden-page close, especially in Android WebView environments
 ## v4.22.7 (Jul 02, 2026)
 ### Improvements
 - Improved stability

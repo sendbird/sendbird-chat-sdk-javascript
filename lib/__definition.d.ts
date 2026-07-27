@@ -2321,6 +2321,7 @@ export declare enum HiddenState {
 
 export declare interface InitConversationParams {
   aiAgentId: string;
+  initialUserMessage?: string;
 }
 
 export declare interface InvitationPreference {
@@ -7443,6 +7444,17 @@ export declare class AIAgentModule extends Module {
   requestMessengerSettings<T = object>(params: MessengerSettingsParams): Promise<T>;
   /**
    * @experimental This API is experimental and may be changed or removed at any time without notice.
+   */
+  submitCustomerProvidedAuthCodes(
+    params: SubmitCustomerProvidedAuthCodesParams,
+  ): Promise<SubmitCustomerProvidedAuthCodesResponse>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
+   * @description Requests a nudge message to be shown on top of the launcher.
+   */
+  requestNudgeMessage<T = object>(params: RequestNudgeMessageParams): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
    * @description Sets whether the current user uses AI Agent memory.
    */
   setUserMemoryState<T = object>(params: AIAgentSetUserMemoryStateParams): Promise<T>;
@@ -7666,6 +7678,23 @@ export declare class ConversationListQuery extends BaseListQuery {
 
 export declare interface ConversationListQueryParams extends BaseListQueryParams, ConversationListParams {}
 
+/**
+ * CPA authorization error codes returned by the server when a submitted
+ * authorization code fails (`status: 'error'`). The listed values are the
+ * codes currently defined by the server spec; the union stays open
+ * (`string & {}`) so newly added server codes are still delivered as-is
+ * without an SDK update.
+ */
+export declare type CPAAuthorizationErrorCode =
+  | 'unknown_cpa_key'
+  | 'cpa_not_oauth2'
+  | 'invalid_grant'
+  | 'provider_error'
+  | 'provider_unreachable'
+  | 'exchange_failed'
+  | 'internal_error'
+  | (string & {});
+
 /** Whether to include or exclude Desk channels in the query results. */
 export declare enum DeskChannelFilter {
   INCLUDE = 'include',
@@ -7682,4 +7711,29 @@ export declare interface MessengerSettingsParams {
   knownActiveChannelUrl?: string;
   shouldSendFirstMessage?: boolean;
   agentVersion?: number;
+}
+
+export declare interface RequestNudgeMessageParams {
+  aiAgentId: string;
+  key: string;
+  context?: Record<string, string>;
+  language?: string;
+}
+
+export declare interface SubmitCustomerProvidedAuthCodesParams {
+  aiAgentId: string;
+  authorizationCodes: {
+    key: string;
+    code: string;
+    redirectURI?: string | null;
+  }[];
+}
+
+export declare interface SubmitCustomerProvidedAuthCodesResponse {
+  cpaAuthorizations: {
+    key: string;
+    status: 'ok' | 'error';
+    errorCode?: CPAAuthorizationErrorCode;
+    errorMessage?: string;
+  }[];
 }

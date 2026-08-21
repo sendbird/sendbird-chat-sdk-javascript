@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.22.10 (Aug 21, 2026)
+### Improvements
+- Fixed a bug where `init()` returned the existing instance still bound to the previous application when called with a different `appId`
+- Fixed a bug where `init()` accepted a missing or malformed `appId` instead of throwing `invalidParameters`
+- Fixed a bug where file, profile image, and channel cover image uploads failed on React Native apps whose global `fetch` is not React Native's own implementation, such as Expo SDK 56 and later
 ## v4.22.9 (Jul 27, 2026)
 ### Improvements
 - Improved stability

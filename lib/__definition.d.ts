@@ -4225,6 +4225,8 @@ export declare class SendbirdChat {
   static init<Modules extends Module[]>(params: SendbirdChatParams<Modules>): SendbirdChatWith<Modules>;
   /**
    * @description An active SendbirdChat instance.
+   *  This is undefined before init() and after the instance has been destroyed,
+   *  so access it with optional chaining.
    */
   static get instance(): SendbirdChat;
   /**

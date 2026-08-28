@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.22.11 (Aug 28, 2026)
+### Improvements
+- Fixed a bug where canceled or failed API requests were reported to SDK statistics with browser error codes, or with no error code at all, instead of the corresponding Sendbird error codes
+- Fixed a bug where internal abort controllers accumulated one entry per API request until the connection was closed
+
 ## v4.22.10 (Aug 21, 2026)
 ### Improvements
 - Fixed a bug where `init()` returned the existing instance still bound to the previous application when called with a different `appId`

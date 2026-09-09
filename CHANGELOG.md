@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.22.12 (Sep 09, 2026)
+### Improvements
+- Fixed a bug where an explicit `disconnectWebSocket()` or `logout()` call could hang for up to a few minutes when the underlying WebSocket connection was half-open
 ## v4.22.11 (Aug 28, 2026)
 ### Improvements
 - Fixed a bug where canceled or failed API requests were reported to SDK statistics with browser error codes, or with no error code at all, instead of the corresponding Sendbird error codes

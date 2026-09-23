@@ -119,6 +119,17 @@ export declare interface ApplicationUserListQueryParams extends BaseListQueryPar
   nicknameStartsWithFilter?: string;
 }
 
+export declare class AssignedAgent {
+  /**
+   * @description The user ID of the assigned agent.
+   */
+  readonly userId: string;
+  /**
+   * @description The name of the assigned agent.
+   */
+  readonly name: string;
+}
+
 /**
  * Structural subset of `@react-native-async-storage/async-storage` that this store relies on.
  * Declaring it locally decouples the SDK from the package's published types, so consumers can
@@ -1427,6 +1438,10 @@ export declare class ConversationHandoff {
    * @description The timestamp when the handoff was requested.
    */
   readonly requestedAt?: number;
+  /**
+   * @description The agent currently assigned to the conversation. It is `undefined` when no agent is assigned.
+   */
+  readonly assignedAgent?: AssignedAgent;
 }
 
 export declare class ConversationResolution {

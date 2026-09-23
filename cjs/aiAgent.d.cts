@@ -26,6 +26,7 @@ export {
   AIAgentStewardBaseParams,
   AIAgentUnreadMessageCount,
   AIAgentUserActionMessageParams,
+  AssignedAgent,
   Conversation,
   ConversationChannelInfo,
   ConversationHandoff,

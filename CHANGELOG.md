@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.22.13 (Sep 23, 2026)
+### Improvements
+- Improvement stability
 ## v4.22.12 (Sep 09, 2026)
 ### Improvements
 - Fixed a bug where an explicit `disconnectWebSocket()` or `logout()` call could hang for up to a few minutes when the underlying WebSocket connection was half-open

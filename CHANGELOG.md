@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.22.14 (Oct 15, 2026)
+### Improvements
+- Fixed a bug where pending messages stayed pending until the app went to the background and back, when the connection dropped while they were being auto-resent and reconnected right away
+- Fixed an issue where reconnecting with a large local message cache blocked the JS thread for a long time in `MessageCollection`
 ## v4.22.13 (Sep 23, 2026)
 ### Improvements
 - Improvement stability

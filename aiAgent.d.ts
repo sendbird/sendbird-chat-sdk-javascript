@@ -37,6 +37,7 @@ export {
   ConversationStatus,
   ConversationType,
   CPAAuthorizationErrorCode,
+  CSATFollowUp,
   DeskChannelFilter,
   GroupChannelChangelogs,
   HelpdeskInfo,

@@ -1389,6 +1389,10 @@ export declare class Conversation {
    */
   readonly csatExpireAt?: number;
   /**
+   * @description The submitted answer to each CSAT follow-up question. It is `undefined` when the server did not return them (e.g. the CSAT was submitted by an older SDK).
+   */
+  readonly followUp?: CSATFollowUp[];
+  /**
    * @description The resolution status of the conversation.
    */
   readonly resolution?: ConversationResolution;
@@ -1474,6 +1478,21 @@ export declare enum CountPreference {
   OFF = 'off',
 }
 
+export declare interface CSATFollowUp {
+  /**
+   * @description The position of the question in the survey's `follow_up` array (0-based).
+   */
+  index: number;
+  /**
+   * @description The text answer of a `free_text` question.
+   */
+  answer?: string;
+  /**
+   * @description The position of the chosen option in a `single_choice` question's `options` (0-based).
+   */
+  option?: number;
+}
+
 declare interface CSATSubmitParams {
   /**
    * @description The type of the CSAT score.
@@ -1499,6 +1518,10 @@ declare interface CSATSubmitParams {
    * @description The timestamp when CSAT started.
    */
   csatStartedAt?: number;
+  /**
+   * @description The answer to each CSAT follow-up question. The `follow_up` key is not sent when it is `undefined`.
+   */
+  followUp?: CSATFollowUp[];
 }
 
 /** Day of week. Uses lowercase string to match the API. */

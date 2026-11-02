@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.22.15 (Nov 02, 2026)
+### Improvements
+- Added `CSATFollowUp` and `CSATSubmitParams.followUp` to submit an answer to each CSAT follow-up question, and `Conversation.followUp` to read the submitted answers
 ## v4.22.14 (Oct 15, 2026)
 ### Improvements
 - Fixed a bug where pending messages stayed pending until the app went to the background and back, when the connection dropped while they were being auto-resent and reconnected right away

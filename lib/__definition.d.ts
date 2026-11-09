@@ -7505,6 +7505,10 @@ export declare class AIAgentModule extends Module {
   clearUserMemories(params?: AIAgentClearUserMemoriesParams): Promise<void>;
   /**
    * @experimental This API is experimental and may be changed or removed at any time without notice.
+   */
+  send<T = unknown>(params: AIAgentRequestParams): Promise<T>;
+  /**
+   * @experimental This API is experimental and may be changed or removed at any time without notice.
    * @description Creates a query instance to get conversation list.
    */
   createConversationListQuery(params?: ConversationListQueryParams): ConversationListQuery;
@@ -7624,6 +7628,36 @@ export declare interface AIAgentPinnedChannelUnreadMessageCount {
   channelUrl: string;
   /** The count of unread messages in the pinned channel. */
   count: number;
+}
+
+/**
+ * @experimental This API is experimental and may be changed or removed at any time without notice.
+ */
+export declare class AIAgentRequestError extends SendbirdError {
+  readonly hostCode: string | number;
+}
+
+/**
+ * A value the SDK fills in when the request is sent.
+ */
+export declare type AIAgentRequestHeaderSource = 'sessionKey' | 'userId';
+
+export declare type AIAgentRequestHeaderValue =
+  | string
+  | {
+      from: AIAgentRequestHeaderSource;
+    };
+
+export declare type AIAgentRequestMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
+export declare interface AIAgentRequestParams {
+  method: AIAgentRequestMethod;
+  path: string;
+  host?: string;
+  query?: Record<string, unknown>;
+  params?: unknown;
+  headers?: Record<string, AIAgentRequestHeaderValue>;
+  sessionExpiredErrorCodes?: readonly (string | number)[];
 }
 
 /**

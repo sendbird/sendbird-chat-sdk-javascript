@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.22.16 (Nov 09, 2026)
+### Improvements
+- Added `logger.warn` logs when a realtime group channel message is dropped without notifying handlers or collections (e.g. JSON parse failure, `getChannel` failure, MACK send failure)
 ## v4.22.15 (Nov 02, 2026)
 ### Improvements
 - Added `CSATFollowUp` and `CSATSubmitParams.followUp` to submit an answer to each CSAT follow-up question, and `Conversation.followUp` to read the submitted answers

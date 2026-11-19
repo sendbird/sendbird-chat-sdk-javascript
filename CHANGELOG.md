@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.22.17 (Nov 19, 2026)
+### Improvements
+- Fixed a bug where the typing indicator was removed right after it arrived when the device clock was ahead of the server
 ## v4.22.16 (Nov 09, 2026)
 ### Improvements
 - Added `logger.warn` logs when a realtime group channel message is dropped without notifying handlers or collections (e.g. JSON parse failure, `getChannel` failure, MACK send failure)

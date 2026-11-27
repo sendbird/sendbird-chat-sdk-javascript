@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.22.18 (Nov 27, 2026)
+### Improvements
+- Improved stability
 ## v4.22.17 (Nov 19, 2026)
 ### Improvements
 - Fixed a bug where the typing indicator was removed right after it arrived when the device clock was ahead of the server

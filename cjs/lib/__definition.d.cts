@@ -7785,6 +7785,11 @@ export declare interface MessengerSettingsParams {
   knownActiveChannelUrl?: string;
   shouldSendFirstMessage?: boolean;
   agentVersion?: number;
+  /**
+   * Opens a test conversation on a development branch. Omit it for Main.
+   * A blank key, the reserved key `main`, or using it with `agentVersion` is invalid.
+   */
+  branchKey?: string;
 }
 
 export declare interface RequestNudgeMessageParams {
